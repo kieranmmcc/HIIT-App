@@ -1,11 +1,22 @@
 import type { Exercise, WorkoutExercise, GeneratedWorkout } from '../types/exercise';
 import type { WorkoutSettings } from '../types/workout';
+import { generateCircuitWorkout } from './circuitGenerator';
 import exercisesData from '../data/exercises.json';
 import { BlacklistStorage } from './blacklistStorage';
 
 const exercises = exercisesData as Exercise[];
 
 export function generateWorkout(settings: WorkoutSettings): GeneratedWorkout {
+  // Use new circuit-based generation if circuitType is specified
+  if (settings.circuitType) {
+    return generateCircuitWorkout(settings);
+  }
+
+  // Legacy generation for backward compatibility
+  return generateLegacyWorkout(settings);
+}
+
+function generateLegacyWorkout(settings: WorkoutSettings): GeneratedWorkout {
   const { duration, difficulty, selectedEquipment, targetMuscleGroups } = settings;
 
   // Filter exercises by available equipment and exclude blacklisted exercises

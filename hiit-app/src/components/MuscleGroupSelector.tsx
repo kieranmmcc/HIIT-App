@@ -1,32 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { muscleGroupFilters, type MuscleGroupFilter } from '../types/muscleGroups';
+import type { CircuitType } from '../types/circuit';
 
 interface MuscleGroupSelectorProps {
   selectedMuscleGroups: string[];
   onMuscleGroupsChange: (muscleGroups: string[]) => void;
+  excludedMuscleGroups: string[];
+  onExcludedMuscleGroupsChange: (excludedGroups: string[]) => void;
+  circuitType?: CircuitType;
+  exerciseCount?: number;
 }
 
 const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
   selectedMuscleGroups,
-  onMuscleGroupsChange
+  onMuscleGroupsChange,
+  excludedMuscleGroups,
+  onExcludedMuscleGroupsChange,
+  circuitType,
+  exerciseCount
 }) => {
+
+  const getAvailableMuscleGroups = () => {
+    if (circuitType === 'super_sets') {
+      // For super sets, only show complementary pairs
+      const superSetPairs = ['arms', 'legs_glutes', 'chest_back', 'shoulders_core', 'cardio_core'];
+      return muscleGroupFilters.filter(mg => superSetPairs.includes(mg.id));
+    } else {
+      // For classic circuits, exclude the combined pairs
+      const combinedPairs = ['legs_glutes', 'chest_back', 'shoulders_core', 'biceps_triceps', 'cardio_core'];
+      return muscleGroupFilters.filter(mg => !combinedPairs.includes(mg.id));
+    }
+  };
+
+  const availableMuscleGroups = getAvailableMuscleGroups();
   const handleToggleMuscleGroup = (muscleGroupId: string) => {
-    if (selectedMuscleGroups.includes(muscleGroupId)) {
-      onMuscleGroupsChange(selectedMuscleGroups.filter(id => id !== muscleGroupId));
-    } else {
+    const isSelected = selectedMuscleGroups.includes(muscleGroupId);
+    const isExcluded = excludedMuscleGroups.includes(muscleGroupId);
+
+    if (!isSelected && !isExcluded) {
+      // Default -> Target
+      // For super sets, limit selections based on set count (one muscle group per set)
+      const maxSelections = circuitType === 'super_sets' ? (exerciseCount ? exerciseCount / 2 : 4) : undefined;
+      if (maxSelections && selectedMuscleGroups.length >= maxSelections) {
+        return; // Don't allow more selections than stations
+      }
       onMuscleGroupsChange([...selectedMuscleGroups, muscleGroupId]);
+    } else if (isSelected && !isExcluded) {
+      // Target -> Avoid
+      onMuscleGroupsChange(selectedMuscleGroups.filter(id => id !== muscleGroupId));
+      onExcludedMuscleGroupsChange([...excludedMuscleGroups, muscleGroupId]);
+    } else if (!isSelected && isExcluded) {
+      // Avoid -> Default
+      onExcludedMuscleGroupsChange(excludedMuscleGroups.filter(id => id !== muscleGroupId));
     }
   };
 
-  const handleSelectAll = () => {
-    if (selectedMuscleGroups.length === muscleGroupFilters.length) {
-      onMuscleGroupsChange([]);
-    } else {
-      onMuscleGroupsChange(muscleGroupFilters.map(mg => mg.id));
-    }
+  const handleClearAll = () => {
+    // Clear both selections and exclusions
+    onMuscleGroupsChange([]);
+    onExcludedMuscleGroupsChange([]);
   };
-
-  const isAllSelected = selectedMuscleGroups.length === muscleGroupFilters.length;
 
   return (
     <div style={{ marginBottom: '3rem' }}>
@@ -44,16 +77,16 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
           letterSpacing: '1px',
           margin: 0
         }}>
-          Target Body Parts
+          Body Parts
         </h2>
 
         <button
-          onClick={handleSelectAll}
+          onClick={handleClearAll}
           style={{
             background: 'transparent',
-            border: `2px solid ${isAllSelected ? '#ff4757' : '#3a3a40'}`,
+            border: '2px solid #3a3a40',
             borderRadius: '8px',
-            color: isAllSelected ? '#ff4757' : '#b8bcc8',
+            color: '#b8bcc8',
             fontSize: '0.75rem',
             padding: '0.375rem 0.75rem',
             cursor: 'pointer',
@@ -62,40 +95,74 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
             letterSpacing: '0.5px'
           }}
         >
-          {isAllSelected ? 'Clear All' : 'Select All'}
+          Clear All
         </button>
       </div>
 
-      <p style={{
-        color: '#b8bcc8',
-        fontSize: '0.875rem',
-        marginBottom: '1.5rem',
-        margin: '0 0 1.5rem 0'
+      <div style={{
+        marginBottom: '1.5rem'
       }}>
-        {selectedMuscleGroups.length === 0
-          ? 'Select which body parts to focus on (or leave empty for all muscle groups)'
-          : `Targeting ${selectedMuscleGroups.length} body part${selectedMuscleGroups.length !== 1 ? 's' : ''}`
-        }
-      </p>
+        <p style={{
+          color: '#b8bcc8',
+          fontSize: '0.875rem',
+          marginBottom: '0.5rem',
+          margin: '0 0 0.5rem 0'
+        }}>
+          Click to cycle: Default → <span style={{color: '#2ed573'}}>Target</span> → <span style={{color: '#ff4757'}}>Avoid</span>
+        </p>
+
+        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem' }}>
+          {selectedMuscleGroups.length > 0 && (
+            <span style={{ color: '#2ed573' }}>
+              ✓ Targeting {selectedMuscleGroups.length} body part{selectedMuscleGroups.length !== 1 ? 's' : ''}
+            </span>
+          )}
+          {excludedMuscleGroups.length > 0 && (
+            <span style={{ color: '#ff4757' }}>
+              ✗ Avoiding {excludedMuscleGroups.length} body part{excludedMuscleGroups.length !== 1 ? 's' : ''}
+            </span>
+          )}
+          {selectedMuscleGroups.length === 0 && excludedMuscleGroups.length === 0 && (
+            <span style={{ color: '#6c7293' }}>
+              No specific targeting or exclusions - all muscle groups included
+            </span>
+          )}
+        </div>
+      </div>
 
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: '1rem'
       }}>
-        {muscleGroupFilters.map((muscleGroup: MuscleGroupFilter) => {
+        {availableMuscleGroups.map((muscleGroup: MuscleGroupFilter) => {
           const isSelected = selectedMuscleGroups.includes(muscleGroup.id);
+          const isExcluded = excludedMuscleGroups.includes(muscleGroup.id);
+          const maxSelections = circuitType === 'super_sets' ? (exerciseCount ? exerciseCount / 2 : 4) : undefined;
+          const isDisabled = maxSelections ? (!isSelected && selectedMuscleGroups.length >= maxSelections) : false;
+
+          // Determine the state for styling
+          let state = 'default';
+          if (isSelected) state = 'selected';
+          else if (isExcluded) state = 'excluded';
 
           return (
             <button
               key={muscleGroup.id}
               onClick={() => handleToggleMuscleGroup(muscleGroup.id)}
+              disabled={isDisabled}
               style={{
-                background: isSelected ? 'rgba(255, 71, 87, 0.15)' : '#131315',
-                border: `2px solid ${isSelected ? '#ff4757' : '#2a2a2f'}`,
+                background: isDisabled ? '#0a0a0b' :
+                           state === 'selected' ? 'rgba(46, 213, 115, 0.15)' :
+                           state === 'excluded' ? 'rgba(255, 71, 87, 0.15)' :
+                           '#131315',
+                border: `2px solid ${isDisabled ? '#1a1a1d' :
+                        state === 'selected' ? '#2ed573' :
+                        state === 'excluded' ? '#ff4757' :
+                        '#2a2a2f'}`,
                 borderRadius: '16px',
                 padding: '1.25rem',
-                cursor: 'pointer',
+                cursor: isDisabled ? 'not-allowed' : 'pointer',
                 textAlign: 'left',
                 transition: 'all 0.3s ease',
                 boxShadow: isSelected
@@ -103,16 +170,17 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
                   : '0 4px 12px rgba(0, 0, 0, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '1rem'
+                gap: '1rem',
+                opacity: isDisabled ? 0.4 : 1
               }}
               onMouseEnter={(e) => {
-                if (!isSelected) {
+                if (!isSelected && !isDisabled) {
                   e.currentTarget.style.borderColor = '#ff4757';
                   e.currentTarget.style.background = 'rgba(255, 71, 87, 0.05)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isSelected) {
+                if (!isSelected && !isDisabled) {
                   e.currentTarget.style.borderColor = '#2a2a2f';
                   e.currentTarget.style.background = '#131315';
                 }
@@ -129,7 +197,9 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
                 <div style={{
                   fontSize: '1.125rem',
                   fontWeight: 'bold',
-                  color: isSelected ? '#ff4757' : 'white',
+                  color: state === 'selected' ? '#2ed573' :
+                         state === 'excluded' ? '#ff4757' :
+                         'white',
                   marginBottom: '0.25rem'
                 }}>
                   {muscleGroup.name}
@@ -142,12 +212,12 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
                 </div>
               </div>
 
-              {isSelected && (
+              {(isSelected || isExcluded) && (
                 <div style={{
                   width: '24px',
                   height: '24px',
                   borderRadius: '50%',
-                  background: '#ff4757',
+                  background: isSelected ? '#2ed573' : '#ff4757',
                   color: 'white',
                   display: 'flex',
                   alignItems: 'center',
@@ -156,7 +226,7 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
                   fontWeight: 'bold',
                   flexShrink: 0
                 }}>
-                  ✓
+                  {isSelected ? '✓' : '✗'}
                 </div>
               )}
             </button>

@@ -1,4 +1,4 @@
-export type CircuitType = 'classic_cycle' | 'station_pairs' | 'pyramid' | 'super_sets';
+export type CircuitType = 'classic_cycle' | 'super_sets';
 
 export interface CircuitTypeOption {
   value: CircuitType;
@@ -15,20 +15,6 @@ export const circuitTypeOptions: CircuitTypeOption[] = [
     description: 'Cycle through 8 different exercises continuously',
     structure: '8 exercises × multiple rounds',
     icon: '🔄'
-  },
-  {
-    value: 'station_pairs',
-    name: 'Station Pairs',
-    description: 'Alternate between 2 exercises at each of 6 stations',
-    structure: '6 stations × 2 exercises each',
-    icon: '⚡'
-  },
-  {
-    value: 'pyramid',
-    name: 'Pyramid Circuit',
-    description: 'Build up and down through exercise difficulty',
-    structure: '5 exercises in pyramid pattern',
-    icon: '🔺'
   },
   {
     value: 'super_sets',

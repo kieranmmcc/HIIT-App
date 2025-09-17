@@ -7,6 +7,9 @@ export interface EquipmentPreferences {
 
   // Preferences for different workout types
   presets: EquipmentPreset[];
+
+  // Whether the user has completed the initial equipment setup
+  hasCompletedSetup?: boolean;
 }
 
 export interface EquipmentPreset {

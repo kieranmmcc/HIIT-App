@@ -1,41 +1,122 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import type { WorkoutSettings } from '../types/workout';
 import type { GeneratedWorkout, Exercise } from '../types/exercise';
+import type { CircuitWorkout, CircuitStation } from '../types/circuit';
 import type { Equipment } from '../types/equipment';
 import { generateWorkout, regenerateExercise } from '../utils/workoutGenerator';
 import { equipmentData } from '../data/equipment';
 import { BlacklistStorage } from '../utils/blacklistStorage';
 import { muscleGroupLabels } from '../types/muscleGroups';
+import { circuitTypeOptions } from '../types/circuit';
+import { InstructionPreferences } from '../utils/instructionPreferences';
 
 interface WorkoutPreviewProps {
   workoutSettings: WorkoutSettings;
-  onStartWorkout: () => void;
+  existingWorkout?: GeneratedWorkout | null;
+  onStartWorkout: (workout: GeneratedWorkout) => void;
   onBack: () => void;
 }
 
 const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
   workoutSettings,
+  existingWorkout,
   onStartWorkout,
   onBack
 }) => {
-  const [workout, setWorkout] = useState<GeneratedWorkout>(() => generateWorkout(workoutSettings));
+  const [workout, setWorkout] = useState<GeneratedWorkout>(() =>
+    existingWorkout || generateWorkout(workoutSettings)
+  );
+
+  // Update workout if existingWorkout changes (e.g., coming back from active workout)
+  useEffect(() => {
+    if (existingWorkout && existingWorkout !== workout) {
+      setWorkout(existingWorkout);
+    }
+  }, [existingWorkout]);
+  const [expandedExercises, setExpandedExercises] = useState<Set<string>>(() => {
+    // Load saved preference and expand all if user prefers instructions visible
+    const instructionsVisible = InstructionPreferences.getInstructionsVisible();
+    if (instructionsVisible) {
+      // Create set of all exercise keys
+      const allKeys = new Set<string>();
+      if (workout.circuit) {
+        workout.circuit.stations.forEach(station => {
+          station.exercises.forEach(exercise => {
+            allKeys.add(`${station.id}-${exercise.id}`);
+          });
+        });
+      }
+      return allKeys;
+    }
+    return new Set();
+  });
+
+  // Get circuit info and display type
+  const circuitInfo = workout.circuit;
+  const selectedCircuitType = circuitTypeOptions.find(option => option.value === workoutSettings.circuitType);
 
   // Get equipment data for display
   const getEquipmentInfo = (equipmentId: string): Equipment | undefined => {
     return equipmentData.find(eq => eq.id === equipmentId);
   };
 
-  // Get all unique equipment needed for the workout
+  // Get user's selected equipment for display
   const workoutEquipment = useMemo(() => {
-    const allEquipmentIds = new Set<string>();
-    workout.exercises.forEach(workoutEx => {
-      workoutEx.exercise.equipment.forEach(equipId => {
-        allEquipmentIds.add(equipId);
-      });
-    });
-    return Array.from(allEquipmentIds);
-  }, [workout.exercises]);
+    return workoutSettings.selectedEquipment;
+  }, [workoutSettings.selectedEquipment]);
+
   const totalWorkoutTime = Math.round(workout.totalDuration / 60);
+
+  // Calculate exercise vs rest time breakdown
+  const getTimeBreakdown = () => {
+    if (circuitInfo) {
+      // For circuit workouts, calculate based on circuit structure
+      const totalExercises = workout.exercises.length;
+      const totalWorkTime = totalExercises * circuitInfo.workTime;
+
+      let totalRestTime = 0;
+
+      if (circuitInfo.type === 'classic_cycle') {
+        // Classic circuits: no rest after the last exercise of each round
+        const restPeriods = totalExercises - circuitInfo.rounds; // Remove one rest per round
+        totalRestTime = restPeriods * circuitInfo.restTime;
+      } else {
+        // Other circuit types: rest after every exercise except the very last one
+        totalRestTime = (totalExercises - 1) * circuitInfo.restTime;
+      }
+
+      // Add station rest time if applicable
+      let stationRestTime = 0;
+      if (circuitInfo.stationRestTime && circuitInfo.stationRestTime > 0) {
+        // Calculate number of station transitions
+        const exercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+        const stationsPerRound = circuitInfo.stations.length;
+        const stationTransitions = circuitInfo.rounds * (stationsPerRound - 1);
+        stationRestTime = stationTransitions * circuitInfo.stationRestTime;
+      }
+
+      return {
+        exerciseTime: totalWorkTime,
+        restTime: totalRestTime + stationRestTime
+      };
+    } else {
+      // For legacy workouts
+      let totalExerciseTime = 0;
+      let totalRestTime = 0;
+
+      workout.exercises.forEach(workoutEx => {
+        totalExerciseTime += workoutEx.duration;
+        totalRestTime += workoutEx.restDuration;
+      });
+
+      return {
+        exerciseTime: totalExerciseTime,
+        restTime: totalRestTime
+      };
+    }
+  };
+
+  const timeBreakdown = getTimeBreakdown();
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -43,74 +124,210 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleRegenerateExercise = useCallback((exerciseIndex: number) => {
+  const formatTimeMinutes = (seconds: number) => {
+    const mins = Math.round(seconds / 60);
+    return `${mins}min`;
+  };
+
+  const toggleExerciseDescription = (exerciseKey: string) => {
+    setExpandedExercises(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(exerciseKey)) {
+        newSet.delete(exerciseKey);
+      } else {
+        newSet.add(exerciseKey);
+      }
+      return newSet;
+    });
+  };
+
+  const showAllInstructions = () => {
+    const allKeys = new Set<string>();
+    if (circuitInfo) {
+      circuitInfo.stations.forEach(station => {
+        station.exercises.forEach(exercise => {
+          allKeys.add(`${station.id}-${exercise.id}`);
+        });
+      });
+    }
+    setExpandedExercises(allKeys);
+    InstructionPreferences.setInstructionsVisible(true);
+  };
+
+  const hideAllInstructions = () => {
+    setExpandedExercises(new Set());
+    InstructionPreferences.setInstructionsVisible(false);
+  };
+
+  // Check if all instructions are currently visible
+  const getAllExerciseKeys = () => {
+    const allKeys = new Set<string>();
+    if (circuitInfo) {
+      circuitInfo.stations.forEach(station => {
+        if (station.exercises) {
+          station.exercises.forEach(exercise => {
+            if (exercise && exercise.id) {
+              allKeys.add(`${station.id}-${exercise.id}`);
+            }
+          });
+        }
+      });
+    }
+    return allKeys;
+  };
+
+  const allExerciseKeys = getAllExerciseKeys();
+  const allInstructionsVisible = allExerciseKeys.size > 0 &&
+    Array.from(allExerciseKeys).every(key => expandedExercises.has(key));
+
+  const handleRegenerateCircuitExercise = useCallback((stationId: string, exerciseIndex: number) => {
     setWorkout(prevWorkout => {
-      const currentExercise = prevWorkout.exercises[exerciseIndex].exercise;
+      if (!prevWorkout.circuit) return prevWorkout;
+
+      const newCircuit = { ...prevWorkout.circuit };
+      const stationIndex = newCircuit.stations.findIndex(s => s.id === stationId);
+
+      if (stationIndex === -1) return prevWorkout;
+
+      const currentExercise = newCircuit.stations[stationIndex].exercises[exerciseIndex];
       const newExercise = regenerateExercise(currentExercise, workoutSettings);
 
       if (newExercise) {
-        console.log('Replacing exercise at index', exerciseIndex, 'from', currentExercise.name, 'to', newExercise.name);
-        const newExercises = [...prevWorkout.exercises];
-        newExercises[exerciseIndex] = {
-          ...newExercises[exerciseIndex],
-          exercise: newExercise
+
+        const newStations = [...newCircuit.stations];
+        const newStationExercises = [...newStations[stationIndex].exercises];
+        newStationExercises[exerciseIndex] = newExercise;
+        newStations[stationIndex] = {
+          ...newStations[stationIndex],
+          exercises: newStationExercises
         };
+
+        const updatedCircuit = {
+          ...newCircuit,
+          stations: newStations
+        };
+
+        // Also update the legacy exercises array - replace ALL instances
+        const newLegacyExercises = [...prevWorkout.exercises];
+        for (let i = 0; i < newLegacyExercises.length; i++) {
+          if (newLegacyExercises[i].exercise.id === currentExercise.id) {
+            newLegacyExercises[i] = {
+              ...newLegacyExercises[i],
+              exercise: newExercise
+            };
+            // Don't break - continue to replace ALL instances of this exercise
+          }
+        }
+
+        // Update expanded exercises state for regenerated exercise
+        const instructionsVisible = InstructionPreferences.getInstructionsVisible();
+        if (instructionsVisible) {
+          const newExerciseKey = `${stationId}-${newExercise.id}`;
+          setExpandedExercises(prev => {
+            const newSet = new Set(prev);
+            newSet.add(newExerciseKey);
+            return newSet;
+          });
+        }
 
         return {
           ...prevWorkout,
-          exercises: newExercises
+          circuit: updatedCircuit,
+          exercises: newLegacyExercises
         };
       }
       return prevWorkout;
     });
   }, [workoutSettings]);
 
-  const handleBlacklistExercise = useCallback((exerciseIndex: number) => {
+  const handleBlacklistCircuitExercise = useCallback((stationId: string, exerciseIndex: number) => {
     setWorkout(prevWorkout => {
-      const currentExercise = prevWorkout.exercises[exerciseIndex].exercise;
+      if (!prevWorkout.circuit) return prevWorkout;
+
+      const stationIndex = prevWorkout.circuit.stations.findIndex(s => s.id === stationId);
+      if (stationIndex === -1) return prevWorkout;
+
+      const currentExercise = prevWorkout.circuit.stations[stationIndex].exercises[exerciseIndex];
       BlacklistStorage.addToBlacklist(currentExercise.id.toString());
 
-      // Find all instances of this exercise in the current workout
-      const exerciseId = currentExercise.id;
-      const indicesToReplace: number[] = [];
 
-      prevWorkout.exercises.forEach((workoutEx, index) => {
-        if (workoutEx.exercise.id === exerciseId) {
-          indicesToReplace.push(index);
+      // Find and replace all instances of this exercise in the circuit
+      const replacementExercise = regenerateExercise(currentExercise, workoutSettings);
+      if (!replacementExercise) return prevWorkout;
+
+      const newCircuit = { ...prevWorkout.circuit };
+      const newStations = [...newCircuit.stations];
+      let totalReplacements = 0;
+
+      for (let sIndex = 0; sIndex < newStations.length; sIndex++) {
+        const station = newStations[sIndex];
+        const newExercises = [...station.exercises];
+
+        for (let eIndex = 0; eIndex < newExercises.length; eIndex++) {
+          if (newExercises[eIndex].id === currentExercise.id) {
+            newExercises[eIndex] = replacementExercise;
+            totalReplacements++;
+          }
         }
-      });
 
-      console.log(`Blacklisting "${currentExercise.name}" - found ${indicesToReplace.length} instances at positions:`, indicesToReplace);
-
-      // Replace all instances of the blacklisted exercise
-      const newExercises = [...prevWorkout.exercises];
-      let replacementCount = 0;
-
-      for (const index of indicesToReplace) {
-        const replacementExercise = regenerateExercise(currentExercise, workoutSettings);
-        if (replacementExercise) {
-          newExercises[index] = {
-            ...newExercises[index],
-            exercise: replacementExercise
-          };
-          replacementCount++;
-          console.log(`Replaced instance at position ${index} with "${replacementExercise.name}"`);
-        }
-      }
-
-      if (replacementCount > 0) {
-        return {
-          ...prevWorkout,
+        newStations[sIndex] = {
+          ...station,
           exercises: newExercises
         };
       }
 
-      return prevWorkout;
+      const updatedCircuit = {
+        ...newCircuit,
+        stations: newStations
+      };
+
+      // Also update legacy exercises array - use the same replacement exercise for all instances
+      const newLegacyExercises = [...prevWorkout.exercises];
+      for (let i = 0; i < newLegacyExercises.length; i++) {
+        if (newLegacyExercises[i].exercise.id === currentExercise.id) {
+          newLegacyExercises[i] = {
+            ...newLegacyExercises[i],
+            exercise: replacementExercise
+          };
+        }
+      }
+
+
+      // Update expanded exercises state for all replaced exercises
+      const instructionsVisible = InstructionPreferences.getInstructionsVisible();
+      if (instructionsVisible && totalReplacements > 0) {
+        setExpandedExercises(prev => {
+          const newSet = new Set(prev);
+          // Add all new exercise keys from updated circuit
+          updatedCircuit.stations.forEach(station => {
+            station.exercises.forEach(exercise => {
+              const exerciseKey = `${station.id}-${exercise.id}`;
+              newSet.add(exerciseKey);
+            });
+          });
+          return newSet;
+        });
+      }
+
+      return {
+        ...prevWorkout,
+        circuit: updatedCircuit,
+        exercises: newLegacyExercises
+      };
     });
   }, [workoutSettings]);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0b', color: 'white' }}>
+    <>
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}
+      </style>
+      <div style={{ minHeight: '100vh', background: '#0a0a0b', color: 'white' }}>
       <div className="container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '1.5rem' }}>
         {/* Header */}
         <div style={{ marginBottom: '2rem' }}>
@@ -136,27 +353,119 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
             Back to Setup
           </button>
 
-          <h1 style={{
-            color: 'white',
-            fontSize: '2.5rem',
-            marginBottom: '0.5rem',
-            background: 'linear-gradient(135deg, #ff4757 0%, #ff6b35 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+            <h1 style={{
+              color: 'white',
+              fontSize: '2.5rem',
+              margin: 0,
+              background: 'linear-gradient(135deg, #ff4757 0%, #ff6b35 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+              {selectedCircuitType?.name || 'Workout Preview'}
+            </h1>
+            {selectedCircuitType && (
+              <span style={{ fontSize: '2rem' }}>{selectedCircuitType.icon}</span>
+            )}
+          </div>
+
+          <p style={{
+            color: '#b8bcc8',
+            fontSize: '1.125rem',
+            marginBottom: '1.5rem',
+            margin: '0 0 1.5rem 0'
           }}>
-            Workout Preview
-          </h1>
+            {selectedCircuitType?.description || 'Your personalized workout'}
+          </p>
 
           <div style={{
             display: 'flex',
             gap: '2rem',
             color: '#b8bcc8',
-            fontSize: '1.125rem',
-            marginBottom: '1.5rem'
+            fontSize: '1rem',
+            marginBottom: '1rem',
+            flexWrap: 'wrap'
           }}>
             <span>⏱️ {totalWorkoutTime} minutes</span>
-            <span>💪 {workout.exercises.length} exercises</span>
+            {circuitInfo ? (
+              <>
+                <span>🔄 {circuitInfo.rounds} rounds</span>
+                <span>🏋️ {circuitInfo.stations.length} stations</span>
+                <span>💪 {circuitInfo.stations.reduce((total, station) => total + station.exercises.length, 0)} unique exercises</span>
+              </>
+            ) : (
+              <span>💪 {workout.exercises.length} exercises</span>
+            )}
             <span>🔥 {workout.difficulty} difficulty</span>
+          </div>
+
+          {/* Time Breakdown */}
+          <div style={{
+            display: 'flex',
+            gap: '1rem',
+            marginBottom: '1.5rem',
+            flexWrap: 'wrap'
+          }}>
+            <div style={{
+              background: 'rgba(46, 213, 115, 0.15)',
+              border: '2px solid #2ed573',
+              borderRadius: '12px',
+              padding: '0.75rem 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <div style={{ fontSize: '1.25rem' }}>💪</div>
+              <div>
+                <div style={{ color: '#2ed573', fontSize: '0.875rem', fontWeight: '600' }}>
+                  Exercise Time
+                </div>
+                <div style={{ color: 'white', fontSize: '1rem', fontWeight: 'bold' }}>
+                  {formatTimeMinutes(timeBreakdown.exerciseTime)}
+                </div>
+              </div>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 71, 87, 0.15)',
+              border: '2px solid #ff4757',
+              borderRadius: '12px',
+              padding: '0.75rem 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <div style={{ fontSize: '1.25rem' }}>🛌</div>
+              <div>
+                <div style={{ color: '#ff4757', fontSize: '0.875rem', fontWeight: '600' }}>
+                  Rest Time
+                </div>
+                <div style={{ color: 'white', fontSize: '1rem', fontWeight: 'bold' }}>
+                  {formatTimeMinutes(timeBreakdown.restTime)}
+                </div>
+              </div>
+            </div>
+
+
+            <div style={{
+              background: 'rgba(108, 114, 147, 0.15)',
+              border: '2px solid #6c7293',
+              borderRadius: '12px',
+              padding: '0.75rem 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <div style={{ fontSize: '1.25rem' }}>⏱️</div>
+              <div>
+                <div style={{ color: '#6c7293', fontSize: '0.875rem', fontWeight: '600' }}>
+                  Work:Rest Ratio
+                </div>
+                <div style={{ color: 'white', fontSize: '1rem', fontWeight: 'bold' }}>
+                  {Math.round((timeBreakdown.exerciseTime / timeBreakdown.restTime) * 10) / 10}:1
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -220,277 +529,524 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
           </div>
         </div>
 
-        {/* Exercise List */}
-        <div style={{ marginBottom: '3rem' }}>
-          <h2 style={{
-            color: '#ff4757',
-            fontSize: '1.25rem',
-            fontWeight: '600',
-            marginBottom: '1.5rem',
-            textTransform: 'uppercase',
-            letterSpacing: '1px'
-          }}>
-            Exercise Sequence
-          </h2>
+        {/* Circuit Layout */}
+        {circuitInfo ? (
+          <div style={{ marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <h2 style={{
+                  color: '#ff4757',
+                  fontSize: '1.125rem',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                  margin: 0
+                }}>
+                  Circuit Structure
+                </h2>
 
-          <div style={{
-            display: 'grid',
-            gap: '1rem'
-          }}>
-            {workout.exercises.map((workoutEx, index) => {
-              const exercise = workoutEx.exercise;
-              const exerciseEquipment = exercise.equipment.map(id => getEquipmentInfo(id)).filter(Boolean);
+                {/* Toggle All Descriptions Button */}
+                <div>
+                  <button
+                    onClick={allInstructionsVisible ? hideAllInstructions : showAllInstructions}
+                    style={{
+                      background: allInstructionsVisible ? 'rgba(255, 71, 87, 0.2)' : 'rgba(46, 213, 115, 0.2)',
+                      border: `1px solid ${allInstructionsVisible ? '#ff4757' : '#2ed573'}`,
+                      borderRadius: '6px',
+                      color: allInstructionsVisible ? '#ff4757' : '#2ed573',
+                      cursor: 'pointer',
+                      padding: '0.375rem 0.75rem',
+                      fontSize: '0.75rem',
+                      fontWeight: '500',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.375rem',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      const isShowingAll = allInstructionsVisible;
+                      e.currentTarget.style.background = isShowingAll ? 'rgba(255, 71, 87, 0.3)' : 'rgba(46, 213, 115, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      const isShowingAll = allInstructionsVisible;
+                      e.currentTarget.style.background = isShowingAll ? 'rgba(255, 71, 87, 0.2)' : 'rgba(46, 213, 115, 0.2)';
+                    }}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      style={{
+                        transform: allInstructionsVisible ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s ease'
+                      }}
+                    >
+                      <polyline points="6,9 12,15 18,9" />
+                    </svg>
+                    {allInstructionsVisible ? 'Hide All Descriptions' : 'Show All Descriptions'}
+                  </button>
+                </div>
+              </div>
 
-              return (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                background: 'rgba(255, 71, 87, 0.1)',
+                border: '2px solid #ff4757',
+                borderRadius: '8px',
+                padding: '0.5rem 0.75rem',
+                fontSize: '0.75rem',
+                color: '#ff4757',
+                fontWeight: '600',
+                flexWrap: 'wrap'
+              }}>
+                <span>⏱️ Work: {formatTime(circuitInfo.workTime)}</span>
+                <span>•</span>
+                <span>🛌 Rest: {formatTime(circuitInfo.restTime)}</span>
+                {circuitInfo.stationRestTime && (
+                  <>
+                    <span>•</span>
+                    <span>⏸️ Between: {formatTime(circuitInfo.stationRestTime)}</span>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Stations Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '2rem',
+              marginBottom: '1.5rem'
+            }}>
+              {circuitInfo.stations.map((station, stationIndex) => (
                 <div
-                  key={`${index}-${exercise.id}`}
+                  key={station.id}
                   style={{
                     background: '#131315',
                     border: '2px solid #2a2a2f',
-                    borderRadius: '12px',
-                    padding: '1.25rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1.5rem'
+                    borderRadius: '16px',
+                    padding: '2rem',
+                    position: 'relative'
                   }}
                 >
-                  {/* Exercise Number */}
+                  {/* Station Header */}
                   <div style={{
-                    width: '48px',
-                    height: '48px',
-                    background: 'linear-gradient(135deg, #ff4757 0%, #ff6b35 100%)',
-                    borderRadius: '12px',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'black',
-                    fontSize: '1.25rem',
-                    fontWeight: 'bold',
-                    flexShrink: 0
+                    gap: '1rem',
+                    marginBottom: '1.5rem'
                   }}>
-                    {index + 1}
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      background: 'linear-gradient(135deg, #ff4757 0%, #ff6b35 100%)',
+                      borderRadius: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'black',
+                      fontSize: '1.125rem',
+                      fontWeight: 'bold'
+                    }}>
+                      {stationIndex + 1}
+                    </div>
+                    <div>
+                      <h3 style={{
+                        color: 'white',
+                        fontSize: '1.125rem',
+                        fontWeight: '600',
+                        margin: 0
+                      }}>
+                        {station.name}
+                      </h3>
+                      <p style={{
+                        color: '#6c7293',
+                        fontSize: '0.75rem',
+                        margin: 0,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}>
+                        {station.exercises.length} exercise{station.exercises.length !== 1 ? 's' : ''}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Exercise Info */}
-                  <div style={{ flex: 1 }}>
-                    <h3 style={{
-                      color: 'white',
-                      fontSize: '1.25rem',
-                      fontWeight: '600',
-                      marginBottom: '0.5rem'
-                    }}>
-                      {exercise.name}
-                    </h3>
+                  {/* Station Exercises */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    {station.exercises?.map((exercise, exerciseIndex) => {
+                      if (!exercise || !exercise.id) return null;
 
-                    <p style={{
-                      color: '#b8bcc8',
-                      fontSize: '0.875rem',
-                      lineHeight: 1.4,
-                      marginBottom: '0.75rem'
-                    }}>
-                      {exercise.instructions}
-                    </p>
+                      const exerciseEquipment = exercise.equipment?.map(id => getEquipmentInfo(id)).filter(Boolean) || [];
+                      const exerciseKey = `${station.id}-${exercise.id}`;
+                      const isExpanded = expandedExercises.has(exerciseKey);
 
-                    {/* Exercise Equipment */}
-                    <div style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '0.5rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                      {exerciseEquipment.map(equipment => {
-                        if (!equipment) return null;
-
-                        return (
-                          <div
-                            key={equipment.id}
-                            style={{
+                      return (
+                        <div
+                          key={exerciseKey}
+                          style={{
+                            background: '#1c1c20',
+                            border: '1px solid #3a3a40',
+                            borderRadius: '12px',
+                            padding: '1.25rem',
+                            position: 'relative'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
+                            {/* Exercise Letter (A, B, etc.) */}
+                            <div style={{
+                              width: '28px',
+                              height: '28px',
+                              background: 'rgba(255, 71, 87, 0.2)',
+                              border: '2px solid #ff4757',
+                              borderRadius: '6px',
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '0.375rem',
-                              background: 'rgba(108, 114, 147, 0.2)',
-                              border: '1px solid #3a3a40',
-                              borderRadius: '8px',
-                              padding: '0.25rem 0.5rem',
-                              fontSize: '0.75rem',
-                              color: '#b8bcc8'
-                            }}
-                          >
-                            <img
-                              src={equipment.svgUrl}
-                              alt={equipment.name}
+                              justifyContent: 'center',
+                              color: '#ff4757',
+                              fontSize: '0.875rem',
+                              fontWeight: 'bold',
+                              flexShrink: 0
+                            }}>
+                              {String.fromCharCode(65 + exerciseIndex)} {/* A, B, C, etc. */}
+                            </div>
+
+                            <div style={{ flex: 1 }}>
+                              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+                                <div style={{ flex: 1 }}>
+                                  <h4 style={{
+                                    color: 'white',
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    marginBottom: '0.375rem',
+                                    lineHeight: 1.3
+                                  }}>
+                                    {exercise.name}
+                                  </h4>
+
+                                  {/* Muscle Groups */}
+                                  <div style={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    gap: '0.375rem',
+                                    marginBottom: '0.75rem'
+                                  }}>
+                                    <div style={{
+                                      background: 'rgba(255, 71, 87, 0.2)',
+                                      border: '1px solid #ff4757',
+                                      borderRadius: '4px',
+                                      padding: '0.125rem 0.375rem',
+                                      fontSize: '0.625rem',
+                                      color: '#ff4757',
+                                      fontWeight: '600',
+                                      textTransform: 'uppercase'
+                                    }}>
+                                      {muscleGroupLabels[exercise.primaryMuscle] || exercise.primaryMuscle}
+                                    </div>
+                                    {exercise.muscleGroups
+                                      .filter(mg => mg !== exercise.primaryMuscle)
+                                      .slice(0, 2)
+                                      .map(muscleGroup => (
+                                        <div
+                                          key={muscleGroup}
+                                          style={{
+                                            background: 'rgba(255, 107, 53, 0.15)',
+                                            border: '1px solid #ff6b35',
+                                            borderRadius: '4px',
+                                            padding: '0.125rem 0.375rem',
+                                            fontSize: '0.625rem',
+                                            color: '#ff6b35',
+                                            textTransform: 'uppercase'
+                                          }}
+                                        >
+                                          {muscleGroupLabels[muscleGroup] || muscleGroup}
+                                        </div>
+                                      ))}
+                                  </div>
+
+                                  {/* Equipment */}
+                                  {exerciseEquipment.length > 0 && (
+                                    <div style={{
+                                      display: 'flex',
+                                      flexWrap: 'wrap',
+                                      gap: '0.375rem'
+                                    }}>
+                                      {exerciseEquipment.map(equipment => {
+                                        if (!equipment) return null;
+
+                                        return (
+                                          <div
+                                            key={equipment.id}
+                                            style={{
+                                              display: 'flex',
+                                              alignItems: 'center',
+                                              gap: '0.25rem',
+                                              background: 'rgba(108, 114, 147, 0.2)',
+                                              border: '1px solid #3a3a40',
+                                              borderRadius: '4px',
+                                              padding: '0.125rem 0.375rem',
+                                              fontSize: '0.625rem',
+                                              color: '#b8bcc8'
+                                            }}
+                                          >
+                                            <img
+                                              src={equipment.svgUrl}
+                                              alt={equipment.name}
+                                              style={{
+                                                width: '12px',
+                                                height: '12px',
+                                                borderRadius: '1px'
+                                              }}
+                                            />
+                                            <span>{equipment.name}</span>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '0.5rem',
+                                  flexShrink: 0
+                                }}>
+                                  <button
+                                    onClick={() => handleRegenerateCircuitExercise(station.id, exerciseIndex)}
+                                    title="Get a different exercise"
+                                    style={{
+                                      background: 'rgba(255, 193, 7, 0.2)',
+                                      border: '1px solid #ffc107',
+                                      borderRadius: '6px',
+                                      color: '#ffc107',
+                                      cursor: 'pointer',
+                                      padding: '0.375rem',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      fontSize: '0.75rem',
+                                      fontWeight: '500',
+                                      transition: 'all 0.2s ease',
+                                      minWidth: '32px',
+                                      height: '32px'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.background = 'rgba(255, 193, 7, 0.3)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.background = 'rgba(255, 193, 7, 0.2)';
+                                    }}
+                                  >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                                      <path d="M21 3v5h-5" />
+                                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                                      <path d="M3 21v-5h5" />
+                                    </svg>
+                                  </button>
+
+                                  <button
+                                    onClick={() => handleBlacklistCircuitExercise(station.id, exerciseIndex)}
+                                    title="Never show this exercise again"
+                                    style={{
+                                      background: 'rgba(255, 71, 87, 0.2)',
+                                      border: '1px solid #ff4757',
+                                      borderRadius: '6px',
+                                      color: '#ff4757',
+                                      cursor: 'pointer',
+                                      padding: '0.375rem',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      fontSize: '0.75rem',
+                                      fontWeight: '500',
+                                      transition: 'all 0.2s ease',
+                                      minWidth: '32px',
+                                      height: '32px'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.background = 'rgba(255, 71, 87, 0.3)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.background = 'rgba(255, 71, 87, 0.2)';
+                                    }}
+                                  >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <circle cx="12" cy="12" r="10" />
+                                      <path d="15 9l-6 6" />
+                                      <path d="9 9l6 6" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Expandable Description */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                            <button
+                              onClick={() => toggleExerciseDescription(exerciseKey)}
                               style={{
-                                width: '16px',
-                                height: '16px',
-                                borderRadius: '2px',
-                                objectFit: 'cover'
+                                background: 'transparent',
+                                border: '1px solid #3a3a40',
+                                borderRadius: '6px',
+                                color: '#b8bcc8',
+                                cursor: 'pointer',
+                                padding: '0.375rem 0.75rem',
+                                fontSize: '0.75rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.375rem',
+                                transition: 'all 0.2s ease'
                               }}
-                            />
-                            <span>{equipment.name}</span>
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.borderColor = '#ff4757';
+                                e.currentTarget.style.color = '#ff4757';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.borderColor = '#3a3a40';
+                                e.currentTarget.style.color = '#b8bcc8';
+                              }}
+                            >
+                              <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                style={{
+                                  transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                                  transition: 'transform 0.2s ease'
+                                }}
+                              >
+                                <polyline points="6,9 12,15 18,9" />
+                              </svg>
+                              {isExpanded ? 'Hide' : 'Show'} Instructions
+                            </button>
                           </div>
-                        );
-                      })}
-                    </div>
 
-                    {/* Muscle Groups */}
-                    <div style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '0.375rem'
-                    }}>
-                      <div
-                        style={{
-                          background: 'rgba(255, 71, 87, 0.2)',
-                          border: '1px solid #ff4757',
-                          borderRadius: '6px',
-                          padding: '0.125rem 0.5rem',
-                          fontSize: '0.625rem',
-                          color: '#ff4757',
-                          fontWeight: '600',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.5px'
-                        }}
-                      >
-                        Primary: {muscleGroupLabels[exercise.primaryMuscle] || exercise.primaryMuscle}
-                      </div>
-                      {exercise.muscleGroups
-                        .filter(mg => mg !== exercise.primaryMuscle)
-                        .slice(0, 3)
-                        .map(muscleGroup => (
-                          <div
-                            key={muscleGroup}
-                            style={{
-                              background: 'rgba(255, 107, 53, 0.15)',
-                              border: '1px solid #ff6b35',
-                              borderRadius: '6px',
-                              padding: '0.125rem 0.5rem',
-                              fontSize: '0.625rem',
-                              color: '#ff6b35',
-                              textTransform: 'uppercase',
-                              letterSpacing: '0.5px'
-                            }}
-                          >
-                            {muscleGroupLabels[muscleGroup] || muscleGroup}
-                          </div>
-                        ))}
-                    </div>
+                          {/* Exercise Description */}
+                          {isExpanded && (
+                            <div
+                              style={{
+                                marginTop: '1rem',
+                                padding: '1.25rem',
+                                background: 'rgba(255, 71, 87, 0.05)',
+                                border: '1px solid rgba(255, 71, 87, 0.2)',
+                                borderRadius: '8px',
+                                animation: 'fadeIn 0.2s ease-in-out'
+                              }}
+                            >
+                              <p style={{
+                                color: '#e8eaed',
+                                fontSize: '0.875rem',
+                                lineHeight: 1.5,
+                                margin: 0
+                              }}>
+                                {exercise.instructions}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
 
-                  {/* Action Buttons */}
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                    flexShrink: 0
-                  }}>
-                    <button
-                      onClick={() => handleRegenerateExercise(index)}
-                      title="Get a different exercise"
-                      style={{
-                        background: 'rgba(255, 193, 7, 0.2)',
-                        border: '2px solid #ffc107',
-                        borderRadius: '8px',
-                        color: '#ffc107',
-                        cursor: 'pointer',
-                        padding: '0.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '0.75rem',
-                        fontWeight: '500',
-                        gap: '0.25rem',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 193, 7, 0.3)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 193, 7, 0.2)';
-                      }}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                        <path d="M21 3v5h-5" />
-                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                        <path d="M3 21v-5h5" />
-                      </svg>
-                      Replace
-                    </button>
-
-                    <button
-                      onClick={() => handleBlacklistExercise(index)}
-                      title="Never show this exercise again"
-                      style={{
-                        background: 'rgba(255, 71, 87, 0.2)',
-                        border: '2px solid #ff4757',
-                        borderRadius: '8px',
-                        color: '#ff4757',
-                        cursor: 'pointer',
-                        padding: '0.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '0.75rem',
-                        fontWeight: '500',
-                        gap: '0.25rem',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 71, 87, 0.3)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 71, 87, 0.2)';
-                      }}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="15 9l-6 6" />
-                        <path d="9 9l6 6" />
-                      </svg>
-                      Block
-                    </button>
-                  </div>
-
-                  {/* Timing Info */}
-                  <div style={{
-                    textAlign: 'center',
-                    flexShrink: 0,
-                    minWidth: '100px'
-                  }}>
+                  {/* Cycle Indicator */}
+                  {station.exercises.length > 1 && (
                     <div style={{
-                      color: '#2ed573',
-                      fontSize: '1.125rem',
-                      fontWeight: 'bold',
-                      marginBottom: '0.25rem'
-                    }}>
-                      {formatTime(workoutEx.duration)}
-                    </div>
-                    <div style={{
-                      color: '#6c7293',
+                      position: 'absolute',
+                      top: '1rem',
+                      right: '1rem',
+                      background: 'rgba(46, 213, 115, 0.2)',
+                      border: '2px solid #2ed573',
+                      borderRadius: '6px',
+                      padding: '0.375rem 0.75rem',
                       fontSize: '0.75rem',
+                      color: '#2ed573',
+                      fontWeight: '600',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.5px'
+                      letterSpacing: '0.5px',
+                      textAlign: 'center'
                     }}>
-                      Work
+                      <div style={{ marginBottom: '0.125rem' }}>↔️ Alternate</div>
+                      <div style={{ fontSize: '0.625rem', opacity: 0.9 }}>
+                        {circuitInfo.type === 'super_sets' ?
+                          `${circuitInfo.rounds} times each` :
+                          `${Math.ceil(circuitInfo.rounds / 2)} times each`
+                        }
+                      </div>
                     </div>
-                    <div style={{
-                      color: '#ff4757',
-                      fontSize: '0.875rem',
-                      marginTop: '0.25rem'
-                    }}>
-                      {formatTime(workoutEx.restDuration)} rest
-                    </div>
-                  </div>
+                  )}
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {/* Compact Rounds Indicator */}
+            <div style={{
+              textAlign: 'center',
+              background: 'rgba(46, 213, 115, 0.1)',
+              border: '2px solid #2ed573',
+              borderRadius: '12px',
+              padding: '1rem',
+            }}>
+              <h3 style={{
+                color: '#2ed573',
+                fontSize: '1rem',
+                fontWeight: '700',
+                marginBottom: '0.5rem',
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
+              }}>
+                🔄 {circuitInfo.rounds} Complete Round{circuitInfo.rounds !== 1 ? 's' : ''}
+              </h3>
+
+              <p style={{
+                color: '#b8bcc8',
+                fontSize: '0.75rem',
+                margin: '0 0 0.5rem 0',
+                lineHeight: 1.3
+              }}>
+                {circuitInfo.type === 'super_sets'
+                  ? `Complete both exercises in each super set ${circuitInfo.rounds} time${circuitInfo.rounds !== 1 ? 's' : ''} before moving to next.`
+                  : `Repeat the entire circuit ${circuitInfo.rounds} time${circuitInfo.rounds !== 1 ? 's' : ''} for your complete ${totalWorkoutTime}-minute workout.`
+                }
+              </p>
+
+              <div style={{
+                display: 'inline-block',
+                background: 'rgba(46, 213, 115, 0.15)',
+                border: '1px solid #2ed573',
+                borderRadius: '6px',
+                padding: '0.375rem 0.75rem',
+                fontSize: '0.625rem',
+                color: '#2ed573',
+                fontWeight: '600',
+                textTransform: 'uppercase'
+              }}>
+                Total: {totalWorkoutTime} minutes
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div>Legacy workout view (no circuit structure)</div>
+        )}
 
         {/* Start Workout Button */}
-        <div style={{ textAlign: 'center' }}>
+        <div style={{
+          textAlign: 'center',
+          marginTop: '2rem',
+          paddingBottom: '2rem'
+        }}>
           <button
-            onClick={onStartWorkout}
+            onClick={() => onStartWorkout(workout)}
             style={{
               background: 'linear-gradient(135deg, #2ed573 0%, #20bf6b 100%)',
               color: 'black',
@@ -532,7 +1088,8 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
           </p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

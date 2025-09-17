@@ -14,11 +14,12 @@ export class EquipmentStorage {
       console.warn('Failed to load equipment preferences:', error);
     }
 
-    // Return default preferences if nothing stored
+    // Return default preferences if nothing stored (first-time user)
     return {
       ownedEquipment: ['bodyweight'], // Always start with bodyweight
       selectedForWorkout: ['bodyweight'],
       presets: defaultPresets
+      // hasCompletedSetup is intentionally omitted (undefined = false)
     };
   }
 
@@ -43,6 +44,9 @@ export class EquipmentStorage {
     if (preferences.selectedForWorkout.length === 0) {
       preferences.selectedForWorkout = ['bodyweight'];
     }
+
+    // Mark that user has completed initial setup
+    preferences.hasCompletedSetup = true;
 
     this.savePreferences(preferences);
   }

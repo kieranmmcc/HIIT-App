@@ -27,6 +27,9 @@ const EquipmentSelection: React.FC<EquipmentSelectionProps> = ({
     const ownedEquipmentIds = equipment.filter(eq => eq.isSelected).map(eq => eq.id);
     EquipmentStorage.updateOwnedEquipment(ownedEquipmentIds);
 
+    // Also save as workout selection so it persists on refresh
+    EquipmentStorage.updateWorkoutSelection(ownedEquipmentIds);
+
     onContinue(equipment);
   };
 

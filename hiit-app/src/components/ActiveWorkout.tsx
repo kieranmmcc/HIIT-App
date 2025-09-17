@@ -1,23 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import type { WorkoutSettings } from '../types/workout';
 import type { ActiveWorkout, GeneratedWorkout } from '../types/exercise';
+import type { CircuitWorkout } from '../types/circuit';
 import type { Equipment } from '../types/equipment';
-import { generateWorkout } from '../utils/workoutGenerator';
 import { audioManager } from '../utils/audioManager';
 import { equipmentData } from '../data/equipment';
+import { circuitTypeOptions } from '../types/circuit';
 
 interface ActiveWorkoutProps {
-  workoutSettings: WorkoutSettings;
+  workout: GeneratedWorkout;
   onComplete: () => void;
   onExit: () => void;
 }
 
 const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
-  workoutSettings,
+  workout,
   onComplete,
   onExit
 }) => {
-  const [workout] = useState<GeneratedWorkout>(() => generateWorkout(workoutSettings));
   const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout>({
     workout,
     currentExerciseIndex: 0,
@@ -26,6 +25,13 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
     isActive: false,
     isPaused: false
   });
+
+  const [completionCountdown, setCompletionCountdown] = useState<number>(10); // 10 second countdown
+
+
+  // Circuit information - enhanced workout timer with circuit context
+  const circuitInfo = workout.circuit;
+  const selectedCircuitType = circuitTypeOptions.find(option => option.value === workout.circuit?.type);
 
   // Timer logic
   useEffect(() => {
@@ -123,15 +129,211 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
     }));
   };
 
-  // Handle workout completion
+  // Handle workout completion countdown
   useEffect(() => {
-    if (activeWorkout.phase === 'complete') {
-      setTimeout(() => onComplete(), 2000);
+    if (activeWorkout.phase === 'complete' && completionCountdown > 0) {
+      const timer = setTimeout(() => {
+        setCompletionCountdown(prev => {
+          if (prev <= 1) {
+            onComplete();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearTimeout(timer);
     }
-  }, [activeWorkout.phase, onComplete]);
+  }, [activeWorkout.phase, completionCountdown, onComplete]);
 
   const currentExercise = workout.exercises[activeWorkout.currentExerciseIndex]?.exercise;
   const progress = ((activeWorkout.currentExerciseIndex + 1) / workout.exercises.length) * 100;
+
+  // Circuit context helpers
+  const getCurrentCircuitContext = () => {
+    if (!circuitInfo) return null;
+
+    const currentWorkoutExercise = workout.exercises[activeWorkout.currentExerciseIndex];
+    if (!currentWorkoutExercise) return null;
+
+    // Find which station and round we're in
+    let exercisesSoFar = 0;
+    const totalExercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+
+    const currentRound = Math.floor(activeWorkout.currentExerciseIndex / totalExercisesPerRound) + 1;
+    const indexInRound = activeWorkout.currentExerciseIndex % totalExercisesPerRound;
+
+    // Find current station within the round
+    let currentStationIndex = 0;
+    let exercisesInCurrentStation = 0;
+    for (let i = 0; i < circuitInfo.stations.length; i++) {
+      if (indexInRound < exercisesSoFar + circuitInfo.stations[i].exercises.length) {
+        currentStationIndex = i;
+        exercisesInCurrentStation = indexInRound - exercisesSoFar;
+        break;
+      }
+      exercisesSoFar += circuitInfo.stations[i].exercises.length;
+    }
+
+    const currentStation = circuitInfo.stations[currentStationIndex];
+    const exerciseInStation = currentStation.exercises[exercisesInCurrentStation];
+
+    return {
+      station: currentStation,
+      stationIndex: currentStationIndex,
+      exerciseInStation,
+      exerciseIndexInStation: exercisesInCurrentStation,
+      round: currentRound,
+      totalRounds: circuitInfo.rounds,
+      exerciseLetter: String.fromCharCode(65 + exercisesInCurrentStation) // A, B, C, etc.
+    };
+  };
+
+  const circuitContext = getCurrentCircuitContext();
+
+  // Get next exercise preview for circuit awareness
+  const getNextExercisePreview = () => {
+    const previewCount = 2; // Show only next 2 items for compact display
+    const preview: Array<{
+      exercise: any;
+      type: 'exercise' | 'rest' | 'station-rest';
+      stationName?: string;
+      exerciseLetter?: string;
+      isCurrentStation?: boolean;
+      duration?: number;
+    }> = [];
+
+    let itemsAdded = 0;
+
+    // Start from the next phase after current
+    let startFromRest = activeWorkout.phase === 'work';
+
+    for (let i = 0; itemsAdded < previewCount; i++) {
+      // Determine if this should be a rest or exercise
+      const isRestPhase = startFromRest ? (i % 2 === 0) : (i % 2 === 1);
+
+      if (isRestPhase) {
+        // This is a rest period
+        const exerciseIndex = Math.floor(i / 2) + activeWorkout.currentExerciseIndex + (startFromRest ? 0 : 1);
+
+        if (exerciseIndex >= workout.exercises.length) {
+          break; // No more exercises
+        }
+
+        const currentWorkoutEx = workout.exercises[exerciseIndex];
+        const nextExerciseIndex = exerciseIndex + 1;
+
+        // Check if this is a station transition rest
+        let isStationTransition = false;
+        let nextStationName = '';
+
+        if (circuitInfo && circuitContext && nextExerciseIndex < workout.exercises.length) {
+          // Calculate current and next station
+          const totalExercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+
+          const currentIndexInRound = exerciseIndex % totalExercisesPerRound;
+          const nextIndexInRound = nextExerciseIndex % totalExercisesPerRound;
+
+          // Find current station
+          let currentStationIndex = 0;
+          let exercisesSoFar = 0;
+          for (let j = 0; j < circuitInfo.stations.length; j++) {
+            if (currentIndexInRound < exercisesSoFar + circuitInfo.stations[j].exercises.length) {
+              currentStationIndex = j;
+              break;
+            }
+            exercisesSoFar += circuitInfo.stations[j].exercises.length;
+          }
+
+          // Find next station
+          let nextStationIndex = 0;
+          exercisesSoFar = 0;
+          for (let j = 0; j < circuitInfo.stations.length; j++) {
+            if (nextIndexInRound < exercisesSoFar + circuitInfo.stations[j].exercises.length) {
+              nextStationIndex = j;
+              break;
+            }
+            exercisesSoFar += circuitInfo.stations[j].exercises.length;
+          }
+
+          isStationTransition = currentStationIndex !== nextStationIndex;
+          if (isStationTransition) {
+            nextStationName = circuitInfo.stations[nextStationIndex].name;
+          }
+        }
+
+        const restDuration = isStationTransition ?
+          (circuitInfo?.stationRestTime || 30) :
+          currentWorkoutEx.restDuration;
+
+        preview.push({
+          exercise: {
+            name: isStationTransition ? `Moving to ${nextStationName}` : 'Rest'
+          },
+          type: isStationTransition ? 'station-rest' : 'rest',
+          duration: restDuration,
+          stationName: isStationTransition ? nextStationName : undefined
+        });
+
+      } else {
+        // This is an exercise
+        const exerciseIndex = Math.floor((i + 1) / 2) + activeWorkout.currentExerciseIndex + (startFromRest ? 0 : 1);
+
+        if (exerciseIndex >= workout.exercises.length) {
+          preview.push({
+            exercise: { name: 'Workout Complete!' },
+            type: 'exercise',
+            duration: 0
+          });
+          break;
+        }
+
+        const nextExercise = workout.exercises[exerciseIndex];
+        let stationName = '';
+        let exerciseLetter = '';
+        let isCurrentStation = false;
+
+        if (circuitInfo && circuitContext) {
+          // Calculate station context for next exercise
+          const totalExercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+          const nextIndexInRound = exerciseIndex % totalExercisesPerRound;
+
+          let exercisesSoFar = 0;
+          let nextStationIndex = 0;
+          let exercisesInNextStation = 0;
+
+          for (let j = 0; j < circuitInfo.stations.length; j++) {
+            if (nextIndexInRound < exercisesSoFar + circuitInfo.stations[j].exercises.length) {
+              nextStationIndex = j;
+              exercisesInNextStation = nextIndexInRound - exercisesSoFar;
+              break;
+            }
+            exercisesSoFar += circuitInfo.stations[j].exercises.length;
+          }
+
+          const nextStation = circuitInfo.stations[nextStationIndex];
+          stationName = nextStation.name;
+          exerciseLetter = String.fromCharCode(65 + exercisesInNextStation);
+          isCurrentStation = nextStationIndex === circuitContext.stationIndex;
+        }
+
+        preview.push({
+          exercise: nextExercise.exercise,
+          type: 'exercise',
+          stationName,
+          exerciseLetter,
+          isCurrentStation,
+          duration: nextExercise.duration
+        });
+      }
+
+      itemsAdded++;
+    }
+
+    return preview;
+  };
+
+  const nextExercisePreview = getNextExercisePreview();
 
   // Get equipment info for current exercise
   const getEquipmentInfo = (equipmentId: string): Equipment | undefined => {
@@ -142,11 +344,71 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
     .map(id => getEquipmentInfo(id))
     .filter(Boolean) || [];
 
+  // Calculate remaining exercise and rest time
+  const getRemainingTimes = () => {
+    let remainingExerciseTime = 0;
+    let remainingRestTime = 0;
+
+    // Add current phase time
+    if (activeWorkout.phase === 'work') {
+      remainingExerciseTime += activeWorkout.timeRemaining;
+    } else if (activeWorkout.phase === 'rest') {
+      remainingRestTime += activeWorkout.timeRemaining;
+    }
+
+    // Add time for remaining exercises
+    for (let i = activeWorkout.currentExerciseIndex + (activeWorkout.phase === 'work' ? 1 : 0); i < workout.exercises.length; i++) {
+      const exercise = workout.exercises[i];
+      remainingExerciseTime += exercise.duration;
+      if (i < workout.exercises.length - 1) { // No rest after last exercise
+        remainingRestTime += exercise.restDuration;
+      }
+    }
+
+    // Add station rest time if applicable
+    if (circuitInfo && circuitInfo.stationRestTime) {
+      // Calculate remaining station transitions
+      const totalExercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+      const currentRound = Math.floor(activeWorkout.currentExerciseIndex / totalExercisesPerRound) + 1;
+      const indexInRound = activeWorkout.currentExerciseIndex % totalExercisesPerRound;
+
+      // Find current station
+      let currentStationIndex = 0;
+      let exercisesSoFar = 0;
+      for (let i = 0; i < circuitInfo.stations.length; i++) {
+        if (indexInRound < exercisesSoFar + circuitInfo.stations[i].exercises.length) {
+          currentStationIndex = i;
+          break;
+        }
+        exercisesSoFar += circuitInfo.stations[i].exercises.length;
+      }
+
+      // Count remaining station transitions in current round
+      const remainingStationsInRound = circuitInfo.stations.length - currentStationIndex - 1;
+      // Plus transitions in remaining rounds
+      const remainingRounds = circuitInfo.rounds - currentRound;
+      const remainingStationTransitions = remainingStationsInRound + (remainingRounds * (circuitInfo.stations.length - 1));
+
+      if (remainingStationTransitions > 0) {
+        remainingRestTime += remainingStationTransitions * circuitInfo.stationRestTime;
+      }
+    }
+
+    return { remainingExerciseTime, remainingRestTime };
+  };
+
+  const remainingTimes = getRemainingTimes();
+
   // Format time display
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const formatTimeMinutes = (seconds: number) => {
+    const mins = Math.round(seconds / 60);
+    return `${mins}min`;
   };
 
   // Phase colors
@@ -204,58 +466,122 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
         <p style={{ color: '#b8bcc8', fontSize: '1.125rem', marginBottom: '2rem' }}>
           Great job! You completed {workout.exercises.length} exercises in {Math.round(workout.totalDuration / 60)} minutes.
         </p>
+
+        {/* Countdown and Back Button */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1rem'
+        }}>
+          <div style={{
+            background: 'rgba(255, 71, 87, 0.1)',
+            border: '2px solid #ff4757',
+            borderRadius: '8px',
+            padding: '0.75rem 1.5rem',
+            fontSize: '0.875rem',
+            color: '#ff4757',
+            fontWeight: '600'
+          }}>
+            Returning to setup in {completionCountdown} seconds
+          </div>
+
+          <button
+            onClick={onComplete}
+            style={{
+              background: 'linear-gradient(135deg, #2ed573 0%, #20bf6b 100%)',
+              color: 'black',
+              border: 'none',
+              borderRadius: '12px',
+              padding: '0.75rem 2rem',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 12H5m7-7l-7 7 7 7" />
+            </svg>
+            Back to Setup
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: `linear-gradient(135deg, ${getPhaseBackground()}, #0a0a0b)`,
-      color: 'white',
-      display: 'flex',
-      flexDirection: 'column'
-    }}>
-      {/* Header */}
+    <>
+      <style>
+        {`
+          .exercise-description-scroll::-webkit-scrollbar {
+            display: none;
+          }
+          .exercise-description-scroll {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+          }
+        `}
+      </style>
       <div style={{
-        padding: '1.5rem',
-        borderBottom: '2px solid #2a2a2f',
+        height: '100vh',
+        minHeight: '100vh',
+        background: `linear-gradient(135deg, ${getPhaseBackground()}, #0a0a0b)`,
+        color: 'white',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}>
+      {/* Compact Header */}
+      <div style={{
+        padding: '0.75rem 1rem',
+        borderBottom: '1px solid #2a2a2f',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '0.5rem',
+        flexShrink: 0
       }}>
         <button
           onClick={onExit}
           style={{
             background: 'transparent',
             border: '1px solid #3a3a40',
-            borderRadius: '8px',
+            borderRadius: '6px',
             color: '#b8bcc8',
-            fontSize: '0.875rem',
-            padding: '0.5rem 1rem',
+            fontSize: '0.75rem',
+            padding: '0.375rem 0.75rem',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem'
+            gap: '0.375rem'
           }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5m7-7l-7 7 7 7" />
           </svg>
           Exit
         </button>
 
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ color: '#b8bcc8', fontSize: '0.875rem', marginBottom: '0.25rem' }}>
-            Exercise {activeWorkout.currentExerciseIndex + 1} of {workout.exercises.length}
-          </div>
+        <div style={{ textAlign: 'center', flex: 1 }}>
           <div style={{
             background: '#131315',
-            borderRadius: '20px',
-            padding: '0.5rem 1rem',
-            border: '2px solid #2a2a2f'
+            borderRadius: '16px',
+            padding: '0.375rem 0.75rem',
+            border: '2px solid #2a2a2f',
+            display: 'inline-block'
           }}>
-            <span style={{ color: getPhaseColor(), fontWeight: 'bold', textTransform: 'uppercase', fontSize: '0.875rem' }}>
+            <span style={{ color: getPhaseColor(), fontWeight: 'bold', textTransform: 'uppercase', fontSize: '0.75rem' }}>
               {activeWorkout.phase}
             </span>
           </div>
@@ -263,22 +589,30 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
 
         <div style={{
           background: '#131315',
-          borderRadius: '8px',
-          padding: '0.5rem 1rem',
-          border: '2px solid #2a2a2f'
+          borderRadius: '6px',
+          padding: '0.375rem 0.5rem',
+          border: '1px solid #2a2a2f',
+          fontSize: '0.625rem',
+          color: '#b8bcc8',
+          textAlign: 'center',
+          minWidth: '60px'
         }}>
-          <div style={{ fontSize: '0.75rem', color: '#6c7293', marginBottom: '0.125rem' }}>Progress</div>
-          <div style={{ fontSize: '0.875rem', color: 'white', fontWeight: 'bold' }}>
-            {Math.round(progress)}%
+          <div style={{ color: 'white', fontWeight: 'bold' }}>
+            {circuitContext ?
+              `${circuitContext.round}/${circuitContext.totalRounds}` :
+              `${Math.round(progress)}%`
+            }
           </div>
+          <div>{circuitContext ? 'Round' : 'Done'}</div>
         </div>
       </div>
 
       {/* Progress Bar */}
       <div style={{
-        height: '8px',
+        height: '6px',
         background: '#131315',
-        position: 'relative'
+        position: 'relative',
+        flexShrink: 0
       }}>
         <div style={{
           height: '100%',
@@ -295,138 +629,78 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem',
-        textAlign: 'center'
+        padding: '0.5rem 1rem',
+        textAlign: 'center',
+        minHeight: 0,
+        overflow: 'auto'
       }}>
+        {/* Remaining Time Display */}
+        <div style={{
+          display: 'flex',
+          gap: '0.5rem',
+          justifyContent: 'center',
+          fontSize: '0.625rem',
+          color: '#b8bcc8',
+          marginBottom: '0.5rem',
+          flexShrink: 0
+        }}>
+          <div style={{
+            background: 'rgba(46, 213, 115, 0.1)',
+            border: '1px solid #2ed573',
+            borderRadius: '6px',
+            padding: '0.375rem 0.5rem',
+            textAlign: 'center',
+            minWidth: '60px'
+          }}>
+            <div style={{ color: '#2ed573', fontWeight: 'bold', marginBottom: '0.125rem', fontSize: '0.625rem' }}>
+              Work
+            </div>
+            <div style={{ color: 'white', fontSize: '0.75rem', fontWeight: 'bold' }}>
+              {formatTimeMinutes(remainingTimes.remainingExerciseTime)}
+            </div>
+          </div>
+          <div style={{
+            background: 'rgba(255, 71, 87, 0.1)',
+            border: '1px solid #ff4757',
+            borderRadius: '6px',
+            padding: '0.375rem 0.5rem',
+            textAlign: 'center',
+            minWidth: '60px'
+          }}>
+            <div style={{ color: '#ff4757', fontWeight: 'bold', marginBottom: '0.125rem', fontSize: '0.625rem' }}>
+              Rest
+            </div>
+            <div style={{ color: 'white', fontSize: '0.75rem', fontWeight: 'bold' }}>
+              {formatTimeMinutes(remainingTimes.remainingRestTime)}
+            </div>
+          </div>
+        </div>
+
         {/* Timer Display */}
         <div style={{
-          fontSize: '6rem',
+          fontSize: 'clamp(3rem, 12vw, 5rem)',
           fontWeight: 'bold',
           color: getPhaseColor(),
-          marginBottom: '1rem',
+          marginBottom: '0.75rem',
           fontFamily: 'monospace',
           lineHeight: 1,
-          textShadow: `0 0 30px ${getPhaseColor()}40`
+          textShadow: `0 0 30px ${getPhaseColor()}40`,
+          flexShrink: 0
         }}>
           {formatTime(activeWorkout.timeRemaining)}
         </div>
 
-        {/* Current Exercise */}
-        {currentExercise && (
-          <div style={{
-            background: '#131315',
-            border: '2px solid #2a2a2f',
-            borderRadius: '16px',
-            padding: '2rem',
-            maxWidth: '600px',
-            width: '100%',
-            marginBottom: '2rem'
-          }}>
-            <h2 style={{
-              color: 'white',
-              fontSize: '2rem',
-              marginBottom: '1rem',
-              fontWeight: 'bold'
-            }}>
-              {activeWorkout.phase === 'prepare' ? 'Get Ready!' :
-               activeWorkout.phase === 'rest' ? 'Rest Time' :
-               currentExercise.name}
-            </h2>
-
-            {activeWorkout.phase === 'work' && (
-              <div>
-                <p style={{
-                  color: '#b8bcc8',
-                  fontSize: '1.125rem',
-                  lineHeight: 1.6,
-                  marginBottom: '1.5rem'
-                }}>
-                  {currentExercise.instructions}
-                </p>
-
-                {/* Equipment Required */}
-                {currentExerciseEquipment.length > 0 && (
-                  <div style={{ marginBottom: '0.5rem' }}>
-                    <div style={{
-                      color: '#ff4757',
-                      fontSize: '0.875rem',
-                      fontWeight: '600',
-                      marginBottom: '0.75rem',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px'
-                    }}>
-                      Equipment Needed:
-                    </div>
-
-                    <div style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '0.5rem',
-                      justifyContent: 'center'
-                    }}>
-                      {currentExerciseEquipment.map(equipment => {
-                        if (!equipment) return null;
-
-                        return (
-                          <div
-                            key={equipment.id}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.5rem',
-                              background: equipment.isRequired
-                                ? 'rgba(46, 213, 115, 0.2)'
-                                : 'rgba(255, 71, 87, 0.2)',
-                              border: `2px solid ${equipment.isRequired ? '#2ed573' : '#ff4757'}`,
-                              borderRadius: '12px',
-                              padding: '0.5rem 0.75rem',
-                              fontSize: '0.875rem',
-                              color: 'white',
-                              fontWeight: '500'
-                            }}
-                          >
-                            <img
-                              src={equipment.svgUrl}
-                              alt={equipment.name}
-                              style={{
-                                width: '20px',
-                                height: '20px',
-                                borderRadius: '4px',
-                                objectFit: 'cover'
-                              }}
-                            />
-                            <span>{equipment.name}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeWorkout.phase === 'rest' && (
-              <div>
-                <p style={{ color: '#b8bcc8', marginBottom: '1rem' }}>Take a breather! Next up:</p>
-                <p style={{ color: '#ff4757', fontSize: '1.25rem', fontWeight: 'bold' }}>
-                  {workout.exercises[activeWorkout.currentExerciseIndex + 1]?.exercise?.name || 'Workout Complete!'}
-                </p>
-              </div>
-            )}
-
-            {activeWorkout.phase === 'prepare' && (
-              <p style={{ color: '#b8bcc8', fontSize: '1.125rem' }}>
-                {currentExercise.name} - {currentExercise.instructions}
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Controls */}
+        {/* Control Buttons - Fixed Position */}
         <div style={{
           display: 'flex',
-          gap: '1rem',
-          alignItems: 'center'
+          gap: '0.5rem',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          maxWidth: '350px',
+          width: '100%',
+          marginBottom: '0.75rem',
+          flexShrink: 0
         }}>
           {!activeWorkout.isActive ? (
             <button
@@ -435,20 +709,23 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
                 background: 'linear-gradient(135deg, #2ed573 0%, #20bf6b 100%)',
                 color: 'black',
                 border: 'none',
-                borderRadius: '12px',
-                padding: '1rem 2rem',
-                fontSize: '1.25rem',
+                borderRadius: '8px',
+                padding: '0.75rem 1.5rem',
+                fontSize: '1rem',
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                flex: 1,
+                justifyContent: 'center',
+                minWidth: '140px'
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="5,3 19,12 5,21" />
               </svg>
-              Start Workout
+              Start
             </button>
           ) : (
             <>
@@ -460,26 +737,29 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
                     'linear-gradient(135deg, #feca57 0%, #ff9f43 100%)',
                   color: 'black',
                   border: 'none',
-                  borderRadius: '12px',
-                  padding: '1rem 2rem',
-                  fontSize: '1.125rem',
+                  borderRadius: '8px',
+                  padding: '0.75rem 1rem',
+                  fontSize: '0.875rem',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem'
+                  gap: '0.375rem',
+                  flex: 1,
+                  justifyContent: 'center',
+                  minWidth: '80px'
                 }}
               >
                 {activeWorkout.isPaused ? (
                   <>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="5,3 19,12 5,21" />
                     </svg>
                     Resume
                   </>
                 ) : (
                   <>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                       <rect x="6" y="4" width="4" height="16" />
                       <rect x="14" y="4" width="4" height="16" />
                     </svg>
@@ -493,22 +773,22 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
                 style={{
                   background: 'transparent',
                   color: '#ff4757',
-                  border: '2px solid #ff4757',
-                  borderRadius: '12px',
-                  padding: '1rem 1.5rem',
-                  fontSize: '1rem',
+                  border: '1px solid #ff4757',
+                  borderRadius: '8px',
+                  padding: '0.75rem',
+                  fontSize: '0.875rem',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem'
+                  justifyContent: 'center',
+                  minWidth: '60px'
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polygon points="5,4 15,12 5,20" />
                   <line x1="19" y1="5" x2="19" y2="19" />
                 </svg>
-                Skip
               </button>
 
               <button
@@ -516,26 +796,179 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
                 style={{
                   background: 'transparent',
                   color: '#6c7293',
-                  border: '2px solid #3a3a40',
-                  borderRadius: '12px',
-                  padding: '1rem 1.5rem',
-                  fontSize: '1rem',
+                  border: '1px solid #3a3a40',
+                  borderRadius: '8px',
+                  padding: '0.75rem',
+                  fontSize: '0.875rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem'
+                  justifyContent: 'center',
+                  minWidth: '60px'
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                   <rect x="6" y="6" width="12" height="12" />
                 </svg>
-                Stop
               </button>
             </>
           )}
         </div>
+
+        {/* Current Exercise - Fixed Height */}
+        {currentExercise && (
+          <div style={{
+            background: '#131315',
+            border: '1px solid #2a2a2f',
+            borderRadius: '12px',
+            padding: '1.5rem',
+            maxWidth: '400px',
+            width: '100%',
+            height: '160px', // Reduced for iPhone SE compatibility
+            marginBottom: '1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden'
+          }}>
+            <h2 style={{
+              color: 'white',
+              fontSize: '1.5rem',
+              marginBottom: '0.75rem',
+              fontWeight: 'bold'
+            }}>
+              {activeWorkout.phase === 'prepare' ? `Get Ready: ${currentExercise?.name || 'Loading...'}` :
+               activeWorkout.phase === 'rest' ? 'Rest Time' :
+               currentExercise?.name || 'Loading...'}
+            </h2>
+
+            {/* Circuit Info - Compact */}
+            {circuitContext && activeWorkout.phase === 'work' && (
+              <div style={{
+                color: '#ff4757',
+                fontSize: '0.75rem',
+                marginBottom: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                {circuitContext.station.name} - Exercise {circuitContext.exerciseLetter}
+              </div>
+            )}
+
+            <div
+              className="exercise-description-scroll"
+              style={{
+                flex: 1,
+                overflow: 'auto', // Allow scrolling
+                minHeight: 0
+              }}>
+              {activeWorkout.phase === 'work' && (
+                <p style={{
+                  color: '#b8bcc8',
+                  fontSize: '0.875rem',
+                  lineHeight: 1.4,
+                  margin: 0
+                }}>
+                  {currentExercise.instructions}
+                </p>
+              )}
+
+              {activeWorkout.phase === 'rest' && (
+                <div>
+                  <p style={{ color: '#ff4757', fontSize: '1rem', fontWeight: 'bold', margin: '0 0 0.75rem 0' }}>
+                    Next: {workout.exercises[activeWorkout.currentExerciseIndex + 1]?.exercise?.name || 'Complete!'}
+                  </p>
+                  {workout.exercises[activeWorkout.currentExerciseIndex + 1]?.exercise?.instructions && (
+                    <p style={{
+                      color: '#b8bcc8',
+                      fontSize: '0.875rem',
+                      lineHeight: 1.4,
+                      margin: 0
+                    }}>
+                      {workout.exercises[activeWorkout.currentExerciseIndex + 1].exercise.instructions}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {activeWorkout.phase === 'prepare' && (
+                <p style={{ color: '#b8bcc8', fontSize: '0.875rem', margin: 0 }}>
+                  {currentExercise.instructions}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Compact Next Preview - Fixed Height */}
+        <div style={{
+          background: '#131315',
+          border: '1px solid #2a2a2f',
+          borderRadius: '8px',
+          padding: '0.375rem',
+          maxWidth: '400px',
+          width: '100%',
+          height: '80px', // Reduced for iPhone SE
+          marginBottom: '0.5rem',
+          overflow: 'hidden',
+          flexShrink: 0
+        }}>
+          <div style={{
+            color: '#ff4757',
+            fontSize: '0.5rem',
+            marginBottom: '0.25rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            textAlign: 'center'
+          }}>
+            Coming Up
+          </div>
+
+          {nextExercisePreview.slice(0, 2).map((item, index) => {
+            const isRest = item.type === 'rest' || item.type === 'station-rest';
+
+            return (
+              <div
+                key={index}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0.25rem 0.375rem',
+                  background: isRest ? 'rgba(255, 71, 87, 0.1)' : 'rgba(46, 213, 115, 0.1)',
+                  border: `1px solid ${isRest ? '#ff4757' : '#2ed573'}`,
+                  borderRadius: '4px',
+                  marginBottom: index < 1 ? '0.25rem' : '0',
+                  opacity: index === 0 ? 1 : 0.7
+                }}
+              >
+                <div style={{
+                  color: 'white',
+                  fontSize: '0.625rem',
+                  fontWeight: '500',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  flex: 1
+                }}>
+                  {isRest ? '🛌 Rest' : item.exercise.name}
+                </div>
+
+                <div style={{
+                  fontSize: '0.625rem',
+                  color: '#6c7293',
+                  fontWeight: '500',
+                  marginLeft: '0.5rem'
+                }}>
+                  {item.duration ? `${item.duration}s` : '0s'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
