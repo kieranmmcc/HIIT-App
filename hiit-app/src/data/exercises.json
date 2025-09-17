@@ -1,0 +1,1352 @@
+[
+  {
+    "id": 1,
+    "name": "Explosive Burpees",
+    "instructions": "Perform a standard burpee, but explode into a high tuck jump at the top.",
+    "muscleGroups": ["full_body", "legs", "chest", "core"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 2,
+    "name": "Plyometric Lunges",
+    "instructions": "Start in a lunge position and explosively jump, switching your front and back legs in mid-air.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 3,
+    "name": "Broad Jump to Bear Crawl",
+    "instructions": "Perform a maximal broad jump forward, then immediately drop into a bear crawl and crawl backwards to the start.",
+    "muscleGroups": ["full_body", "legs", "shoulders", "core"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 4,
+    "name": "180 Degree Squat Jumps",
+    "instructions": "Drop into a squat and jump explosively, rotating 180 degrees in the air. Land softly and immediately squat and jump back.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 5,
+    "name": "Plank-to-Pike Jumps",
+    "instructions": "From a high plank, jump your feet forward towards your hands into a pike position, then jump back to plank.",
+    "muscleGroups": ["core", "shoulders", "legs"],
+    "primaryMuscle": "core",
+    "difficulty": 3,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 6,
+    "name": "Breakdancer Planks",
+    "instructions": "From a plank, kick one leg through and across your body, rotating your hips and touching your opposite hand.",
+    "muscleGroups": ["core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 7,
+    "name": "Mountain Climber Burpees",
+    "instructions": "Perform a burpee, but at the bottom in the plank position, perform 4 quick mountain climbers before jumping up.",
+    "muscleGroups": ["full_body", "core", "legs", "chest"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 8,
+    "name": "Tuck Jump Push-ups",
+    "instructions": "Perform a push-up, then jump your feet in and explode into a high tuck jump.",
+    "muscleGroups": ["full_body", "chest", "legs", "arms"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 9,
+    "name": "Skater Hops",
+    "instructions": "Bound from side to side, landing on one foot and sweeping the other leg behind you for balance. Stay low and explosive.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 2,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 10,
+    "name": "Fast Feet Sprints",
+    "instructions": "Stay on the balls of your feet and move them as quickly as possible in place, like a football drill.",
+    "muscleGroups": ["legs", "full_body"],
+    "primaryMuscle": "legs",
+    "difficulty": 2,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 11,
+    "name": "Donkey Kicks",
+    "instructions": "From a crouched position, kick both feet up into the air explosively, trying to get your hips over your shoulders.",
+    "muscleGroups": ["shoulders", "core", "glutes"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 4,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 12,
+    "name": "Heisman Shuffles",
+    "instructions": "Shuffle two steps to one side and bring your inside knee up high, then repeat on the other side. Stay quick and agile.",
+    "muscleGroups": ["legs", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 2,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 13,
+    "name": "Sprawl to Sprawl",
+    "instructions": "From standing, quickly drop your hips and kick your legs back into a plank (a sprawl), then immediately jump back up.",
+    "muscleGroups": ["full_body", "core", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 3,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 14,
+    "name": "Power Skips",
+    "instructions": "Perform high skips, focusing on driving your knee up and getting as much height as possible with each skip.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 2,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 15,
+    "name": "Lateral High Knees",
+    "instructions": "Perform high knees while moving laterally for 3-4 steps, then switch direction.",
+    "muscleGroups": ["legs", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 16,
+    "name": "Inchworm Push-ups",
+    "instructions": "From standing, walk your hands out to a plank, perform a push-up, then walk your feet in towards your hands and stand up.",
+    "muscleGroups": ["full_body", "shoulders", "chest", "core"],
+    "primaryMuscle": "full_body",
+    "difficulty": 3,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 17,
+    "name": "Pike Push-ups",
+    "instructions": "From a downward dog position, lower your head towards the floor by bending your elbows, keeping your hips high.",
+    "muscleGroups": ["shoulders", "arms", "core"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 4,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 18,
+    "name": "Diamond Push-up Burpees",
+    "instructions": "Perform a burpee, but use a diamond hand position for the push-up to target your triceps.",
+    "muscleGroups": ["full_body", "arms", "chest"],
+    "primaryMuscle": "arms",
+    "difficulty": 5,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 19,
+    "name": "Crab Toe Touches",
+    "instructions": "In a crab walk position, lift one hand and the opposite foot simultaneously and touch them in the middle.",
+    "muscleGroups": ["core", "shoulders", "glutes"],
+    "primaryMuscle": "core",
+    "difficulty": 3,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 20,
+    "name": "Star Jumps",
+    "instructions": "From a crouch, explode upwards, extending your arms and legs out into a star shape in mid-air.",
+    "muscleGroups": ["full_body", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 3,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": 21,
+    "name": "Bench Burpees",
+    "instructions": "Place hands on the bench, jump feet back to plank, perform a push-up on the bench, jump feet in and jump up.",
+    "muscleGroups": ["full_body", "chest", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 22,
+    "name": "Bench Jump Overs",
+    "instructions": "Stand to one side of the bench, place hands on it, and jump with both feet over to the other side. Move continuously.",
+    "muscleGroups": ["full_body", "legs", "shoulders", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 23,
+    "name": "Decline Push-ups",
+    "instructions": "Place your feet on the bench and hands on the floor. Perform push-ups to target your upper chest and shoulders.",
+    "muscleGroups": ["chest", "shoulders", "arms"],
+    "primaryMuscle": "chest",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 24,
+    "name": "Incline Mountain Climbers",
+    "instructions": "Place your hands on the bench and your feet on the floor. Drive your knees towards your chest as fast as possible.",
+    "muscleGroups": ["core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 2,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 25,
+    "name": "Bench Step-ups with Knee Drive",
+    "instructions": "Step one foot onto the bench and drive the opposite knee up high explosively. Alternate legs.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 26,
+    "name": "Single Leg Bench Squats (Pistol Squat Assist)",
+    "instructions": "Stand on one leg facing away from the bench. Squat down until your glutes tap the bench, then drive back up.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 27,
+    "name": "Bench Pike Push-ups",
+    "instructions": "Place your feet on the bench and walk your hands in, keeping hips high in a pike. Lower your head towards the floor.",
+    "muscleGroups": ["shoulders", "arms", "core"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 5,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 28,
+    "name": "Bench Dips",
+    "instructions": "Place hands on the edge of the bench, fingers forward. Lower your body down until your elbows are at 90 degrees.",
+    "muscleGroups": ["arms", "shoulders"],
+    "primaryMuscle": "arms",
+    "difficulty": 2,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 29,
+    "name": "Lateral Bench Jumps",
+    "instructions": "Stand beside the bench and jump laterally onto the bench and then down to the other side. Repeat back and forth.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 30,
+    "name": "Bench Bulgarian Split Squats",
+    "instructions": "Place the top of one foot on the bench behind you. Lunge down on your front leg until your thigh is parallel to the floor.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "glutes",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 31,
+    "name": "Bench Single-Leg Hip Thrusts",
+    "instructions": "Lie with your upper back on the bench, one foot on the floor and the other leg extended. Drive your hips up towards the ceiling.",
+    "muscleGroups": ["glutes", "legs"],
+    "primaryMuscle": "glutes",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 32,
+    "name": "Bench Plank Up-Downs",
+    "instructions": "Start in a plank with your forearms on the bench. Push up one hand at a time to a high plank, then lower back down.",
+    "muscleGroups": ["core", "shoulders", "arms"],
+    "primaryMuscle": "core",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 33,
+    "name": "Bench Bear Crawls",
+    "instructions": "Place hands on the bench and crawl your feet up towards it, then crawl back down to a plank. Maintain a flat back.",
+    "muscleGroups": ["core", "shoulders", "full_body"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 34,
+    "name": "Bench Jump Squats",
+    "instructions": "Stand in front of the bench, squat down and tap the bench with your glutes, then explode up into a high jump.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 35,
+    "name": "Bench Reverse Lunges",
+    "instructions": "Stand on the bench. Step one foot back and down into a lunge, tapping the floor, then drive back up to standing on the bench.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 36,
+    "name": "Incline Push-up to T-Rotation",
+    "instructions": "Perform a push-up with hands on the bench, then at the top, rotate your body and extend one arm to the ceiling.",
+    "muscleGroups": ["chest", "shoulders", "core"],
+    "primaryMuscle": "chest",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 37,
+    "name": "Decline Mountain Climber Twists",
+    "instructions": "With feet on the bench, perform mountain climbers, but bring your knee towards the opposite elbow.",
+    "muscleGroups": ["core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 38,
+    "name": "Bench Box Jumps",
+    "instructions": "Stand facing the bench and perform a box jump, landing softly on top. Step or jump down safely.",
+    "muscleGroups": ["legs", "glutes", "full_body"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 39,
+    "name": "Bench Tricep Dip to Knee Tuck",
+    "instructions": "Perform a bench dip, and as you push up, bring both knees into your chest for a tuck.",
+    "muscleGroups": ["arms", "core", "shoulders"],
+    "primaryMuscle": "arms",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 40,
+    "name": "Elevated Side Plank Hip Dips",
+    "instructions": "Place your top foot on the bench in a side plank position. Dip your bottom hip towards the floor and raise it back up.",
+    "muscleGroups": ["core"],
+    "primaryMuscle": "core",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 41,
+    "name": "Bench Supported Jump Lunges",
+    "instructions": "Place one hand on the bench for balance and perform explosive plyometric lunges, switching legs mid-air.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 42,
+    "name": "Decline Plank Jacks",
+    "instructions": "With your feet on the bench in a plank, jump your feet apart and back together like a horizontal jumping jack.",
+    "muscleGroups": ["core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 43,
+    "name": "Bench Lateral Step-Over",
+    "instructions": "Stand beside the bench, step up laterally with your inside foot, bring the other foot to tap, and step down on the other side.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 2,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 44,
+    "name": "Incline Burpee",
+    "instructions": "A variation of the bench burpee; jump feet back, then jump feet wide outside the bench, and jump up.",
+    "muscleGroups": ["full_body", "chest", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 45,
+    "name": "Bench Supported Single Leg Deadlifts",
+    "instructions": "Stand on one leg, holding the bench with one hand for support. Hinge at the hips, keeping your back straight.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "glutes",
+    "difficulty": 2,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 46,
+    "name": "Decline Spider-Man Push-ups",
+    "instructions": "With feet on the bench, perform a push-up while bringing one knee to the outside of your elbow.",
+    "muscleGroups": ["chest", "core", "shoulders"],
+    "primaryMuscle": "chest",
+    "difficulty": 5,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 47,
+    "name": "Bench Plank to Squat Jump",
+    "instructions": "Start in a plank with hands on the bench. Jump your feet in towards the bench and explode into a squat jump.",
+    "muscleGroups": ["full_body", "legs", "core"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 48,
+    "name": "Bench Supported Calf Raise Jumps",
+    "instructions": "Stand on the bench with heels off the edge. Perform a calf raise then immediately jump up for height.",
+    "muscleGroups": ["legs"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 49,
+    "name": "Bench Reverse Plank Pulses",
+    "instructions": "Sit on the floor with hands on the bench behind you. Lift hips into a reverse plank and perform small pulses.",
+    "muscleGroups": ["glutes", "core", "shoulders"],
+    "primaryMuscle": "glutes",
+    "difficulty": 2,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 50,
+    "name": "Decline Burpees",
+    "instructions": "Start with feet on the bench. Jump down, perform a push-up on the floor, then jump feet back onto the bench.",
+    "muscleGroups": ["full_body", "chest", "shoulders"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 51,
+    "name": "Bench Jump Squats with Rotation",
+    "instructions": "Perform a bench jump squat, but add a 90-degree rotation in the air. Alternate direction.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 52,
+    "name": "Elevated Push-up to Knee Tuck",
+    "instructions": "With hands on the bench, do a push-up. At the top, jump both knees in towards your chest, then back to plank.",
+    "muscleGroups": ["chest", "core", "shoulders"],
+    "primaryMuscle": "chest",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 53,
+    "name": "Bench Lateral Bounds",
+    "instructions": "Stand on the bench. Jump laterally off to one side, landing softly, then immediately jump back on and to the other side.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 54,
+    "name": "Incline Pike Walks",
+    "instructions": "With feet on the floor and hands on the bench, walk your feet in as close as possible to a handstand position, then walk back out.",
+    "muscleGroups": ["shoulders", "core"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 3,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 55,
+    "name": "Decline Bear Crawls",
+    "instructions": "With feet on the bench and hands on the floor, crawl side to side, keeping your knees bent and close to the ground.",
+    "muscleGroups": ["core", "shoulders", "full_body"],
+    "primaryMuscle": "core",
+    "difficulty": 5,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 56,
+    "name": "Bench Crawl-Unders",
+    "instructions": "Crawl or roll under the bench from one side to the other, then pop up and jump over the bench to return to the start.",
+    "muscleGroups": ["full_body", "core", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["weight_bench"]
+  },
+  {
+    "id": 57,
+    "name": "Dumbbell Bench Press Burpee",
+    "instructions": "Holding dumbbells, perform a chest press on the bench. At the top, jump feet to the floor, do a renegade row, then jump back up.",
+    "muscleGroups": ["full_body", "chest", "back", "core"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 58,
+    "name": "Incline Dumbbell Thrusters",
+    "instructions": "Sit on an inclined bench holding dumbbells at your shoulders. Press them overhead as you stand up explosively.",
+    "muscleGroups": ["shoulders", "legs", "full_body"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 4,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 59,
+    "name": "Single-Arm Bench Row to Stand",
+    "instructions": "Place one knee and hand on the bench. Perform a single-arm row, then stand up explosively. Alternate sides.",
+    "muscleGroups": ["back", "legs", "core"],
+    "primaryMuscle": "back",
+    "difficulty": 3,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 60,
+    "name": "Dumbbell Bench Step-ups",
+    "instructions": "Hold dumbbells at your sides or on your shoulders. Step up onto the bench, driving through your heel.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 61,
+    "name": "Dumbbell Bench Chest Fly to Tuck Jump",
+    "instructions": "Perform a dumbbell chest fly on the bench. As you bring the weights together, sit up, drop the weights, and do a tuck jump.",
+    "muscleGroups": ["chest", "core", "legs", "full_body"],
+    "primaryMuscle": "chest",
+    "difficulty": 5,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 62,
+    "name": "Dumbbell Bench Pullover to Crunch",
+    "instructions": "Lie on the bench holding one dumbbell with both hands. Lower it behind your head, then pull it over your chest as you crunch up.",
+    "muscleGroups": ["back", "chest", "core", "arms"],
+    "primaryMuscle": "back",
+    "difficulty": 3,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 63,
+    "name": "Alternating Dumbbell Bench Press",
+    "instructions": "Lie on the bench with two dumbbells. Press one up as you lower the other, maintaining a rapid, alternating pace.",
+    "muscleGroups": ["chest", "shoulders", "arms"],
+    "primaryMuscle": "chest",
+    "difficulty": 3,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 64,
+    "name": "Bench Dumbbell Renegade Rows",
+    "instructions": "Place dumbbells on the bench. Get into a plank with hands on the dumbbells and perform alternating rows.",
+    "muscleGroups": ["back", "core", "shoulders"],
+    "primaryMuscle": "back",
+    "difficulty": 4,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 65,
+    "name": "Decline Dumbbell Chest Press",
+    "instructions": "Lie on a decline bench. Press the dumbbells up from your chest until your arms are fully extended.",
+    "muscleGroups": ["chest", "arms"],
+    "primaryMuscle": "chest",
+    "difficulty": 4,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 66,
+    "name": "Dumbbell Bench Jump Overs",
+    "instructions": "Place a dumbbell on the floor. Stand beside the bench, jump over it, pick up the dumbbell, and jump back over.",
+    "muscleGroups": ["legs", "full_body"],
+    "primaryMuscle": "legs",
+    "difficulty": 5,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 67,
+    "name": "Incline Dumbbell Plank Rows",
+    "instructions": "With feet on the floor and one hand on an incline bench, row a dumbbell with the other arm. Keep your core tight.",
+    "muscleGroups": ["back", "core"],
+    "primaryMuscle": "back",
+    "difficulty": 3,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 68,
+    "name": "Dumbbell Bench Press to Leg Raise",
+    "instructions": "Perform a dumbbell bench press. At the top of the press, perform a leg raise, keeping your lower back on the bench.",
+    "muscleGroups": ["chest", "core", "arms"],
+    "primaryMuscle": "chest",
+    "difficulty": 4,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 69,
+    "name": "Incline Dumbbell Bicep Curls",
+    "instructions": "Sit on an incline bench and let your arms hang down. Curl the dumbbells up, squeezing your biceps.",
+    "muscleGroups": ["arms"],
+    "primaryMuscle": "arms",
+    "difficulty": 2,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 70,
+    "name": "Dumbbell Bench Bulgarian Lunges",
+    "instructions": "Hold dumbbells and place one foot on the bench behind you. Perform a lunge on your front leg.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 71,
+    "name": "Incline Dumbbell Burpees",
+    "instructions": "Holding dumbbells, place them on an incline bench, jump back to plank, jump in, then stand and press the dumbbells overhead.",
+    "muscleGroups": ["full_body", "shoulders", "chest"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 72,
+    "name": "Decline Dumbbell Push-ups",
+    "instructions": "Place your feet on the bench and hands on dumbbells on the floor. Perform a push-up for an increased range of motion.",
+    "muscleGroups": ["chest", "shoulders"],
+    "primaryMuscle": "chest",
+    "difficulty": 4,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 73,
+    "name": "Dumbbell Bench Lateral Step-ups",
+    "instructions": "Hold a dumbbell on one shoulder. Step up laterally onto the bench with your inside leg.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 74,
+    "name": "Flat Dumbbell Bench Press",
+    "instructions": "Lie on a flat bench and press the dumbbells from your chest upwards until your arms are fully extended.",
+    "muscleGroups": ["chest", "arms", "shoulders"],
+    "primaryMuscle": "chest",
+    "difficulty": 3,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 75,
+    "name": "Incline Dumbbell Chest Press",
+    "instructions": "Lie on an incline bench and press the dumbbells from your upper chest upwards until your arms are fully extended.",
+    "muscleGroups": ["chest", "shoulders", "arms"],
+    "primaryMuscle": "chest",
+    "difficulty": 3,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 76,
+    "name": "Single Arm Dumbbell Bench Press",
+    "instructions": "Lie on the bench and press one dumbbell at a time, forcing your core to stabilize your body.",
+    "muscleGroups": ["chest", "core", "arms"],
+    "primaryMuscle": "chest",
+    "difficulty": 4,
+    "equipment": ["dumbbells", "weight_bench"]
+  },
+  {
+    "id": 77,
+    "name": "Plate Bench Press Burpee",
+    "instructions": "Hold a plate with both hands and perform a chest press on the bench. Jump off, place the plate down, do a burpee over it.",
+    "muscleGroups": ["full_body", "chest", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["weight_plates", "weight_bench"]
+  },
+  {
+    "id": 78,
+    "name": "Bench Plate Russian Twists",
+    "instructions": "Sit on the bench, lean back, and lift your feet. Twist your torso from side to side, tapping the plate on the bench.",
+    "muscleGroups": ["core"],
+    "primaryMuscle": "core",
+    "difficulty": 3,
+    "equipment": ["weight_plates", "weight_bench"]
+  },
+  {
+    "id": 79,
+    "name": "Incline Plate Push-ups",
+    "instructions": "Place hands on the edge of a weight plate on an incline bench. Perform push-ups with this unstable grip.",
+    "muscleGroups": ["chest", "core", "shoulders"],
+    "primaryMuscle": "chest",
+    "difficulty": 4,
+    "equipment": ["weight_plates", "weight_bench"]
+  },
+  {
+    "id": 80,
+    "name": "Decline Plate Mountain Climbers",
+    "instructions": "With feet on the bench and hands on a plate on the floor, perform fast mountain climbers.",
+    "muscleGroups": ["core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["weight_plates", "weight_bench"]
+  },
+  {
+    "id": 81,
+    "name": "Plate Bench Chest Press to Jump",
+    "instructions": "Perform a chest press with a plate on the bench, sit up, stand, and perform a squat jump while holding the plate.",
+    "muscleGroups": ["chest", "legs", "full_body"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["weight_plates", "weight_bench"]
+  },
+  {
+    "id": 82,
+    "name": "Plate Bench Step-ups",
+    "instructions": "Hold a weight plate at your chest and step up onto the bench. Alternate leading legs.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["weight_plates", "weight_bench"]
+  },
+  {
+    "id": 83,
+    "name": "Bench Plate Halos",
+    "instructions": "Sit on the bench and circle a weight plate around your head, engaging your core and shoulders.",
+    "muscleGroups": ["shoulders", "core"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 2,
+    "equipment": ["weight_plates", "weight_bench"]
+  },
+  {
+    "id": 84,
+    "name": "Bench Plate Slams",
+    "instructions": "Stand on the bench holding a plate overhead. Jump off, slam the plate on the ground, and jump back on the bench.",
+    "muscleGroups": ["full_body", "legs", "back"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["weight_plates", "weight_bench"]
+  },
+  {
+    "id": 85,
+    "name": "Kettlebell Bench Pistol Squats",
+    "instructions": "Hold a kettlebell at your chest (goblet style) and perform a single leg squat, tapping the bench at the bottom.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 5,
+    "equipment": ["kettlebell", "weight_bench"]
+  },
+  {
+    "id": 86,
+    "name": "Kettlebell Bench Press",
+    "instructions": "Lie on the bench and press two kettlebells up, focusing on stabilizing the offset weight.",
+    "muscleGroups": ["chest", "shoulders", "arms", "core"],
+    "primaryMuscle": "chest",
+    "difficulty": 4,
+    "equipment": ["kettlebell", "weight_bench"]
+  },
+  {
+    "id": 87,
+    "name": "Kettlebell Bench Step-up to Press",
+    "instructions": "Hold a kettlebell in one hand. Step onto the bench and press the kettlebell overhead at the top.",
+    "muscleGroups": ["legs", "shoulders", "full_body"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["kettlebell", "weight_bench"]
+  },
+  {
+    "id": 88,
+    "name": "Kettlebell Bench Dip to Swing",
+    "instructions": "Perform a bench dip. At the top, stand up, grab a kettlebell and perform one explosive swing.",
+    "muscleGroups": ["full_body", "arms", "glutes"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["kettlebell", "weight_bench"]
+  },
+  {
+    "id": 89,
+    "name": "Single Arm Kettlebell Bench Row",
+    "instructions": "Place one knee and hand on the bench for support and row a heavy kettlebell to your side.",
+    "muscleGroups": ["back", "core"],
+    "primaryMuscle": "back",
+    "difficulty": 3,
+    "equipment": ["kettlebell", "weight_bench"]
+  },
+  {
+    "id": 90,
+    "name": "Kettlebell Bulgarian Split Squat Pass-Through",
+    "instructions": "Get into a Bulgarian split squat position. Pass a kettlebell under your front leg from hand to hand.",
+    "muscleGroups": ["legs", "glutes", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["kettlebell", "weight_bench"]
+  },
+  {
+    "id": 91,
+    "name": "Kettlebell Bench Pullovers",
+    "instructions": "Lie with your upper back across the bench, holding a kettlebell by the horns. Lower it behind your head, then pull it back over.",
+    "muscleGroups": ["back", "chest"],
+    "primaryMuscle": "back",
+    "difficulty": 3,
+    "equipment": ["kettlebell", "weight_bench"]
+  },
+  {
+    "id": 92,
+    "name": "Kettlebell Bench Burpee Press",
+    "instructions": "Perform a burpee with hands on the bench. At the top, grab two kettlebells and press them overhead.",
+    "muscleGroups": ["full_body", "shoulders", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["kettlebell", "weight_bench"]
+  },
+  {
+    "id": 93,
+    "name": "Medicine Ball Bench Slams",
+    "instructions": "Stand on the bench, raise a medicine ball overhead, and slam it on the floor beside the bench.",
+    "muscleGroups": ["full_body", "core", "back"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["medicine_ball", "weight_bench"]
+  },
+  {
+    "id": 94,
+    "name": "Medicine Ball Decline Push-up",
+    "instructions": "Place feet on the bench and one hand on a medicine ball. Perform a push-up, then roll the ball to the other hand.",
+    "muscleGroups": ["chest", "core", "shoulders"],
+    "primaryMuscle": "chest",
+    "difficulty": 5,
+    "equipment": ["medicine_ball", "weight_bench"]
+  },
+  {
+    "id": 95,
+    "name": "Medicine Ball Bench V-Ups",
+    "instructions": "Lie on the bench holding a medicine ball. Simultaneously lift your legs and torso, passing the ball to your feet.",
+    "muscleGroups": ["core"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["medicine_ball", "weight_bench"]
+  },
+  {
+    "id": 96,
+    "name": "Medicine Ball Bench Jump Squats",
+    "instructions": "Hold a medicine ball at your chest. Squat to tap the bench, then explode up into a jump.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["medicine_ball", "weight_bench"]
+  },
+  {
+    "id": 97,
+    "name": "Medicine Ball Bench Burpee Toss",
+    "instructions": "Perform a burpee facing a wall, with hands on the bench. At the top, grab a medicine ball and throw it against the wall.",
+    "muscleGroups": ["full_body", "chest", "shoulders"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["medicine_ball", "weight_bench"]
+  },
+  {
+    "id": 98,
+    "name": "Medicine Ball Bench Twists",
+    "instructions": "Sit on the bench, lean back with feet up, and twist side to side, tapping the medicine ball on the bench.",
+    "muscleGroups": ["core"],
+    "primaryMuscle": "core",
+    "difficulty": 3,
+    "equipment": ["medicine_ball", "weight_bench"]
+  },
+  {
+    "id": 99,
+    "name": "Band-Resisted Bench Press",
+    "instructions": "Loop a resistance band around your back and hold it in your hands. Perform a fast-paced bench press against the band's tension.",
+    "muscleGroups": ["chest", "arms"],
+    "primaryMuscle": "chest",
+    "difficulty": 4,
+    "equipment": ["resistance_bands", "weight_bench"]
+  },
+  {
+    "id": 100,
+    "name": "Band-Resisted Bench Hip Thrust",
+    "instructions": "With upper back on the bench and a band around your thighs, drive your hips up, pushing your knees out against the band.",
+    "muscleGroups": ["glutes", "legs"],
+    "primaryMuscle": "glutes",
+    "difficulty": 3,
+    "equipment": ["resistance_bands", "weight_bench"]
+  },
+  {
+    "id": 101,
+    "name": "Band-Anchored Bench Sprints",
+    "instructions": "Anchor a band to a low point behind the bench. Loop it around your waist and perform high-knee sprints in place.",
+    "muscleGroups": ["legs", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["resistance_bands", "weight_bench"]
+  },
+  {
+    "id": 102,
+    "name": "Band-Resisted Incline Push-ups",
+    "instructions": "Loop a band across your back and place hands on the bench. Perform explosive push-ups against the band's resistance.",
+    "muscleGroups": ["chest", "shoulders", "arms"],
+    "primaryMuscle": "chest",
+    "difficulty": 3,
+    "equipment": ["resistance_bands", "weight_bench"]
+  },
+  {
+    "id": 103,
+    "name": "Band-Resisted Bench Dips",
+    "instructions": "Place a band across your lap and anchor it with your hands to add resistance to your bench dips.",
+    "muscleGroups": ["arms", "shoulders"],
+    "primaryMuscle": "arms",
+    "difficulty": 3,
+    "equipment": ["resistance_bands", "weight_bench"]
+  },
+  {
+    "id": 104,
+    "name": "Band Bench Pull-Aparts",
+    "instructions": "Lie on the bench and hold a band with both hands over your chest. Pull the band apart, squeezing your shoulder blades.",
+    "muscleGroups": ["back", "shoulders"],
+    "primaryMuscle": "back",
+    "difficulty": 2,
+    "equipment": ["resistance_bands", "weight_bench"]
+  },
+  {
+    "id": 105,
+    "name": "Dumbbell Thrusters",
+    "instructions": "Hold dumbbells at your shoulders. Squat down, and as you stand up, press the dumbbells explosively overhead.",
+    "muscleGroups": ["full_body", "legs", "shoulders"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["dumbbells"]
+  },
+  {
+    "id": 106,
+    "name": "Renegade Row Burpees",
+    "instructions": "With hands on dumbbells, perform a burpee. At the plank, do a renegade row on each side before jumping up.",
+    "muscleGroups": ["full_body", "back", "core"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["dumbbells"]
+  },
+  {
+    "id": 107,
+    "name": "Man Makers",
+    "instructions": "A complex movement: push-up on dumbbells, row each arm, jump feet in, squat clean, then press overhead.",
+    "muscleGroups": ["full_body", "back", "chest", "shoulders", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["dumbbells"]
+  },
+  {
+    "id": 108,
+    "name": "Resistance Band Squat Jumps",
+    "instructions": "Place a band around your thighs. Perform squat jumps, focusing on pushing your knees out against the band.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "glutes",
+    "difficulty": 3,
+    "equipment": ["resistance_bands"]
+  },
+  {
+    "id": 109,
+    "name": "Resistance Band Pull-Aparts",
+    "instructions": "Hold a band with both hands at shoulder height. Pull the band apart by squeezing your shoulder blades together.",
+    "muscleGroups": ["back", "shoulders"],
+    "primaryMuscle": "back",
+    "difficulty": 2,
+    "equipment": ["resistance_bands"]
+  },
+  {
+    "id": 110,
+    "name": "Kettlebell Swings",
+    "instructions": "Hinge at your hips and swing the kettlebell forward to chest height using the power from your glutes and hamstrings.",
+    "muscleGroups": ["glutes", "legs", "back", "core"],
+    "primaryMuscle": "glutes",
+    "difficulty": 3,
+    "equipment": ["kettlebell"]
+  },
+  {
+    "id": 111,
+    "name": "Kettlebell Goblet Squat to Press",
+    "instructions": "Hold a kettlebell at your chest. Perform a deep goblet squat, and as you stand, press the kettlebell overhead.",
+    "muscleGroups": ["legs", "glutes", "shoulders"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["kettlebell"]
+  },
+  {
+    "id": 112,
+    "name": "Kettlebell Halos",
+    "instructions": "Hold a kettlebell by the horns and circle it around your head, keeping your core tight and avoiding moving your head.",
+    "muscleGroups": ["shoulders", "core"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 2,
+    "equipment": ["kettlebell"]
+  },
+  {
+    "id": 113,
+    "name": "Medicine Ball Slams",
+    "instructions": "Lift a medicine ball overhead, rise onto your toes, and use your entire body to slam the ball into the ground.",
+    "muscleGroups": ["full_body", "back", "core"],
+    "primaryMuscle": "full_body",
+    "difficulty": 3,
+    "equipment": ["medicine_ball"]
+  },
+  {
+    "id": 114,
+    "name": "Medicine Ball Russian Twists",
+    "instructions": "Sit on the floor with knees bent and feet elevated. Twist your torso, tapping the ball on the floor on each side.",
+    "muscleGroups": ["core"],
+    "primaryMuscle": "core",
+    "difficulty": 3,
+    "equipment": ["medicine_ball"]
+  },
+  {
+    "id": 115,
+    "name": "Jump Rope High Knees",
+    "instructions": "While jumping rope, bring your knees up to hip level with each rotation. Keep it fast and consistent.",
+    "muscleGroups": ["legs", "cardio", "full_body"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["jump_rope"]
+  },
+  {
+    "id": 116,
+    "name": "Jump Rope Double Unders",
+    "instructions": "Allow the rope to pass under your feet twice for every single jump. This requires an explosive jump and fast wrists.",
+    "muscleGroups": ["legs", "full_body", "shoulders"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["jump_rope"]
+  },
+  {
+    "id": 117,
+    "name": "Kipping Pull-ups",
+    "instructions": "Use a hip-driven kip to generate momentum and pull your chin over the bar. Focus on a controlled, rhythmic motion.",
+    "muscleGroups": ["back", "arms", "shoulders"],
+    "primaryMuscle": "back",
+    "difficulty": 4,
+    "equipment": ["pull_up_bar"]
+  },
+  {
+    "id": 118,
+    "name": "Toes to Bar",
+    "instructions": "Hang from the bar and use a combination of core strength and a kip to bring your toes up to touch the bar.",
+    "muscleGroups": ["core", "back", "arms"],
+    "primaryMuscle": "core",
+    "difficulty": 5,
+    "equipment": ["pull_up_bar"]
+  },
+  {
+    "id": 119,
+    "name": "Resistance Loop Glute Bridges",
+    "instructions": "Lie on your back with a loop around your thighs, just above your knees. Drive your hips up, pushing your knees apart.",
+    "muscleGroups": ["glutes", "legs"],
+    "primaryMuscle": "glutes",
+    "difficulty": 2,
+    "equipment": ["resistance_loops"]
+  },
+  {
+    "id": 120,
+    "name": "Resistance Loop Lateral Walks",
+    "instructions": "With a loop around your ankles or knees, take lateral steps in a squat position, keeping tension on the band.",
+    "muscleGroups": ["glutes", "legs"],
+    "primaryMuscle": "glutes",
+    "difficulty": 2,
+    "equipment": ["resistance_loops"]
+  },
+  {
+    "id": 121,
+    "name": "Stability Ball Jackknife",
+    "instructions": "Start in a plank with your shins on a stability ball. Pull your knees towards your chest, rolling the ball forward.",
+    "muscleGroups": ["core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["stability_ball"]
+  },
+  {
+    "id": 122,
+    "name": "Stability Ball Hamstring Curls",
+    "instructions": "Lie on your back with your heels on the ball. Lift your hips into a bridge and curl your heels towards your glutes.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["stability_ball"]
+  },
+  {
+    "id": 123,
+    "name": "Bosu Ball Burpees",
+    "instructions": "Place the Bosu ball flat side down. Perform a burpee, using the dome for your push-up and jumping onto it at the top.",
+    "muscleGroups": ["full_body", "core", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["bosu_ball"]
+  },
+  {
+    "id": 124,
+    "name": "Bosu Ball Mountain Climbers",
+    "instructions": "Hold the sides of the Bosu ball (flat side up) and perform mountain climbers, engaging your core to stabilize.",
+    "muscleGroups": ["core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["bosu_ball"]
+  },
+  {
+    "id": 125,
+    "name": "Suspension Trainer Atomic Push-ups",
+    "instructions": "With feet in the straps, perform a push-up, then immediately bring both knees to your chest in a crunch.",
+    "muscleGroups": ["chest", "core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 5,
+    "equipment": ["suspension_trainer"]
+  },
+  {
+    "id": 126,
+    "name": "Suspension Trainer Jump Squats",
+    "instructions": "Hold the handles and lean back slightly. Perform a deep squat and use the straps for assistance to explode up into a jump.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["suspension_trainer"]
+  },
+  {
+    "id": 127,
+    "name": "Suspension Trainer Rows",
+    "instructions": "Lean back holding the handles with arms extended. Pull your chest towards the handles, squeezing your back muscles.",
+    "muscleGroups": ["back", "arms", "core"],
+    "primaryMuscle": "back",
+    "difficulty": 3,
+    "equipment": ["suspension_trainer"]
+  },
+  {
+    "id": 128,
+    "name": "Ankle Weight High Knees",
+    "instructions": "With weights on, perform high knees, focusing on driving your knees up against the added resistance.",
+    "muscleGroups": ["legs", "core"],
+    "primaryMuscle": "legs",
+    "difficulty": 3,
+    "equipment": ["ankle_weights"]
+  },
+  {
+    "id": 129,
+    "name": "Ankle Weight Plank Jacks",
+    "instructions": "In a high plank position with weights on, jump your feet apart and back together.",
+    "muscleGroups": ["core", "shoulders", "legs"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["ankle_weights"]
+  },
+  {
+    "id": 130,
+    "name": "Weight Plate Halos",
+    "instructions": "Stand holding a plate and circle it around your head. Keep your core tight and engaged.",
+    "muscleGroups": ["shoulders", "core"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 2,
+    "equipment": ["weight_plates"]
+  },
+  {
+    "id": 131,
+    "name": "Weight Plate Ground to Overhead",
+    "instructions": "Squat down and pick up a plate. In one fluid motion, lift it off the ground and press it directly overhead.",
+    "muscleGroups": ["full_body", "legs", "shoulders"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["weight_plates"]
+  },
+  {
+    "id": 132,
+    "name": "Bench Step Plyo Jumps",
+    "instructions": "Place one foot on a step or low bench, and explode up, switching feet in mid-air to land with the opposite foot on top.",
+    "muscleGroups": ["legs", "glutes"],
+    "primaryMuscle": "legs",
+    "difficulty": 4,
+    "equipment": ["bench_step"]
+  },
+  {
+    "id": 133,
+    "name": "Bench Step Burpee Box Jumps",
+    "instructions": "Perform a burpee facing a step or bench, then immediately jump onto the box. Step down and repeat.",
+    "muscleGroups": ["full_body", "legs", "chest"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["bench_step"]
+  },
+  {
+    "id": 134,
+    "name": "Battle Rope Alternating Waves",
+    "instructions": "Hold one rope in each hand and alternate whipping your arms up and down to create waves.",
+    "muscleGroups": ["arms", "shoulders", "back", "core"],
+    "primaryMuscle": "shoulders",
+    "difficulty": 3,
+    "equipment": ["battle_ropes"]
+  },
+  {
+    "id": 135,
+    "name": "Battle Rope Power Slams",
+    "instructions": "Lift both ropes overhead simultaneously and slam them into the ground with maximum force.",
+    "muscleGroups": ["full_body", "back", "core"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["battle_ropes"]
+  },
+  {
+    "id": 136,
+    "name": "Battle Rope Jumping Jacks",
+    "instructions": "Perform jumping jacks while holding the battle ropes to add significant upper body resistance.",
+    "muscleGroups": ["full_body", "shoulders", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["battle_ropes"]
+  },
+  {
+    "id": 137,
+    "name": "Slam Ball Burpees",
+    "instructions": "Hold a slam ball, perform a burpee, and at the top, lift the ball overhead and slam it to the ground.",
+    "muscleGroups": ["full_body", "back", "legs"],
+    "primaryMuscle": "full_body",
+    "difficulty": 5,
+    "equipment": ["slam_ball"]
+  },
+  {
+    "id": 138,
+    "name": "Slam Ball Rotational Throws",
+    "instructions": "Stand perpendicular to a wall. Twist your torso and throw the slam ball forcefully against the wall.",
+    "muscleGroups": ["core", "back", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["slam_ball"]
+  },
+  {
+    "id": 139,
+    "name": "Parallette T-Bar Push-ups",
+    "instructions": "Arrange parallettes in a T-shape. Perform a push-up on one bar, then move to the other for the next rep.",
+    "muscleGroups": ["chest", "arms", "shoulders"],
+    "primaryMuscle": "chest",
+    "difficulty": 3,
+    "equipment": ["parallette_bars"]
+  },
+  {
+    "id": 140,
+    "name": "Parallette L-Sit",
+    "instructions": "Hold the bars and lift your straight legs up until they are parallel to the floor, forming an L-shape with your body.",
+    "muscleGroups": ["core", "arms", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 5,
+    "equipment": ["parallette_bars"]
+  },
+  {
+    "id": 141,
+    "name": "Parallette Shoot-Throughs",
+    "instructions": "From a support position on the bars, tuck your knees and 'shoot' your legs forward through your arms, then back again.",
+    "muscleGroups": ["core", "arms", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["parallette_bars"]
+  },
+  {
+    "id": 142,
+    "name": "Ab Wheel Rollouts",
+    "instructions": "From your knees, roll the wheel forward as far as you can while maintaining a straight line from knees to head, then roll back.",
+    "muscleGroups": ["core", "back", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["ab_wheel"]
+  },
+  {
+    "id": 143,
+    "name": "Standing Ab Wheel Rollouts",
+    "instructions": "An advanced version of the rollout, performed from a standing position for a much greater range of motion.",
+    "muscleGroups": ["core", "full_body"],
+    "primaryMuscle": "core",
+    "difficulty": 5,
+    "equipment": ["ab_wheel"]
+  },
+  {
+    "id": 144,
+    "name": "Ab Wheel Oblique Rollouts",
+    "instructions": "Perform a standard rollout, but angle your rollout to the left or right to target your obliques.",
+    "muscleGroups": ["core"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["ab_wheel"]
+  },
+  {
+    "id": 145,
+    "name": "Mat Slams",
+    "instructions": "Roll a yoga mat up tightly. Lift it overhead and slam it into the ground with force, like you would a slam ball.",
+    "muscleGroups": ["full_body", "core", "back"],
+    "primaryMuscle": "full_body",
+    "difficulty": 2,
+    "equipment": ["yoga_mat"]
+  },
+  {
+    "id": 146,
+    "name": "Dynamic Mat Bridges",
+    "instructions": "Lie on a mat with a resistance loop. Perform a glute bridge, and at the top, perform 3 quick pulses pushing your knees apart.",
+    "muscleGroups": ["glutes", "legs"],
+    "primaryMuscle": "glutes",
+    "difficulty": 3,
+    "equipment": ["yoga_mat", "resistance_loops"]
+  },
+  {
+    "id": 147,
+    "name": "Bosu Ball Plank Up-Downs",
+    "instructions": "With forearms on the Bosu dome, move from a forearm plank to a high plank one arm at a time.",
+    "muscleGroups": ["core", "shoulders"],
+    "primaryMuscle": "core",
+    "difficulty": 4,
+    "equipment": ["bosu_ball"]
+  },
+  {
+    "id": 148,
+    "name": "Stability Ball Push-up to Pike",
+    "instructions": "With shins on the ball, perform a push-up. Then, pull your hips up towards the ceiling into a pike position.",
+    "muscleGroups": ["chest", "shoulders", "core"],
+    "primaryMuscle": "core",
+    "difficulty": 5,
+    "equipment": ["stability_ball"]
+  },
+  {
+    "id": 149,
+    "name": "Kneeling to Standing Pull-ups",
+    "instructions": "Start kneeling under the pull-up bar. Jump up to grab the bar and perform a pull-up in one fluid motion.",
+    "muscleGroups": ["back", "arms", "legs"],
+    "primaryMuscle": "back",
+    "difficulty": 4,
+    "equipment": ["pull_up_bar"]
+  },
+  {
+    "id": 150,
+    "name": "Slam Ball Thrusters",
+    "instructions": "Hold a slam ball at your chest. Perform a deep squat, and as you stand, explosively press the ball overhead.",
+    "muscleGroups": ["full_body", "legs", "shoulders"],
+    "primaryMuscle": "full_body",
+    "difficulty": 4,
+    "equipment": ["slam_ball"]
+  }
+]

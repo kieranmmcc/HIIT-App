@@ -1,0 +1,212 @@
+/* HIIT App Dark Theme - Professional Athletic Design */
+
+:root {
+  /* Color Palette - Dark Athletic Theme */
+  --primary-bg: #0a0a0b;           /* Deep black background */
+  --secondary-bg: #131315;         /* Card/panel background */
+  --tertiary-bg: #1c1c20;          /* Hover states */
+  --accent-bg: #252529;            /* Elevated elements */
+
+  /* HIIT Brand Colors */
+  --hiit-red: #ff4757;             /* Primary action color */
+  --hiit-orange: #ff6b35;          /* Secondary action */
+  --hiit-yellow: #feca57;          /* Warning/energy */
+  --hiit-green: #2ed573;           /* Success/active */
+
+  /* Text Colors */
+  --text-primary: #ffffff;         /* Primary text */
+  --text-secondary: #b8bcc8;       /* Secondary text */
+  --text-muted: #6c7293;           /* Muted text */
+  --text-inverse: #0a0a0b;         /* Text on light backgrounds */
+
+  /* Interactive States */
+  --border-default: #2a2a2f;       /* Default borders */
+  --border-hover: #3a3a40;         /* Hover borders */
+  --border-active: var(--hiit-red); /* Active/selected borders */
+  --shadow-default: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 6px 20px rgba(255, 71, 87, 0.15);
+  --shadow-active: 0 8px 24px rgba(255, 71, 87, 0.25);
+
+  /* Spacing & Layout */
+  --container-padding: 1.5rem;
+  --panel-padding: 1.25rem;
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--primary-bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography Scale */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, var(--hiit-red) 0%, var(--hiit-orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* Button Styles */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  font-weight: var(--font-weight-medium);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--hiit-red) 0%, var(--hiit-orange) 100%);
+  color: var(--text-inverse);
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  box-shadow: var(--shadow-default);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Layout Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--container-padding);
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  :root {
+    --container-padding: 1rem;
+    --panel-padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate HIIT App Icons</title>
+</head>
+<body>
+    <canvas id="canvas192" width="192" height="192" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+    <canvas id="canvas512" width="512" height="512" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+
+    <script>
+        // Create 192x192 icon
+        const canvas192 = document.getElementById('canvas192');
+        const ctx192 = canvas192.getContext('2d');
+
+        // Background
+        const gradient192 = ctx192.createLinearGradient(0, 0, 192, 192);
+        gradient192.addColorStop(0, '#ff4757');
+        gradient192.addColorStop(1, '#ff6b35');
+        ctx192.fillStyle = gradient192;
+        ctx192.fillRect(0, 0, 192, 192);
+
+        // Text
+        ctx192.fillStyle = 'white';
+        ctx192.font = 'bold 60px Arial';
+        ctx192.textAlign = 'center';
+        ctx192.fillText('HIIT', 96, 110);
+        ctx192.font = 'bold 24px Arial';
+        ctx192.fillText('WORKOUT', 96, 140);
+
+        // Create 512x512 icon
+        const canvas512 = document.getElementById('canvas512');
+        const ctx512 = canvas512.getContext('2d');
+
+        // Background
+        const gradient512 = ctx512.createLinearGradient(0, 0, 512, 512);
+        gradient512.addColorStop(0, '#ff4757');
+        gradient512.addColorStop(1, '#ff6b35');
+        ctx512.fillStyle = gradient512;
+        ctx512.fillRect(0, 0, 512, 512);
+
+        // Text
+        ctx512.fillStyle = 'white';
+        ctx512.font = 'bold 160px Arial';
+        ctx512.textAlign = 'center';
+        ctx512.fillText('HIIT', 256, 290);
+        ctx512.font = 'bold 64px Arial';
+        ctx512.fillText('WORKOUT', 256, 370);
+
+        // Download functions
+        setTimeout(() => {
+            const link192 = document.createElement('a');
+            link192.download = 'icon-192x192.png';
+            link192.href = canvas192.toDataURL();
+            link192.click();
+
+            const link512 = document.createElement('a');
+            link512.download = 'icon-512x512.png';
+            link512.href = canvas512.toDataURL();
+            link512.click();
+        }, 1000);
+    </script>
+</body>
+</html>
