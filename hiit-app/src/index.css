@@ -235,4 +235,10 @@ button {
     align-items: center !important;
     text-align: center !important;
   }
+
+  /* Reduce top padding on mobile for headers */
+  .equipment-header,
+  .workout-header {
+    padding-top: 1rem !important;
+  }
 }
