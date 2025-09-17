@@ -18,6 +18,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hiit-app
 
     steps:
       - name: Checkout
@@ -31,14 +34,10 @@ jobs:
           cache-dependency-path: 'hiit-app/package-lock.json'
 
       - name: Install dependencies
-        run: |
-          cd hiit-app
-          npm ci
+        run: npm ci
 
       - name: Build application
-        run: |
-          cd hiit-app
-          npm run build
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
