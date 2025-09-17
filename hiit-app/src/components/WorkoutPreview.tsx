@@ -39,8 +39,8 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
       // Create set of all exercise keys
       const allKeys = new Set<string>();
       if (workout.circuit) {
-        workout.circuit.stations.forEach(station => {
-          station.exercises.forEach(exercise => {
+        workout.circuit.stations.forEach((station: any) => {
+          station.exercises.forEach((exercise: any) => {
             allKeys.add(`${station.id}-${exercise.id}`);
           });
         });
@@ -88,7 +88,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
       let stationRestTime = 0;
       if (circuitInfo.stationRestTime && circuitInfo.stationRestTime > 0) {
         // Calculate number of station transitions
-        const exercisesPerRound = circuitInfo.stations.reduce((sum: number, station: any) => sum + station.exercises.length, 0);
+        // const exercisesPerRound = circuitInfo.stations.reduce((sum: number, station: any) => sum + station.exercises.length, 0);
         const stationsPerRound = circuitInfo.stations.length;
         const stationTransitions = circuitInfo.rounds * (stationsPerRound - 1);
         stationRestTime = stationTransitions * circuitInfo.stationRestTime;
@@ -143,8 +143,8 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
   const showAllInstructions = () => {
     const allKeys = new Set<string>();
     if (circuitInfo) {
-      circuitInfo.stations.forEach(station => {
-        station.exercises.forEach(exercise => {
+      circuitInfo.stations.forEach((station: any) => {
+        station.exercises.forEach((exercise: any) => {
           allKeys.add(`${station.id}-${exercise.id}`);
         });
       });
@@ -162,9 +162,9 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
   const getAllExerciseKeys = () => {
     const allKeys = new Set<string>();
     if (circuitInfo) {
-      circuitInfo.stations.forEach(station => {
+      circuitInfo.stations.forEach((station: any) => {
         if (station.exercises) {
-          station.exercises.forEach(exercise => {
+          station.exercises.forEach((exercise: any) => {
             if (exercise && exercise.id) {
               allKeys.add(`${station.id}-${exercise.id}`);
             }
@@ -184,7 +184,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
       if (!prevWorkout.circuit) return prevWorkout;
 
       const newCircuit = { ...prevWorkout.circuit };
-      const stationIndex = newCircuit.stations.findIndex(s => s.id === stationId);
+      const stationIndex = newCircuit.stations.findIndex((s: any) => s.id === stationId);
 
       if (stationIndex === -1) return prevWorkout;
 
@@ -243,7 +243,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
     setWorkout(prevWorkout => {
       if (!prevWorkout.circuit) return prevWorkout;
 
-      const stationIndex = prevWorkout.circuit.stations.findIndex(s => s.id === stationId);
+      const stationIndex = prevWorkout.circuit.stations.findIndex((s: any) => s.id === stationId);
       if (stationIndex === -1) return prevWorkout;
 
       const currentExercise = prevWorkout.circuit.stations[stationIndex].exercises[exerciseIndex];
@@ -298,8 +298,8 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
         setExpandedExercises(prev => {
           const newSet = new Set(prev);
           // Add all new exercise keys from updated circuit
-          updatedCircuit.stations.forEach(station => {
-            station.exercises.forEach(exercise => {
+          updatedCircuit.stations.forEach((station: any) => {
+            station.exercises.forEach((exercise: any) => {
               const exerciseKey = `${station.id}-${exercise.id}`;
               newSet.add(exerciseKey);
             });
@@ -390,7 +390,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
               <>
                 <span>🔄 {circuitInfo.rounds} rounds</span>
                 <span>🏋️ {circuitInfo.stations.length} stations</span>
-                <span>💪 {circuitInfo.stations.reduce((total, station) => total + station.exercises.length, 0)} unique exercises</span>
+                <span>💪 {circuitInfo.stations.reduce((total: number, station: any) => total + station.exercises.length, 0)} unique exercises</span>
               </>
             ) : (
               <span>💪 {workout.exercises.length} exercises</span>
@@ -677,10 +677,10 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
 
                   {/* Station Exercises */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    {station.exercises?.map((exercise, exerciseIndex) => {
+                    {station.exercises?.map((exercise: any, exerciseIndex: number) => {
                       if (!exercise || !exercise.id) return null;
 
-                      const exerciseEquipment = exercise.equipment?.map(id => getEquipmentInfo(id)).filter(Boolean) || [];
+                      const exerciseEquipment = exercise.equipment?.map((id: string) => getEquipmentInfo(id)).filter(Boolean) || [];
                       const exerciseKey = `${station.id}-${exercise.id}`;
                       const isExpanded = expandedExercises.has(exerciseKey);
 
@@ -747,9 +747,9 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
                                       {muscleGroupLabels[exercise.primaryMuscle] || exercise.primaryMuscle}
                                     </div>
                                     {exercise.muscleGroups
-                                      .filter(mg => mg !== exercise.primaryMuscle)
+                                      .filter((mg: string) => mg !== exercise.primaryMuscle)
                                       .slice(0, 2)
-                                      .map(muscleGroup => (
+                                      .map((muscleGroup: string) => (
                                         <div
                                           key={muscleGroup}
                                           style={{
@@ -774,7 +774,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
                                       flexWrap: 'wrap',
                                       gap: '0.375rem'
                                     }}>
-                                      {exerciseEquipment.map(equipment => {
+                                      {exerciseEquipment.map((equipment: Equipment) => {
                                         if (!equipment) return null;
 
                                         return (

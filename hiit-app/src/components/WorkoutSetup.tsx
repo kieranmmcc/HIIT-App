@@ -4,7 +4,6 @@ import type { WorkoutSettings } from '../types/workout';
 import type { CircuitType } from '../types/circuit';
 import { durationOptions, difficultyOptions } from '../data/workoutOptions';
 import { circuitTypeOptions } from '../types/circuit';
-import EquipmentSummary from './EquipmentSummary';
 import QuickEquipmentSelector from './QuickEquipmentSelector';
 import MuscleGroupSelector from './MuscleGroupSelector';
 import { EquipmentStorage } from '../utils/equipmentStorage';
@@ -198,7 +197,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
     onStartWorkout(settings);
   };
 
-  const selectedCircuitTypeOption = circuitTypeOptions.find(opt => opt.value === circuitType);
+  // const selectedCircuitTypeOption = circuitTypeOptions.find(opt => opt.value === circuitType);
   const selectedDifficultyOption = difficultyOptions.find(opt => opt.value === difficulty);
 
   // Calculate available durations based on exercise count
