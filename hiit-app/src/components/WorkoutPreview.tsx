@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import type { WorkoutSettings } from '../types/workout';
-import type { GeneratedWorkout, Exercise } from '../types/exercise';
-import type { CircuitWorkout, CircuitStation } from '../types/circuit';
+import type { GeneratedWorkout } from '../types/circuit';
 import type { Equipment } from '../types/equipment';
 import { generateWorkout, regenerateExercise } from '../utils/workoutGenerator';
 import { equipmentData } from '../data/equipment';
@@ -89,7 +88,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
       let stationRestTime = 0;
       if (circuitInfo.stationRestTime && circuitInfo.stationRestTime > 0) {
         // Calculate number of station transitions
-        const exercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+        const exercisesPerRound = circuitInfo.stations.reduce((sum: number, station: any) => sum + station.exercises.length, 0);
         const stationsPerRound = circuitInfo.stations.length;
         const stationTransitions = circuitInfo.rounds * (stationsPerRound - 1);
         stationRestTime = stationTransitions * circuitInfo.stationRestTime;
