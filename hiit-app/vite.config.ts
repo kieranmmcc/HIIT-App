@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/HIIT-App/', // Set base path for GitHub Pages
+  base: '/', // Set base path for custom domain
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
