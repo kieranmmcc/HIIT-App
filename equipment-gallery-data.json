@@ -1,0 +1,74 @@
+[
+  {
+    "id": "bodyweight",
+    "name": "Bodyweight Only",
+    "description": "No equipment needed",
+    "svgUrl": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/stretching.svg",
+    "category": "core",
+    "isSelected": true,
+    "isRequired": true
+  },
+  {
+    "id": "dumbbells",
+    "name": "Dumbbells",
+    "description": "Any weight, adjustable preferred",
+    "svgUrl": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/barbell.svg",
+    "category": "weights",
+    "isSelected": false,
+    "isRequired": false
+  },
+  {
+    "id": "resistance_bands",
+    "name": "Resistance Bands",
+    "description": "Loop bands or tube bands",
+    "svgUrl": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/oval-vertical.svg",
+    "category": "resistance",
+    "isSelected": false,
+    "isRequired": false
+  },
+  {
+    "id": "kettlebell",
+    "name": "Kettlebell",
+    "description": "Any weight kettlebell",
+    "svgUrl": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/ball-football.svg",
+    "category": "weights",
+    "isSelected": false,
+    "isRequired": false
+  },
+  {
+    "id": "medicine_ball",
+    "name": "Medicine Ball",
+    "description": "Weighted exercise ball",
+    "svgUrl": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/ball-volleyball.svg",
+    "category": "accessories",
+    "isSelected": false,
+    "isRequired": false
+  },
+  {
+    "id": "jump_rope",
+    "name": "Jump Rope",
+    "description": "Standard jump rope",
+    "svgUrl": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/wave-sine.svg",
+    "category": "cardio",
+    "isSelected": false,
+    "isRequired": false
+  },
+  {
+    "id": "pull_up_bar",
+    "name": "Pull-up Bar",
+    "description": "Doorway or wall-mounted",
+    "svgUrl": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/separator-horizontal.svg",
+    "category": "accessories",
+    "isSelected": false,
+    "isRequired": false
+  },
+  {
+    "id": "yoga_mat",
+    "name": "Yoga Mat",
+    "description": "Exercise mat for floor work",
+    "svgUrl": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/yoga.svg",
+    "category": "accessories",
+    "isSelected": false,
+    "isRequired": false
+  }
+]
