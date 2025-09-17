@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import type { ActiveWorkout, GeneratedWorkout } from '../types/exercise';
-import type { CircuitWorkout } from '../types/circuit';
+import type { ActiveWorkout } from '../types/exercise';
+import type { GeneratedWorkout } from '../types/circuit';
 import type { Equipment } from '../types/equipment';
 import { audioManager } from '../utils/audioManager';
 import { equipmentData } from '../data/equipment';
-import { circuitTypeOptions } from '../types/circuit';
 
 interface ActiveWorkoutProps {
   workout: GeneratedWorkout;
@@ -31,7 +30,6 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
 
   // Circuit information - enhanced workout timer with circuit context
   const circuitInfo = workout.circuit;
-  const selectedCircuitType = circuitTypeOptions.find(option => option.value === workout.circuit?.type);
 
   // Timer logic
   useEffect(() => {
@@ -158,7 +156,7 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
 
     // Find which station and round we're in
     let exercisesSoFar = 0;
-    const totalExercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+    const totalExercisesPerRound = circuitInfo.stations.reduce((sum: number, station: any) => sum + station.exercises.length, 0);
 
     const currentRound = Math.floor(activeWorkout.currentExerciseIndex / totalExercisesPerRound) + 1;
     const indexInRound = activeWorkout.currentExerciseIndex % totalExercisesPerRound;
@@ -229,7 +227,7 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
 
         if (circuitInfo && circuitContext && nextExerciseIndex < workout.exercises.length) {
           // Calculate current and next station
-          const totalExercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+          const totalExercisesPerRound = circuitInfo.stations.reduce((sum: number, station: any) => sum + station.exercises.length, 0);
 
           const currentIndexInRound = exerciseIndex % totalExercisesPerRound;
           const nextIndexInRound = nextExerciseIndex % totalExercisesPerRound;
@@ -295,7 +293,7 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
 
         if (circuitInfo && circuitContext) {
           // Calculate station context for next exercise
-          const totalExercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+          const totalExercisesPerRound = circuitInfo.stations.reduce((sum: number, station: any) => sum + station.exercises.length, 0);
           const nextIndexInRound = exerciseIndex % totalExercisesPerRound;
 
           let exercisesSoFar = 0;
@@ -340,9 +338,9 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
     return equipmentData.find(eq => eq.id === equipmentId);
   };
 
-  const currentExerciseEquipment = currentExercise?.equipment
-    .map(id => getEquipmentInfo(id))
-    .filter(Boolean) || [];
+  // const currentExerciseEquipment = currentExercise?.equipment
+  //   .map(id => getEquipmentInfo(id))
+  //   .filter(Boolean) || [];
 
   // Calculate remaining exercise and rest time
   const getRemainingTimes = () => {
@@ -368,7 +366,7 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
     // Add station rest time if applicable
     if (circuitInfo && circuitInfo.stationRestTime) {
       // Calculate remaining station transitions
-      const totalExercisesPerRound = circuitInfo.stations.reduce((sum, station) => sum + station.exercises.length, 0);
+      const totalExercisesPerRound = circuitInfo.stations.reduce((sum: number, station: any) => sum + station.exercises.length, 0);
       const currentRound = Math.floor(activeWorkout.currentExerciseIndex / totalExercisesPerRound) + 1;
       const indexInRound = activeWorkout.currentExerciseIndex % totalExercisesPerRound;
 

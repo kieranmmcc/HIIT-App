@@ -24,7 +24,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({ equipment, onToggle }) =>
     padding: '1.5rem',
     cursor: equipment.isRequired ? 'default' : 'pointer',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column' as const,
     alignItems: 'center',
     gap: '1.5rem',
     minHeight: '300px',

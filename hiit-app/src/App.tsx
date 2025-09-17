@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import EquipmentSelection from './components/EquipmentSelection'
 import WorkoutSetup from './components/WorkoutSetup'
 import WorkoutPreview from './components/WorkoutPreview'
