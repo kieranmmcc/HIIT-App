@@ -66,7 +66,7 @@ export const usePWAInstall = () => {
   };
 
   const getInstallInstructions = () => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    // const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isIPad = /iPad/.test(navigator.userAgent);
     const isIPhone = /iPhone|iPod/.test(navigator.userAgent);
     const isAndroid = /Android/.test(navigator.userAgent);
