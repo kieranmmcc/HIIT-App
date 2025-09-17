@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { muscleGroupFilters, type MuscleGroupFilter } from '../types/muscleGroups';
 import type { CircuitType } from '../types/circuit';
 
