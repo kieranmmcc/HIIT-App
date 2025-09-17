@@ -196,6 +196,16 @@ button {
 }
 
 /* Responsive Design */
+
+/* Mobile/Desktop visibility classes */
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: block;
+}
+
 @media (max-width: 768px) {
   :root {
     --container-padding: 1rem;
@@ -208,5 +218,21 @@ button {
 
   h2 {
     font-size: 1.5rem;
+  }
+
+  /* Show mobile, hide desktop */
+  .mobile-only {
+    display: flex !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* On mobile, make the desktop-flex stack vertically */
+  .desktop-flex {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
   }
 }

@@ -260,14 +260,21 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
             Back to Equipment
           </button>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+          {/* Mobile: Button at top center */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }} className="mobile-only">
+            <PWAInstallButton size="small" />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }} className="desktop-flex">
             <div>
               <h1 style={{ color: 'white', marginBottom: '1rem' }}>Create Your Workout</h1>
               <p style={{ color: '#b8bcc8' }}>
                 Choose your workout duration and intensity level
               </p>
             </div>
-            <PWAInstallButton size="small" />
+            <div className="desktop-only">
+              <PWAInstallButton size="small" />
+            </div>
           </div>
 
           <QuickEquipmentSelector

@@ -59,12 +59,19 @@ const EquipmentSelection: React.FC<EquipmentSelectionProps> = ({
     <div className="equipment-selection fade-in" style={{ minHeight: '100vh', color: 'white' }}>
       <div className="container">
         <header className="equipment-header" style={{ padding: '2rem 0' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+          {/* Mobile: Button at top center */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }} className="mobile-only">
+            <PWAInstallButton size="small" />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }} className="desktop-flex">
             <div>
               <h1 style={{ color: 'white', marginBottom: '1rem' }}>Set Up Your Home Gym</h1>
               <p style={{ color: '#b8bcc8' }}>Select all the equipment you own. You can choose which to use for each workout later.</p>
             </div>
-            <PWAInstallButton size="small" />
+            <div className="desktop-only">
+              <PWAInstallButton size="small" />
+            </div>
           </div>
           <div className="selection-counter" style={{ background: '#131315', padding: '0.75rem 1.5rem', borderRadius: '16px', border: '2px solid #2a2a2f', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}>
             <span className="count" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#ff4757' }}>{selectedCount}</span>
