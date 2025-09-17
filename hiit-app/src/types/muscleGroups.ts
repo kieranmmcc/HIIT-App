@@ -69,6 +69,8 @@ export const muscleGroupFilters: MuscleGroupFilter[] = [
     description: 'Heart rate, endurance',
     color: '#ff4081',
     icon: '❤️'
+  },
+  {
     id: 'biceps_triceps',
     name: 'Biceps/Triceps',
     description: 'Classic arm super set pair',
