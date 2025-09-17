@@ -18,7 +18,7 @@ interface WorkoutSetupProps {
 }
 
 const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
-  selectedEquipment,
+  // selectedEquipment,
   onBack,
   onStartWorkout
 }) => {
@@ -628,7 +628,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
                     border: 'none',
                     cursor: 'pointer',
                     fontSize: '1.25rem',
-                    color: favoriteCircuitType === option.value ? '#ffd700' : '#6c7293',
+                    color: favoriteDifficulty === option.value ? '#ffd700' : '#6c7293',
                     transition: 'color 0.3s ease, transform 0.2s ease',
                     padding: '0.25rem',
                     borderRadius: '50%',

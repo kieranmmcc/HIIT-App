@@ -88,10 +88,14 @@ export class WorkoutFavoritesManager {
   }
 
   static getAllFavorites(): WorkoutFavorites {
+    const duration = this.getFavoriteDuration();
+    const difficulty = this.getFavoriteDifficulty();
+    const exerciseCount = this.getFavoriteExerciseCount();
+
     return {
-      duration: this.getFavoriteDuration(),
-      difficulty: this.getFavoriteDifficulty(),
-      exerciseCount: this.getFavoriteExerciseCount()
+      duration: duration === null ? undefined : duration,
+      difficulty: difficulty === null ? undefined : difficulty,
+      exerciseCount: exerciseCount === null ? undefined : exerciseCount
     };
   }
 

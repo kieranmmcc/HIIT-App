@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { ActiveWorkout } from '../types/exercise';
 import type { GeneratedWorkout } from '../types/circuit';
-import type { Equipment } from '../types/equipment';
 import { audioManager } from '../utils/audioManager';
-import { equipmentData } from '../data/equipment';
 
 interface ActiveWorkoutProps {
   workout: GeneratedWorkout;
@@ -333,10 +331,10 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
 
   const nextExercisePreview = getNextExercisePreview();
 
-  // Get equipment info for current exercise
-  const getEquipmentInfo = (equipmentId: string): Equipment | undefined => {
-    return equipmentData.find(eq => eq.id === equipmentId);
-  };
+  // // Get equipment info for current exercise
+  // const getEquipmentInfo = (equipmentId: string): Equipment | undefined => {
+  //   return equipmentData.find(eq => eq.id === equipmentId);
+  // };
 
   // const currentExerciseEquipment = currentExercise?.equipment
   //   .map(id => getEquipmentInfo(id))
