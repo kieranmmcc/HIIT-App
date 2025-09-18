@@ -254,7 +254,14 @@ input[type="range"] {
 
 /* Track styling */
 input[type="range"]::-webkit-slider-track {
-  background: #2a2a2f;
+  background: transparent;
+  height: 12px;
+  border-radius: 6px;
+  border: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent;
   height: 12px;
   border-radius: 6px;
   border: none;
@@ -265,6 +272,12 @@ input[type="range"]::-moz-range-track {
   height: 12px;
   border-radius: 6px;
   border: none;
+}
+
+input[type="range"]::-moz-range-progress {
+  background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+  height: 12px;
+  border-radius: 6px;
 }
 
 /* Thumb styling */

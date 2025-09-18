@@ -435,17 +435,29 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
               onChange={(e) => {
                 const value = parseInt(e.target.value);
                 setExerciseCount(circuitType === 'super_sets' ? value * 2 : value);
+
+                // Update progress fill
+                const min = parseInt(e.target.min);
+                const max = parseInt(e.target.max);
+                const percentage = ((value - min) / (max - min)) * 100;
+                e.target.style.background = `linear-gradient(90deg, #22c55e 0%, #16a34a ${percentage}%, #2a2a2f ${percentage}%, #2a2a2f 100%)`;
               }}
               onInput={(e) => {
                 // Additional handling for better iPad compatibility
                 const value = parseInt(e.currentTarget.value);
                 setExerciseCount(circuitType === 'super_sets' ? value * 2 : value);
+
+                // Update progress fill
+                const min = parseInt(e.currentTarget.min);
+                const max = parseInt(e.currentTarget.max);
+                const percentage = ((value - min) / (max - min)) * 100;
+                e.currentTarget.style.background = `linear-gradient(90deg, #22c55e 0%, #16a34a ${percentage}%, #2a2a2f ${percentage}%, #2a2a2f 100%)`;
               }}
               style={{
                 flex: 1,
                 height: '12px',
                 borderRadius: '6px',
-                background: '#2a2a2f',
+                background: `linear-gradient(90deg, #22c55e 0%, #16a34a ${((circuitType === 'super_sets' ? exerciseCount / 2 : exerciseCount) - (circuitType === 'super_sets' ? 2 : 6)) / ((circuitType === 'super_sets' ? 4 : 12) - (circuitType === 'super_sets' ? 2 : 6)) * 100}%, #2a2a2f ${((circuitType === 'super_sets' ? exerciseCount / 2 : exerciseCount) - (circuitType === 'super_sets' ? 2 : 6)) / ((circuitType === 'super_sets' ? 4 : 12) - (circuitType === 'super_sets' ? 2 : 6)) * 100}%, #2a2a2f 100%)`,
                 outline: 'none',
                 cursor: 'pointer',
                 WebkitAppearance: 'none',
