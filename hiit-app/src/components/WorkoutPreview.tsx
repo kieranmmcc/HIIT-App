@@ -478,7 +478,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
           marginBottom: '2rem'
         }}>
           <h2 style={{
-            color: '#ff4757',
+            color: '#22c55e',
             fontSize: '1.25rem',
             fontWeight: '600',
             marginBottom: '1rem',
