@@ -60,7 +60,7 @@ const EquipmentSelection: React.FC<EquipmentSelectionProps> = ({
       <div className="container">
         <header className="equipment-header" style={{ padding: '2rem 0' }}>
           {/* Mobile: Button at top center */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }} className="mobile-only">
+          <div className="mobile-only" style={{ justifyContent: 'center', marginBottom: '1rem' }}>
             <PWAInstallButton size="small" />
           </div>
 

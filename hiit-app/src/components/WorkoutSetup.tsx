@@ -261,7 +261,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
           </button>
 
           {/* Mobile: Button at top center */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }} className="mobile-only">
+          <div className="mobile-only" style={{ justifyContent: 'center', marginBottom: '1rem' }}>
             <PWAInstallButton size="small" />
           </div>
 

@@ -8,6 +8,7 @@ import { BlacklistStorage } from '../utils/blacklistStorage';
 import { muscleGroupLabels } from '../types/muscleGroups';
 import { circuitTypeOptions } from '../types/circuit';
 import { InstructionPreferences } from '../utils/instructionPreferences';
+import { difficultyOptions } from '../data/workoutOptions';
 
 interface WorkoutPreviewProps {
   workoutSettings: WorkoutSettings;
@@ -361,7 +362,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>
-              {selectedCircuitType?.name || 'Workout Preview'}
+              Review {selectedCircuitType?.name || 'Workout'}
             </h1>
             {selectedCircuitType && (
               <span style={{ fontSize: '2rem' }}>{selectedCircuitType.icon}</span>
@@ -395,7 +396,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
             ) : (
               <span>💪 {workout.exercises.length} exercises</span>
             )}
-            <span>🔥 {workout.difficulty} difficulty</span>
+            <span>🔥 {difficultyOptions.find(d => d.value === workout.difficulty)?.label || workout.difficulty} difficulty</span>
           </div>
 
           {/* Time Breakdown */}
