@@ -33,12 +33,16 @@
 
     <script>
       // Case-insensitive URL redirect for GitHub Pages
-      const currentPath = window.location.pathname.toLowerCase();
-      const correctPath = '/hiit-app/';
+      const currentPath = window.location.pathname;
+      const correctBasePath = '/HIIT-App/';
 
-      if (currentPath !== correctPath && !currentPath.startsWith(correctPath)) {
-        // Redirect to lowercase version
-        window.location.replace('/HIIT-App/' + window.location.search + window.location.hash);
+      // If the path doesn't start with the correct case, redirect
+      if (!currentPath.startsWith(correctBasePath)) {
+        const pathWithoutBase = currentPath.replace(/^\/[^\/]+\//, '');
+        window.location.replace(correctBasePath + pathWithoutBase + window.location.search + window.location.hash);
+      } else {
+        // If we're already on the correct path, load the app
+        window.location.replace(correctBasePath + window.location.search + window.location.hash);
       }
     </script>
   </head>
