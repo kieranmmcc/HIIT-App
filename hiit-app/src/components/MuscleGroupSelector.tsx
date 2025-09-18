@@ -174,14 +174,14 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
                 opacity: isDisabled ? 0.4 : (state === 'default' ? 0.6 : 1)
               }}
               onMouseEnter={(e) => {
-                if (!isSelected && !isDisabled) {
+                if (!isSelected && !isExcluded && !isDisabled) {
                   e.currentTarget.style.borderColor = '#9ca3af';
                   e.currentTarget.style.background = 'rgba(156, 163, 175, 0.05)';
                   e.currentTarget.style.opacity = '0.8';
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isSelected && !isDisabled) {
+                if (!isSelected && !isExcluded && !isDisabled) {
                   e.currentTarget.style.borderColor = '#6b7280';
                   e.currentTarget.style.background = '#131315';
                   e.currentTarget.style.opacity = '0.6';
