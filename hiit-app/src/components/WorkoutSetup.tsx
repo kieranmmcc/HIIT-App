@@ -407,6 +407,19 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
             {circuitType === 'super_sets' ? 'Super Set Count' : 'Exercise Count'}
           </h2>
 
+          {/* Slider bounds display */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '0.5rem',
+            fontSize: '0.875rem',
+            color: '#6c7293'
+          }}>
+            <span>Min: {circuitType === 'super_sets' ? '2' : '6'}</span>
+            <span>Max: {circuitType === 'super_sets' ? '4' : '12'}</span>
+          </div>
+
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -423,28 +436,47 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
                 const value = parseInt(e.target.value);
                 setExerciseCount(circuitType === 'super_sets' ? value * 2 : value);
               }}
+              onInput={(e) => {
+                // Additional handling for better iPad compatibility
+                const value = parseInt(e.currentTarget.value);
+                setExerciseCount(circuitType === 'super_sets' ? value * 2 : value);
+              }}
               style={{
                 flex: 1,
-                height: '8px',
-                borderRadius: '4px',
+                height: '12px',
+                borderRadius: '6px',
                 background: '#2a2a2f',
                 outline: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                WebkitAppearance: 'none',
+                appearance: 'none'
               }}
             />
-            <div style={{
-              minWidth: '60px',
-              textAlign: 'center',
-              background: '#131315',
-              border: '2px solid #22c55e',
-              borderRadius: '8px',
-              padding: '0.5rem 1rem',
-              color: '#22c55e',
-              fontWeight: 'bold',
-              fontSize: '1.125rem'
-            }}>
-              {circuitType === 'super_sets' ? exerciseCount / 2 : exerciseCount}
-            </div>
+            <input
+              type="number"
+              min={circuitType === 'super_sets' ? 2 : 6}
+              max={circuitType === 'super_sets' ? 4 : 12}
+              value={circuitType === 'super_sets' ? exerciseCount / 2 : exerciseCount}
+              onChange={(e) => {
+                const value = parseInt(e.target.value) || (circuitType === 'super_sets' ? 2 : 6);
+                const min = circuitType === 'super_sets' ? 2 : 6;
+                const max = circuitType === 'super_sets' ? 4 : 12;
+                const clampedValue = Math.min(Math.max(value, min), max);
+                setExerciseCount(circuitType === 'super_sets' ? clampedValue * 2 : clampedValue);
+              }}
+              style={{
+                width: '80px',
+                textAlign: 'center',
+                background: '#131315',
+                border: '2px solid #22c55e',
+                borderRadius: '8px',
+                padding: '0.5rem 0.75rem',
+                color: '#22c55e',
+                fontWeight: 'bold',
+                fontSize: '1.125rem',
+                outline: 'none'
+              }}
+            />
             <button
               onClick={(e) => handleFavoriteExerciseCount(
                 circuitType === 'super_sets' ? exerciseCount / 2 : exerciseCount,
