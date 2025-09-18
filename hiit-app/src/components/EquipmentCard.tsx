@@ -19,7 +19,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({ equipment, onToggle }) =>
       ? '2px solid #22c55e'
       : equipment.isRequired
       ? '2px solid #22c55e'
-      : '2px solid #6b7280',
+      : '2px solid #2a2a2f',
     borderRadius: '16px',
     padding: '1.5rem',
     cursor: equipment.isRequired ? 'default' : 'pointer',
@@ -29,8 +29,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({ equipment, onToggle }) =>
     gap: '1.5rem',
     minHeight: '300px',
     transition: 'all 0.3s ease',
-    boxShadow: equipment.isSelected ? '0 8px 24px rgba(34, 197, 94, 0.25)' : '0 4px 12px rgba(0, 0, 0, 0.4)',
-    opacity: (!equipment.isSelected && !equipment.isRequired) ? '0.6' : '1'
+    boxShadow: equipment.isSelected ? '0 8px 24px rgba(34, 197, 94, 0.25)' : '0 4px 12px rgba(0, 0, 0, 0.4)'
   };
 
   const iconStyle = {
@@ -41,7 +40,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({ equipment, onToggle }) =>
     justifyContent: 'center',
     background: equipment.isSelected ? 'rgba(34, 197, 94, 0.1)' : equipment.isRequired ? 'rgba(34, 197, 94, 0.1)' : '#252529',
     borderRadius: '16px',
-    border: equipment.isSelected ? '3px solid #22c55e' : equipment.isRequired ? '3px solid #22c55e' : '2px solid #6b7280',
+    border: equipment.isSelected ? '3px solid #22c55e' : equipment.isRequired ? '3px solid #22c55e' : '2px solid #2a2a2f',
     flexShrink: 0
   };
 
@@ -62,7 +61,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({ equipment, onToggle }) =>
             height: '176px',
             borderRadius: '12px',
             objectFit: 'cover',
-            opacity: equipment.isSelected || equipment.isRequired ? '1' : '0.5'
+            opacity: equipment.isSelected || equipment.isRequired ? '1' : '0.85'
           }}
         />
       </div>

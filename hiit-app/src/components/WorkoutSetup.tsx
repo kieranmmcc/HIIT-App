@@ -287,7 +287,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
         {/* Circuit Type Selection */}
         <div style={{ marginBottom: '3rem' }}>
           <h2 style={{
-            color: '#ff4757',
+            color: '#22c55e',
             fontSize: '1.25rem',
             fontWeight: '600',
             marginBottom: '1rem',
@@ -308,13 +308,13 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
                 onClick={() => setCircuitType(option.value)}
                 style={{
                   background: circuitType === option.value ? '#1c1c20' : '#131315',
-                  border: circuitType === option.value ? '2px solid #ff4757' : '2px solid #2a2a2f',
+                  border: circuitType === option.value ? '2px solid #22c55e' : '2px solid #2a2a2f',
                   borderRadius: '16px',
                   padding: '1.5rem',
                   cursor: 'pointer',
                   textAlign: 'center',
                   transition: 'all 0.3s ease',
-                  boxShadow: circuitType === option.value ? '0 8px 24px rgba(255, 71, 87, 0.25)' : '0 4px 12px rgba(0, 0, 0, 0.4)',
+                  boxShadow: circuitType === option.value ? '0 8px 24px rgba(34, 197, 94, 0.25)' : '0 4px 12px rgba(0, 0, 0, 0.4)',
                   position: 'relative'
                 }}
               >
@@ -363,7 +363,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
                 <div style={{
                   fontSize: '1.25rem',
                   fontWeight: 'bold',
-                  color: circuitType === option.value ? '#ff4757' : 'white',
+                  color: circuitType === option.value ? '#22c55e' : 'white',
                   marginBottom: '0.5rem'
                 }}>
                   {option.name}
@@ -389,7 +389,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
         {/* Exercise Count Selection */}
         <div style={{ marginBottom: '3rem' }}>
           <h2 style={{
-            color: '#ff4757',
+            color: '#22c55e',
             fontSize: '1.25rem',
             fontWeight: '600',
             marginBottom: '1rem',
@@ -428,10 +428,10 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
               minWidth: '60px',
               textAlign: 'center',
               background: '#131315',
-              border: '2px solid #ff4757',
+              border: '2px solid #22c55e',
               borderRadius: '8px',
               padding: '0.5rem 1rem',
-              color: '#ff4757',
+              color: '#22c55e',
               fontWeight: 'bold',
               fontSize: '1.125rem'
             }}>
@@ -483,7 +483,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
             lineHeight: 1.4
           }}>
             <div style={{ marginBottom: '0.5rem' }}>
-              <strong style={{ color: '#ff4757' }}>Estimated Duration: {duration} minutes</strong>
+              <strong style={{ color: '#22c55e' }}>Estimated Duration: {duration} minutes</strong>
             </div>
             <div>
               {circuitType === 'super_sets'
@@ -497,7 +497,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
         {/* Duration Selection */}
         <div style={{ marginBottom: '3rem' }}>
           <h2 style={{
-            color: '#ff4757',
+            color: '#22c55e',
             fontSize: '1.25rem',
             fontWeight: '600',
             marginBottom: '1rem',
@@ -518,13 +518,13 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
                 onClick={() => setDuration(option.value)}
                 style={{
                   background: duration === option.value ? '#1c1c20' : '#131315',
-                  border: duration === option.value ? '2px solid #ff4757' : '2px solid #2a2a2f',
+                  border: duration === option.value ? '2px solid #22c55e' : '2px solid #2a2a2f',
                   borderRadius: '16px',
                   padding: '1.5rem',
                   cursor: 'pointer',
                   textAlign: 'center',
                   transition: 'all 0.3s ease',
-                  boxShadow: duration === option.value ? '0 8px 24px rgba(255, 71, 87, 0.25)' : '0 4px 12px rgba(0, 0, 0, 0.4)',
+                  boxShadow: duration === option.value ? '0 8px 24px rgba(34, 197, 94, 0.25)' : '0 4px 12px rgba(0, 0, 0, 0.4)',
                   position: 'relative'
                 }}
               >
@@ -567,7 +567,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
                 <div style={{
                   fontSize: '2rem',
                   fontWeight: 'bold',
-                  color: duration === option.value ? '#ff4757' : 'white',
+                  color: duration === option.value ? '#22c55e' : 'white',
                   marginBottom: '0.5rem'
                 }}>
                   {option.label}
@@ -593,7 +593,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
         {/* Difficulty Selection */}
         <div style={{ marginBottom: '3rem' }}>
           <h2 style={{
-            color: '#ff4757',
+            color: '#22c55e',
             fontSize: '1.25rem',
             fontWeight: '600',
             marginBottom: '1rem',
@@ -706,7 +706,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
             className="btn-primary"
             onClick={handleStartWorkout}
             style={{
-              background: 'linear-gradient(135deg, #ff4757 0%, #ff6b35 100%)',
+              background: 'linear-gradient(135deg, #22c55e 0%, #3b82f6 100%)',
               color: 'black',
               padding: '1rem 2.5rem',
               fontSize: '1.25rem',

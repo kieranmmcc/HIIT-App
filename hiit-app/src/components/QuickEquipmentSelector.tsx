@@ -72,7 +72,7 @@ const QuickEquipmentSelector: React.FC<QuickEquipmentSelectorProps> = ({
         marginBottom: '1rem'
       }}>
         <h3 style={{
-          color: '#ff4757',
+          color: '#22c55e',
           fontSize: '1.125rem',
           fontWeight: '600',
           textTransform: 'uppercase',
@@ -177,8 +177,8 @@ const QuickEquipmentSelector: React.FC<QuickEquipmentSelectorProps> = ({
                   }}
                   onMouseEnter={(e) => {
                     if (hasAllEquipment) {
-                      e.currentTarget.style.borderColor = '#ff4757';
-                      e.currentTarget.style.background = 'rgba(255, 71, 87, 0.1)';
+                      e.currentTarget.style.borderColor = '#22c55e';
+                      e.currentTarget.style.background = 'rgba(34, 197, 94, 0.1)';
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -251,29 +251,31 @@ const QuickEquipmentSelector: React.FC<QuickEquipmentSelectorProps> = ({
                 alignItems: 'center',
                 gap: '0.5rem',
                 background: isSelected
-                  ? (isRequired ? 'rgba(46, 213, 115, 0.2)' : 'rgba(255, 71, 87, 0.2)')
+                  ? (isRequired ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.2)')
                   : 'transparent',
                 border: isSelected
-                  ? `2px solid ${isRequired ? '#2ed573' : '#ff4757'}`
-                  : '2px solid #3a3a40',
+                  ? `2px solid ${isRequired ? '#22c55e' : '#22c55e'}`
+                  : '2px solid #6b7280',
+                opacity: isSelected || isRequired ? 1 : 0.6,
                 borderRadius: '12px',
                 padding: '0.5rem 1rem',
                 fontSize: '0.875rem',
                 color: isSelected ? 'white' : '#b8bcc8',
                 cursor: isRequired ? 'default' : 'pointer',
-                opacity: isRequired ? 0.8 : 1,
                 transition: 'all 0.2s ease'
               }}
               onMouseEnter={(e) => {
                 if (!isRequired) {
-                  e.currentTarget.style.borderColor = isSelected ? '#ff6b35' : '#ff4757';
+                  e.currentTarget.style.borderColor = isSelected ? '#22c55e' : '#9ca3af';
+                  e.currentTarget.style.opacity = '0.8';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isRequired) {
                   e.currentTarget.style.borderColor = isSelected
-                    ? '#ff4757'
-                    : '#3a3a40';
+                    ? '#22c55e'
+                    : '#6b7280';
+                  e.currentTarget.style.opacity = isSelected ? '1' : '0.6';
                 }
               }}
             >
@@ -290,7 +292,7 @@ const QuickEquipmentSelector: React.FC<QuickEquipmentSelectorProps> = ({
               <span>{equipment.name}</span>
               {isRequired && (
                 <span style={{
-                  background: '#2ed573',
+                  background: '#22c55e',
                   color: 'black',
                   fontSize: '0.625rem',
                   padding: '0.125rem 0.375rem',
