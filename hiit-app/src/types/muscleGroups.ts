@@ -33,7 +33,7 @@ export const muscleGroupFilters: MuscleGroupFilter[] = [
     name: 'Chest',
     description: 'Pecs, upper body push',
     color: '#3742fa',
-    icon: '🫁'
+    icon: '🛡️'
   },
   {
     id: 'back',
@@ -89,7 +89,7 @@ export const muscleGroupFilters: MuscleGroupFilter[] = [
     name: 'Chest/Back',
     description: 'Push/pull antagonist pair',
     color: '#3742fa',
-    icon: '🫁'
+    icon: '🛡️'
   },
   {
     id: 'shoulders_core',
