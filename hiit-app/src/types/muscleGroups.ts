@@ -26,7 +26,7 @@ export const muscleGroupFilters: MuscleGroupFilter[] = [
     name: 'Core',
     description: 'Abs, obliques, lower back',
     color: '#ff6b35',
-    icon: '💪'
+    icon: '🍻'
   },
   {
     id: 'chest',
@@ -96,14 +96,14 @@ export const muscleGroupFilters: MuscleGroupFilter[] = [
     name: 'Shoulders/Core',
     description: 'Stability & strength combo',
     color: '#ffa502',
-    icon: '💪'
+    icon: '🍻'
   },
   {
     id: 'cardio_core',
     name: 'Cardio/Core',
     description: 'High-intensity core blast',
     color: '#ff4081',
-    icon: '❤️'
+    icon: '🍻'
   }
 ];
 
