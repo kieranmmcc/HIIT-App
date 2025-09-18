@@ -139,7 +139,7 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
           const isSelected = selectedMuscleGroups.includes(muscleGroup.id);
           const isExcluded = excludedMuscleGroups.includes(muscleGroup.id);
           const maxSelections = circuitType === 'super_sets' ? (exerciseCount ? exerciseCount / 2 : 4) : undefined;
-          const isDisabled = maxSelections ? (!isSelected && selectedMuscleGroups.length >= maxSelections) : false;
+          const isDisabled = maxSelections ? (!isSelected && !isExcluded && selectedMuscleGroups.length >= maxSelections) : false;
 
           // Determine the state for styling
           let state = 'default';

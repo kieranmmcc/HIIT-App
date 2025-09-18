@@ -55,6 +55,18 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
   const circuitInfo = workout.circuit;
   const selectedCircuitType = circuitTypeOptions.find(option => option.value === workoutSettings.circuitType);
 
+  // Create dynamic description based on exercise count
+  const getDynamicDescription = () => {
+    if (!selectedCircuitType) return 'Your personalized workout';
+
+    if (selectedCircuitType.value === 'classic_cycle') {
+      const exerciseCount = workoutSettings.exerciseCount || 8;
+      return `Cycle through ${exerciseCount} different exercises continuously`;
+    }
+
+    return selectedCircuitType.description;
+  };
+
   // Get equipment data for display
   const getEquipmentInfo = (equipmentId: string): Equipment | undefined => {
     return equipmentData.find(eq => eq.id === equipmentId);
@@ -375,7 +387,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
             marginBottom: '1.5rem',
             margin: '0 0 1.5rem 0'
           }}>
-            {selectedCircuitType?.description || 'Your personalized workout'}
+            {getDynamicDescription()}
           </p>
 
           <div style={{
