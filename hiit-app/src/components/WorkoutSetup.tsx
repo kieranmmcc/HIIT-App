@@ -113,15 +113,23 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
 
   // Handle circuit type changes - adjust exercise count appropriately
   useEffect(() => {
-    // When switching to super sets, ensure even number of exercises
-    if (circuitType === 'super_sets' && exerciseCount % 2 !== 0) {
-      setExerciseCount(exerciseCount + 1);
+    if (circuitType === 'super_sets') {
+      // When switching to super sets, cap at 8 exercises (4 sets) and ensure even number
+      let newCount = Math.min(exerciseCount, 8);
+      if (newCount % 2 !== 0) {
+        newCount = newCount + 1;
+      }
+      if (newCount !== exerciseCount) {
+        setExerciseCount(newCount);
+      }
+    } else if (circuitType === 'classic_cycle') {
+      // When switching to classic, ensure minimum of 6 exercises
+      if (exerciseCount < 6) {
+        setExerciseCount(8); // Default to 8 for classic circuits
+      }
+      // No need to cap maximum for classic as slider handles it
     }
-    // When switching from super sets to classic, keep reasonable range
-    else if (circuitType === 'classic_cycle' && exerciseCount < 6) {
-      setExerciseCount(8); // Default to 8 for classic circuits
-    }
-  }, [circuitType]);
+  }, [circuitType, exerciseCount]);
 
   const handleEquipmentChange = (equipmentIds: string[]) => {
     setWorkoutEquipment(equipmentIds);
