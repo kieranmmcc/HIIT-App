@@ -4,25 +4,25 @@ export const durationOptions: DurationOption[] = [
   {
     value: 15,
     label: '15 Minutes',
-    description: 'Quick burn session',
+    description: 'Quick energy boost',
     exercises: 12
   },
   {
     value: 20,
     label: '20 Minutes',
-    description: 'Balanced workout',
+    description: 'Balanced full workout',
     exercises: 16
   },
   {
     value: 30,
     label: '30 Minutes',
-    description: 'Full intensity',
+    description: 'Extended training session',
     exercises: 24
   },
   {
     value: 45,
     label: '45 Minutes',
-    description: 'Complete challenge',
+    description: 'Maximum endurance challenge',
     exercises: 36
   }
 ];
@@ -31,25 +31,25 @@ export const difficultyOptions: DifficultyOption[] = [
   {
     value: 'easy',
     label: 'Beginner',
-    description: 'New to HIIT training',
+    description: 'Perfect for newcomers to HIIT',
     workTime: 30,
     restTime: 30,
-    color: '#2ed573' // Green
+    color: '#22c55e' // Green
   },
   {
     value: 'medium',
     label: 'Intermediate',
-    description: 'Regular fitness routine',
+    description: 'Ideal for regular exercisers',
     workTime: 45,
     restTime: 15,
-    color: '#feca57' // Yellow
+    color: '#fbbf24' // Amber
   },
   {
     value: 'hard',
     label: 'Advanced',
-    description: 'High-intensity athlete',
+    description: 'Designed for fitness athletes',
     workTime: 50,
     restTime: 10,
-    color: '#ff4757' // Red
+    color: '#ef4444' // Red
   }
 ];
