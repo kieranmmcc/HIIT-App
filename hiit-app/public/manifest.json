@@ -2,23 +2,23 @@
   "name": "HIIT Workout App",
   "short_name": "HIIT App",
   "description": "Personal HIIT workout generator with smart equipment selection and timer",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#0a0a0b",
   "theme_color": "#ff4757",
   "orientation": "portrait-primary",
   "categories": ["health", "fitness", "lifestyle"],
   "lang": "en",
-  "scope": "/",
+  "scope": "./",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "./icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "./icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
@@ -29,10 +29,10 @@
       "name": "Quick Workout",
       "short_name": "Workout",
       "description": "Start a quick HIIT workout",
-      "url": "/workout",
+      "url": "./",
       "icons": [
         {
-          "src": "/icon-192x192.png",
+          "src": "./icon-192x192.png",
           "sizes": "192x192"
         }
       ]
@@ -40,7 +40,7 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshot-mobile.png",
+      "src": "./screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
