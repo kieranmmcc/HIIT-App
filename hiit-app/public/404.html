@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/HIIT-App/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/HIIT-App/favicon-16x16.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- PWA Configuration -->
+    <title>HIIT Workout App</title>
+    <meta name="description" content="Personal HIIT workout generator with smart equipment selection and timer" />
+    <link rel="manifest" href="/HIIT-App/manifest.json" />
+
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#ff4757" />
+    <meta name="background-color" content="#0a0a0b" />
+
+    <!-- Apple PWA Configuration -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="HIIT App" />
+    <link rel="apple-touch-icon" href="/HIIT-App/apple-touch-icon.png" />
+
+    <!-- Microsoft PWA Configuration -->
+    <meta name="msapplication-TileColor" content="#ff4757" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin />
+    <script type="module" crossorigin src="/HIIT-App/assets/index-BXHcrL9t.js"></script>
+    <link rel="modulepreload" crossorigin href="/HIIT-App/assets/vendor-CiW5Bwbg.js">
+    <link rel="stylesheet" crossorigin href="/HIIT-App/assets/index-k4OHdwUv.css">
+
+    <script>
+      // Case-insensitive URL redirect for GitHub Pages
+      const currentPath = window.location.pathname.toLowerCase();
+      const correctPath = '/hiit-app/';
+
+      if (currentPath !== correctPath && !currentPath.startsWith(correctPath)) {
+        // Redirect to lowercase version
+        window.location.replace('/HIIT-App/' + window.location.search + window.location.hash);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
