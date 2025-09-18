@@ -70,7 +70,7 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
         marginBottom: '1rem'
       }}>
         <h2 style={{
-          color: '#ff4757',
+          color: '#22c55e',
           fontSize: '1.25rem',
           fontWeight: '600',
           textTransform: 'uppercase',
@@ -108,17 +108,17 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
           marginBottom: '0.5rem',
           margin: '0 0 0.5rem 0'
         }}>
-          Click to cycle: Default → <span style={{color: '#2ed573'}}>Target</span> → <span style={{color: '#ff4757'}}>Avoid</span>
+          Click to cycle: Default → <span style={{color: '#22c55e'}}>Target</span> → <span style={{color: '#ef4444'}}>Avoid</span>
         </p>
 
         <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem' }}>
           {selectedMuscleGroups.length > 0 && (
-            <span style={{ color: '#2ed573' }}>
+            <span style={{ color: '#22c55e' }}>
               ✓ Targeting {selectedMuscleGroups.length} body part{selectedMuscleGroups.length !== 1 ? 's' : ''}
             </span>
           )}
           {excludedMuscleGroups.length > 0 && (
-            <span style={{ color: '#ff4757' }}>
+            <span style={{ color: '#ef4444' }}>
               ✗ Avoiding {excludedMuscleGroups.length} body part{excludedMuscleGroups.length !== 1 ? 's' : ''}
             </span>
           )}
@@ -153,36 +153,38 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
               disabled={isDisabled}
               style={{
                 background: isDisabled ? '#0a0a0b' :
-                           state === 'selected' ? 'rgba(46, 213, 115, 0.15)' :
-                           state === 'excluded' ? 'rgba(255, 71, 87, 0.15)' :
+                           state === 'selected' ? 'rgba(34, 197, 94, 0.15)' :
+                           state === 'excluded' ? 'rgba(239, 68, 68, 0.15)' :
                            '#131315',
                 border: `2px solid ${isDisabled ? '#1a1a1d' :
-                        state === 'selected' ? '#2ed573' :
-                        state === 'excluded' ? '#ff4757' :
-                        '#2a2a2f'}`,
+                        state === 'selected' ? '#22c55e' :
+                        state === 'excluded' ? '#ef4444' :
+                        '#6b7280'}`,
                 borderRadius: '16px',
                 padding: '1.25rem',
                 cursor: isDisabled ? 'not-allowed' : 'pointer',
                 textAlign: 'left',
                 transition: 'all 0.3s ease',
                 boxShadow: isSelected
-                  ? '0 8px 24px rgba(255, 71, 87, 0.25)'
+                  ? '0 8px 24px rgba(34, 197, 94, 0.25)'
                   : '0 4px 12px rgba(0, 0, 0, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
-                opacity: isDisabled ? 0.4 : 1
+                opacity: isDisabled ? 0.4 : (state === 'default' ? 0.6 : 1)
               }}
               onMouseEnter={(e) => {
                 if (!isSelected && !isDisabled) {
-                  e.currentTarget.style.borderColor = '#ff4757';
-                  e.currentTarget.style.background = 'rgba(255, 71, 87, 0.05)';
+                  e.currentTarget.style.borderColor = '#9ca3af';
+                  e.currentTarget.style.background = 'rgba(156, 163, 175, 0.05)';
+                  e.currentTarget.style.opacity = '0.8';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isSelected && !isDisabled) {
-                  e.currentTarget.style.borderColor = '#2a2a2f';
+                  e.currentTarget.style.borderColor = '#6b7280';
                   e.currentTarget.style.background = '#131315';
+                  e.currentTarget.style.opacity = '0.6';
                 }
               }}
             >
@@ -197,8 +199,8 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
                 <div style={{
                   fontSize: '1.125rem',
                   fontWeight: 'bold',
-                  color: state === 'selected' ? '#2ed573' :
-                         state === 'excluded' ? '#ff4757' :
+                  color: state === 'selected' ? '#22c55e' :
+                         state === 'excluded' ? '#ef4444' :
                          'white',
                   marginBottom: '0.25rem'
                 }}>
@@ -217,7 +219,7 @@ const MuscleGroupSelector: React.FC<MuscleGroupSelectorProps> = ({
                   width: '24px',
                   height: '24px',
                   borderRadius: '50%',
-                  background: isSelected ? '#2ed573' : '#ff4757',
+                  background: isSelected ? '#22c55e' : '#ef4444',
                   color: 'white',
                   display: 'flex',
                   alignItems: 'center',

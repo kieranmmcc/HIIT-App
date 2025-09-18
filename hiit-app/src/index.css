@@ -7,11 +7,12 @@
   --tertiary-bg: #1c1c20;          /* Hover states */
   --accent-bg: #252529;            /* Elevated elements */
 
-  /* HIIT Brand Colors */
-  --hiit-red: #ff4757;             /* Primary action color */
-  --hiit-orange: #ff6b35;          /* Secondary action */
-  --hiit-yellow: #feca57;          /* Warning/energy */
-  --hiit-green: #2ed573;           /* Success/active */
+  /* HIIT Brand Colors - Colorblind Friendly */
+  --hiit-green: #22c55e;           /* Primary selection/active (green) */
+  --hiit-blue: #3b82f6;            /* Secondary action (blue) */
+  --hiit-yellow: #fbbf24;          /* Warning/energy (amber) */
+  --hiit-grey: #6b7280;            /* Unselected/inactive (grey) */
+  --hiit-light-grey: #9ca3af;      /* Light grey for hover states */
 
   /* Text Colors */
   --text-primary: #ffffff;         /* Primary text */
@@ -20,12 +21,12 @@
   --text-inverse: #0a0a0b;         /* Text on light backgrounds */
 
   /* Interactive States */
-  --border-default: #2a2a2f;       /* Default borders */
-  --border-hover: #3a3a40;         /* Hover borders */
-  --border-active: var(--hiit-red); /* Active/selected borders */
+  --border-default: var(--hiit-grey);     /* Default borders (grey) */
+  --border-hover: var(--hiit-light-grey); /* Hover borders (light grey) */
+  --border-active: var(--hiit-green);     /* Active/selected borders (green) */
   --shadow-default: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-hover: 0 6px 20px rgba(255, 71, 87, 0.15);
-  --shadow-active: 0 8px 24px rgba(255, 71, 87, 0.25);
+  --shadow-hover: 0 6px 20px rgba(34, 197, 94, 0.15);
+  --shadow-active: 0 8px 24px rgba(34, 197, 94, 0.25);
 
   /* Spacing & Layout */
   --container-padding: 1.5rem;
@@ -81,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 2.5rem;
-  background: linear-gradient(135deg, var(--hiit-red) 0%, var(--hiit-orange) 100%);
+  background: linear-gradient(135deg, var(--hiit-green) 0%, var(--hiit-blue) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -113,7 +114,7 @@ button {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--hiit-red) 0%, var(--hiit-orange) 100%);
+  background: linear-gradient(135deg, var(--hiit-green) 0%, var(--hiit-blue) 100%);
   color: var(--text-inverse);
   padding: 0.875rem 2rem;
   font-size: 1rem;

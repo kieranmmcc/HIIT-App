@@ -74,7 +74,7 @@ const EquipmentSelection: React.FC<EquipmentSelectionProps> = ({
             </div>
           </div>
           <div className="selection-counter" style={{ background: '#131315', padding: '0.75rem 1.5rem', borderRadius: '16px', border: '2px solid #2a2a2f', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}>
-            <span className="count" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#ff4757' }}>{selectedCount}</span>
+            <span className="count" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#22c55e' }}>{selectedCount}</span>
             <span className="label" style={{ color: '#b8bcc8' }}>of {equipment.length} equipment selected</span>
           </div>
         </header>
@@ -86,7 +86,7 @@ const EquipmentSelection: React.FC<EquipmentSelectionProps> = ({
           return (
             <div key={categoryKey} style={{ marginBottom: '2.5rem' }}>
               <h2 style={{
-                color: '#ff4757',
+                color: '#22c55e',
                 fontSize: '1.25rem',
                 fontWeight: '600',
                 marginBottom: '1rem',
@@ -114,7 +114,7 @@ const EquipmentSelection: React.FC<EquipmentSelectionProps> = ({
         })}
 
         <div className="equipment-actions" style={{ textAlign: 'center' }}>
-          <button className="btn-primary" onClick={handleContinue} style={{ background: 'linear-gradient(135deg, #ff4757 0%, #ff6b35 100%)', color: 'black', padding: '0.875rem 2rem', fontSize: '1rem', borderRadius: '12px', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+          <button className="btn-primary" onClick={handleContinue} style={{ background: 'linear-gradient(135deg, #22c55e 0%, #3b82f6 100%)', color: 'black', padding: '0.875rem 2rem', fontSize: '1rem', borderRadius: '12px', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
             Save & Continue
             <svg
               width="20"
