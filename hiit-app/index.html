@@ -27,6 +27,25 @@
 
     <!-- Preconnect to external resources -->
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin />
+
+    <script>
+      // Handle case-insensitive URLs for GitHub Pages deployment
+      (function() {
+        const currentPath = window.location.pathname;
+        const currentHostname = window.location.hostname;
+
+        // Only run redirect logic on GitHub Pages
+        if (currentHostname.includes('github.io')) {
+          const correctBasePath = '/HIIT-App/';
+
+          // Check for any case variant of hiit-app that's not the correct case
+          if (currentPath.match(/^\/hiit-app\//i) && !currentPath.startsWith(correctBasePath)) {
+            const pathAfterBase = currentPath.replace(/^\/hiit-app\//i, '');
+            window.location.replace(correctBasePath + pathAfterBase + window.location.search + window.location.hash);
+          }
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
