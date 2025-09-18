@@ -700,7 +700,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
           exerciseCount={exerciseCount}
         />
 
-        {/* Start Workout Button */}
+        {/* Generate Workout Button */}
         <div className="workout-actions" style={{ textAlign: 'center' }}>
           <button
             className="btn-primary"
@@ -720,7 +720,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
               marginBottom: '1rem'
             }}
           >
-            Start {duration}-Minute Workout
+            Generate {duration}-Minute Workout
             <svg
               width="20"
               height="20"
@@ -731,7 +731,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <polygon points="5,3 19,12 5,21" />
+              <polyline points="9,18 15,12 9,6" />
             </svg>
           </button>
           <p style={{ fontSize: '0.875rem', color: '#6c7293', margin: 0 }}>
