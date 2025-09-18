@@ -47,7 +47,7 @@ export const muscleGroupFilters: MuscleGroupFilter[] = [
     name: 'Shoulders',
     description: 'Deltoids, rotator cuffs',
     color: '#ffa502',
-    icon: '💪'
+    icon: '🦍'
   },
   {
     id: 'arms',
