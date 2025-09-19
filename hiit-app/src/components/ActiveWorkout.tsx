@@ -102,6 +102,18 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
       case 'rest':
         // Check if workout is complete
         if (currentExerciseIndex >= workout.exercises.length - 1) {
+          // Check if there's a cooldown to do
+          if (workout.cooldown && workout.cooldown.exercises.length > 0) {
+            return {
+              ...current,
+              phase: 'cooldown',
+              timeRemaining: workout.cooldown.exercises[0].duration,
+              currentCooldownIndex: 0,
+              isActive: true
+            };
+          }
+
+          // No cooldown, go directly to complete
           audioManager.playCompletionSound();
           return {
             ...current,
@@ -118,6 +130,29 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
           currentExerciseIndex: currentExerciseIndex + 1,
           phase: 'work',
           timeRemaining: workout.exercises[currentExerciseIndex + 1].duration
+        };
+
+      case 'cooldown':
+        const cooldownIndex = current.currentCooldownIndex || 0;
+
+        // Check if cooldown is complete
+        if (!workout.cooldown || cooldownIndex >= workout.cooldown.exercises.length - 1) {
+          // Cooldown complete, finish workout
+          audioManager.playCompletionSound();
+          return {
+            ...current,
+            phase: 'complete',
+            timeRemaining: 0,
+            isActive: false,
+            currentCooldownIndex: undefined
+          };
+        }
+
+        // Move to next cooldown exercise
+        return {
+          ...current,
+          currentCooldownIndex: cooldownIndex + 1,
+          timeRemaining: workout.cooldown.exercises[cooldownIndex + 1].duration
         };
 
       default:
@@ -170,15 +205,25 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
       const warmupIndex = activeWorkout.currentWarmupIndex || 0;
       return workout.warmup.exercises[warmupIndex];
     }
+    if (activeWorkout.phase === 'cooldown' && workout.cooldown) {
+      const cooldownIndex = activeWorkout.currentCooldownIndex || 0;
+      return workout.cooldown.exercises[cooldownIndex];
+    }
     return workout.exercises[activeWorkout.currentExerciseIndex]?.exercise;
   };
 
   const currentExercise = getCurrentExercise();
 
   // Calculate progress based on current phase
-  const progress = activeWorkout.phase === 'warmup' && workout.warmup
-    ? ((activeWorkout.currentWarmupIndex || 0) + 1) / workout.warmup.exercises.length * 100
-    : ((activeWorkout.currentExerciseIndex + 1) / workout.exercises.length) * 100;
+  const progress = (() => {
+    if (activeWorkout.phase === 'warmup' && workout.warmup) {
+      return ((activeWorkout.currentWarmupIndex || 0) + 1) / workout.warmup.exercises.length * 100;
+    }
+    if (activeWorkout.phase === 'cooldown' && workout.cooldown) {
+      return ((activeWorkout.currentCooldownIndex || 0) + 1) / workout.cooldown.exercises.length * 100;
+    }
+    return ((activeWorkout.currentExerciseIndex + 1) / workout.exercises.length) * 100;
+  })();
 
   // Circuit context helpers
   const getCurrentCircuitContext = () => {
@@ -449,6 +494,7 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
       case 'prepare': return '#feca57'; // Yellow
       case 'work': return '#2ed573'; // Green
       case 'rest': return '#ff4757'; // Red
+      case 'cooldown': return '#4a90e2'; // Blue
       case 'complete': return '#2ed573'; // Green
       default: return '#ffffff';
     }
@@ -460,6 +506,7 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
       case 'prepare': return 'rgba(254, 202, 87, 0.1)';
       case 'work': return 'rgba(46, 213, 115, 0.1)';
       case 'rest': return 'rgba(255, 71, 87, 0.1)';
+      case 'cooldown': return 'rgba(74, 144, 226, 0.1)';
       case 'complete': return 'rgba(46, 213, 115, 0.1)';
       default: return 'transparent';
     }
@@ -870,6 +917,7 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
               fontWeight: 'bold'
             }}>
               {activeWorkout.phase === 'warmup' ? `Warmup: ${currentExercise?.name || 'Loading...'}` :
+               activeWorkout.phase === 'cooldown' ? `Cooldown: ${currentExercise?.name || 'Loading...'}` :
                activeWorkout.phase === 'prepare' ? `Get Ready: ${currentExercise?.name || 'Loading...'}` :
                activeWorkout.phase === 'rest' ? 'Rest Time' :
                currentExercise?.name || 'Loading...'}
@@ -895,7 +943,7 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
                 overflow: 'auto', // Allow scrolling
                 minHeight: 0
               }}>
-              {(activeWorkout.phase === 'work' || activeWorkout.phase === 'warmup') && (
+              {(activeWorkout.phase === 'work' || activeWorkout.phase === 'warmup' || activeWorkout.phase === 'cooldown') && (
                 <p style={{
                   color: '#b8bcc8',
                   fontSize: '0.875rem',
@@ -928,6 +976,17 @@ const ActiveWorkoutComponent: React.FC<ActiveWorkoutProps> = ({
                 <div>
                   <p style={{ color: '#fd79a8', fontSize: '1rem', fontWeight: 'bold', margin: '0 0 0.75rem 0' }}>
                     {workout.warmup ? 'Starting with warmup exercises' : 'Get ready to begin!'}
+                  </p>
+                  <p style={{ color: '#b8bcc8', fontSize: '0.875rem', margin: 0 }}>
+                    {currentExercise?.instructions}
+                  </p>
+                </div>
+              )}
+
+              {activeWorkout.phase === 'cooldown' && (
+                <div>
+                  <p style={{ color: '#4a90e2', fontSize: '1rem', fontWeight: 'bold', margin: '0 0 0.75rem 0' }}>
+                    Cool down with these recovery stretches
                   </p>
                   <p style={{ color: '#b8bcc8', fontSize: '0.875rem', margin: 0 }}>
                     {currentExercise?.instructions}

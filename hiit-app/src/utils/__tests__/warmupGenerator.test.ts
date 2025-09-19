@@ -560,7 +560,7 @@ describe('warmupGenerator', () => {
     });
 
     describe('duration and exercise count constraints', () => {
-      it('respects minimum duration of 60 seconds', () => {
+      it('respects user-configured warmup duration preferences', () => {
         const workout: GeneratedWorkout = {
           exercises: [
             {
@@ -583,7 +583,13 @@ describe('warmupGenerator', () => {
         };
 
         const warmup = generateWarmup(workout);
-        expect(warmup.totalDuration).toBeGreaterThanOrEqual(60);
+        // Should respect user preferences (default 20s per exercise, with at least 2 exercises = 40s)
+        expect(warmup.totalDuration).toBeGreaterThanOrEqual(40);
+        expect(warmup.exercises.length).toBeGreaterThanOrEqual(2);
+        // All exercises should have user-configured duration (default 20s)
+        warmup.exercises.forEach(exercise => {
+          expect(exercise.duration).toBe(20); // Default warmup duration
+        });
       });
 
       it('respects maximum duration of 180 seconds', () => {

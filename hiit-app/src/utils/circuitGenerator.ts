@@ -9,6 +9,7 @@ import type {
 } from '../types/circuit';
 import exercisesData from '../data/exercises.json';
 import { generateWarmup } from './warmupGenerator';
+import { generateCooldown } from './cooldownGenerator';
 import { BlacklistStorage } from './blacklistStorage';
 
 const exercises = exercisesData as Exercise[];
@@ -47,9 +48,11 @@ export function generateCircuitWorkout(settings: WorkoutSettings): GeneratedWork
     circuit
   };
 
-  // Generate warmup based on the workout
+  // Generate warmup and cooldown based on the workout
   const warmup = generateWarmup(workout);
+  const cooldown = generateCooldown(workout);
   workout.warmup = warmup;
+  workout.cooldown = cooldown;
 
   return workout;
 }

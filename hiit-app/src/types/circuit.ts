@@ -67,9 +67,24 @@ export interface GeneratedWorkout {
     exercises: WarmupExercise[];
     totalDuration: number;
   };
+
+  // Cooldown exercises
+  cooldown?: {
+    exercises: CooldownExercise[];
+    totalDuration: number;
+  };
 }
 
 export interface WarmupExercise {
+  id: string;
+  name: string;
+  instructions: string;
+  targetBodyParts: string[];
+  duration: number;
+  equipment: string[];
+}
+
+export interface CooldownExercise {
   id: string;
   name: string;
   instructions: string;

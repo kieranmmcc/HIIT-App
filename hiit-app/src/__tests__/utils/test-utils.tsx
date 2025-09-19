@@ -3,7 +3,8 @@ import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
 import type { Equipment } from '../../types/equipment';
 import type { WorkoutSettings } from '../../types/workout';
-import type { GeneratedWorkout, Exercise } from '../../types/exercise';
+import type { GeneratedWorkout } from '../../types/circuit';
+import type { Exercise } from '../../types/exercise';
 
 // Custom render function for components that might need providers
 const customRender = (

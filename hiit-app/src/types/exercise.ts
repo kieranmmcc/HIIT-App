@@ -26,6 +26,12 @@ export interface GeneratedWorkout {
     exercises: WarmupExercise[];
     totalDuration: number;
   };
+
+  // Cooldown exercises
+  cooldown?: {
+    exercises: CooldownExercise[];
+    totalDuration: number;
+  };
 }
 
 export interface WarmupExercise {
@@ -37,12 +43,22 @@ export interface WarmupExercise {
   equipment: string[];
 }
 
+export interface CooldownExercise {
+  id: string;
+  name: string;
+  instructions: string;
+  targetBodyParts: string[];
+  duration: number;
+  equipment: string[];
+}
+
 export interface ActiveWorkout {
   workout: GeneratedWorkout;
   currentExerciseIndex: number;
-  phase: 'warmup' | 'prepare' | 'work' | 'rest' | 'complete';
+  phase: 'warmup' | 'prepare' | 'work' | 'rest' | 'cooldown' | 'complete';
   timeRemaining: number; // seconds remaining in current phase
   isActive: boolean;
   isPaused: boolean;
   currentWarmupIndex?: number; // For tracking warmup exercises
+  currentCooldownIndex?: number; // For tracking cooldown exercises
 }

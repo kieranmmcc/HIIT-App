@@ -564,13 +564,26 @@ describe('Warmup Integration Tests', () => {
 
       expect(workout.warmup).toBeDefined();
 
-      // Longer, intense workout should have more thorough warmup
-      expect(workout.warmup!.totalDuration).toBeGreaterThanOrEqual(120);
-      expect(workout.warmup!.totalDuration).toBeLessThanOrEqual(180);
+      // Should have comprehensive warmup with user-configured duration per exercise
+      const exerciseCount = workout.warmup!.exercises.length;
+      const expectedTotalDuration = exerciseCount * 20; // Default warmup duration
+      expect(workout.warmup!.totalDuration).toBe(expectedTotalDuration);
 
-      // More exercises for comprehensive preparation
+      // All exercises should use user-configured duration
+      workout.warmup!.exercises.forEach(exercise => {
+        expect(exercise.duration).toBe(20); // Default warmup duration
+      });
+
+      // Should have multiple exercises for comprehensive preparation
       expect(workout.warmup!.exercises.length).toBeGreaterThanOrEqual(3);
-      expect(workout.warmup!.exercises.length).toBeLessThanOrEqual(6);
+      expect(workout.warmup!.exercises.length).toBeLessThanOrEqual(8);
+
+      // Should include variety of body parts for comprehensive warmup
+      const bodyParts = new Set();
+      workout.warmup!.exercises.forEach(exercise => {
+        exercise.targetBodyParts.forEach(part => bodyParts.add(part));
+      });
+      expect(bodyParts.size).toBeGreaterThanOrEqual(2); // Multiple body parts covered
     });
   });
 });

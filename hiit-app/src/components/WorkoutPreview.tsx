@@ -11,6 +11,8 @@ import { circuitTypeOptions } from '../types/circuit';
 import { InstructionPreferences } from '../utils/instructionPreferences';
 import { difficultyOptions } from '../data/workoutOptions';
 import { warmupBodyPartLabels } from '../utils/warmupGenerator';
+import { cooldownBodyPartLabels } from '../utils/cooldownGenerator';
+import DurationSettings from './DurationSettings';
 
 interface WorkoutPreviewProps {
   workoutSettings: WorkoutSettings;
@@ -46,6 +48,9 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
       setWorkout(existingWorkout);
     }
   }, [existingWorkout]);
+
+  const [isDurationSettingsOpen, setIsDurationSettingsOpen] = useState(false);
+
   const [expandedExercises, setExpandedExercises] = useState<Set<string>>(() => {
     // Load saved preference and expand all if user prefers instructions visible
     const instructionsVisible = InstructionPreferences.getInstructionsVisible();
@@ -204,6 +209,12 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
   const allExerciseKeys = getAllExerciseKeys();
   const allInstructionsVisible = allExerciseKeys.size > 0 &&
     Array.from(allExerciseKeys).every(key => expandedExercises.has(key));
+
+  const handleDurationSettingsSave = useCallback(() => {
+    // Regenerate workout to apply new durations
+    const newWorkout = generateWorkout(workoutSettings);
+    setWorkout(newWorkout);
+  }, [workoutSettings]);
 
   const handleRegenerateCircuitExercise = useCallback((stationId: string, exerciseIndex: number) => {
     setWorkout(prevWorkout => {
@@ -652,7 +663,7 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
             padding: '1.5rem',
             marginBottom: '2rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <h2 style={{
                 color: '#f39c12',
                 fontSize: '1.25rem',
@@ -661,8 +672,28 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
                 letterSpacing: '1px',
                 margin: 0
               }}>
-                🔥 Warm-Up ({Math.round(workout.warmup.totalDuration / 60)} min)
+                🔥 Preview Warm-Up ({Math.round(workout.warmup.totalDuration / 60)} min)
               </h2>
+              <button
+                onClick={() => setIsDurationSettingsOpen(true)}
+                style={{
+                  background: 'rgba(243, 156, 18, 0.1)',
+                  border: '1px solid rgba(243, 156, 18, 0.3)',
+                  borderRadius: '6px',
+                  color: '#f39c12',
+                  padding: '0.5rem 0.75rem',
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.375rem',
+                  fontWeight: '500'
+                }}
+                title="Configure warmup and cooldown durations"
+              >
+⚙️
+                Warmup / Cooldown
+              </button>
             </div>
 
             <p style={{
@@ -1290,6 +1321,163 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
           <div>Legacy workout view (no circuit structure)</div>
         )}
 
+        {/* Cooldown Section */}
+        {workout.cooldown && workout.cooldown.exercises.length > 0 && (
+          <div style={{
+            background: '#131315',
+            border: '2px solid #4a90e2',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '2rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h2 style={{
+                color: '#4a90e2',
+                fontSize: '1.25rem',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                margin: 0
+              }}>
+                🧘‍♀️ Preview Cooldown ({Math.round(workout.cooldown.totalDuration / 60)} min)
+              </h2>
+              <button
+                onClick={() => setIsDurationSettingsOpen(true)}
+                style={{
+                  background: 'rgba(74, 144, 226, 0.1)',
+                  border: '1px solid rgba(74, 144, 226, 0.3)',
+                  borderRadius: '6px',
+                  color: '#4a90e2',
+                  padding: '0.5rem 0.75rem',
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.375rem',
+                  fontWeight: '500'
+                }}
+                title="Configure warmup and cooldown durations"
+              >
+⚙️
+                Warmup / Cooldown
+              </button>
+            </div>
+
+            <p style={{
+              color: '#b8bcc8',
+              fontSize: '0.875rem',
+              marginBottom: '1.5rem',
+              lineHeight: 1.5
+            }}>
+              Targeted stretches for the muscle groups used in your workout to aid recovery
+            </p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1.5rem'
+            }}>
+              {workout.cooldown.exercises.map((cooldownEx, index) => (
+                <div
+                  key={cooldownEx.id}
+                  style={{
+                    background: '#1c1c20',
+                    border: '1px solid #3a3a40',
+                    borderRadius: '12px',
+                    padding: '1.25rem'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
+                    {/* Exercise Number */}
+                    <div style={{
+                      width: '28px',
+                      height: '28px',
+                      background: 'rgba(74, 144, 226, 0.2)',
+                      border: '2px solid #4a90e2',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#4a90e2',
+                      fontSize: '0.875rem',
+                      fontWeight: 'bold',
+                      flexShrink: 0
+                    }}>
+                      {index + 1}
+                    </div>
+
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+                        <div style={{ flex: 1 }}>
+                          <h4 style={{
+                            color: 'white',
+                            fontSize: '1rem',
+                            fontWeight: '600',
+                            marginBottom: '0.5rem',
+                            lineHeight: 1.3
+                          }}>
+                            {cooldownEx.name}
+                          </h4>
+
+                          <div style={{
+                            background: 'rgba(74, 144, 226, 0.15)',
+                            border: '1px solid #4a90e2',
+                            borderRadius: '6px',
+                            padding: '0.25rem 0.5rem',
+                            fontSize: '0.75rem',
+                            color: '#4a90e2',
+                            fontWeight: '600',
+                            display: 'inline-block',
+                            marginBottom: '0.75rem'
+                          }}>
+                            {cooldownEx.duration}s
+                          </div>
+
+                          {/* Target Body Parts */}
+                          <div style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '0.375rem',
+                            marginBottom: '0.75rem'
+                          }}>
+                            {cooldownEx.targetBodyParts.slice(0, 3).map((bodyPart) => (
+                              <div
+                                key={bodyPart}
+                                style={{
+                                  background: 'rgba(74, 144, 226, 0.1)',
+                                  border: '1px solid rgba(74, 144, 226, 0.3)',
+                                  borderRadius: '4px',
+                                  padding: '0.125rem 0.375rem',
+                                  fontSize: '0.625rem',
+                                  color: '#4a90e2',
+                                  textTransform: 'capitalize'
+                                }}
+                              >
+                                {cooldownBodyPartLabels[bodyPart] || bodyPart}
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Instructions */}
+                          <p style={{
+                            color: '#b8bcc8',
+                            fontSize: '0.75rem',
+                            lineHeight: 1.4,
+                            margin: 0,
+                            opacity: 0.9
+                          }}>
+                            {cooldownEx.instructions}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Start Workout Button */}
         <div style={{
           textAlign: 'center',
@@ -1340,6 +1528,12 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
         </div>
       </div>
       </div>
+
+      <DurationSettings
+        isOpen={isDurationSettingsOpen}
+        onClose={() => setIsDurationSettingsOpen(false)}
+        onSave={handleDurationSettingsSave}
+      />
     </>
   );
 };

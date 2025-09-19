@@ -2,6 +2,7 @@ import type { Exercise, WorkoutExercise, GeneratedWorkout } from '../types/exerc
 import type { WorkoutSettings } from '../types/workout';
 import { generateCircuitWorkout } from './circuitGenerator';
 import { generateWarmup } from './warmupGenerator';
+import { generateCooldown } from './cooldownGenerator';
 import exercisesData from '../data/exercises.json';
 import { BlacklistStorage } from './blacklistStorage';
 
@@ -91,9 +92,11 @@ function generateLegacyWorkout(settings: WorkoutSettings): GeneratedWorkout {
     equipmentUsed: selectedEquipment
   };
 
-  // Generate warmup based on the workout
+  // Generate warmup and cooldown based on the workout
   const warmup = generateWarmup(workout);
+  const cooldown = generateCooldown(workout);
   workout.warmup = warmup;
+  workout.cooldown = cooldown;
 
   return workout;
 }

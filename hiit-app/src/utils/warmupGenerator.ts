@@ -1,5 +1,6 @@
 import type { GeneratedWorkout } from '../types/circuit';
 import warmupsData from '../data/warmups.json';
+import { DurationPreferencesStorage } from './durationPreferences';
 
 interface WarmupExercise {
   id: string;
@@ -161,9 +162,18 @@ export function generateWarmup(workout: GeneratedWorkout): GeneratedWarmup {
     totalDuration = defaultWarmup.duration;
   }
 
+  // Apply user-configured duration to all selected warmups
+  const preferences = DurationPreferencesStorage.getPreferences();
+  const configuredWarmups = selectedWarmups.map(warmup => ({
+    ...warmup,
+    duration: preferences.warmupDuration
+  }));
+
+  const configuredTotalDuration = configuredWarmups.length * preferences.warmupDuration;
+
   return {
-    exercises: selectedWarmups,
-    totalDuration
+    exercises: configuredWarmups,
+    totalDuration: configuredTotalDuration
   };
 }
 

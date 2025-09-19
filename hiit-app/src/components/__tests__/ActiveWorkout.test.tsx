@@ -342,10 +342,12 @@ describe('ActiveWorkout Component', () => {
       // Should be in warmup
       expect(screen.getByText('Warmup: Long Warmup')).toBeInTheDocument();
 
-      // Find and click skip button
-      const skipButton = screen.getByRole('button', { name: /skip|next/i }) ||
-                        screen.querySelector('button[title*="skip"]') ||
-                        screen.querySelector('svg[viewBox="0 0 24 24"]')?.closest('button');
+      // Find skip button by looking for buttons with skip-related content
+      const skipButtons = screen.getAllByRole('button');
+      const skipButton = skipButtons.find(button => {
+        const svg = button.querySelector('svg');
+        return svg && svg.getAttribute('viewBox') === '0 0 24 24';
+      });
 
       if (skipButton) {
         fireEvent.click(skipButton);
@@ -483,7 +485,11 @@ describe('ActiveWorkout Component', () => {
       expect(screen.getByText('Pause')).toBeInTheDocument();
 
       // Find stop button (usually represented by a square icon)
-      const stopButton = screen.querySelector('svg[viewBox="0 0 24 24"] rect')?.closest('button');
+      const stopButtons = screen.getAllByRole('button');
+      const stopButton = stopButtons.find(button => {
+        const svg = button.querySelector('svg[viewBox="0 0 24 24"] rect');
+        return svg !== null;
+      });
 
       if (stopButton) {
         fireEvent.click(stopButton);
