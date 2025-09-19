@@ -1,6 +1,7 @@
 import type { Exercise, WorkoutExercise, GeneratedWorkout } from '../types/exercise';
 import type { WorkoutSettings } from '../types/workout';
 import { generateCircuitWorkout } from './circuitGenerator';
+import { generateWarmup } from './warmupGenerator';
 import exercisesData from '../data/exercises.json';
 import { BlacklistStorage } from './blacklistStorage';
 
@@ -82,12 +83,19 @@ function generateLegacyWorkout(settings: WorkoutSettings): GeneratedWorkout {
   // Calculate actual total duration
   const actualDuration = workoutExercises.length * roundDuration;
 
-  return {
+  // Create the workout object
+  const workout: GeneratedWorkout = {
     exercises: workoutExercises,
     totalDuration: actualDuration,
     difficulty,
     equipmentUsed: selectedEquipment
   };
+
+  // Generate warmup based on the workout
+  const warmup = generateWarmup(workout);
+  workout.warmup = warmup;
+
+  return workout;
 }
 
 function selectBalancedExercises(
@@ -170,40 +178,135 @@ function createCycledWorkout(uniqueExercises: Exercise[], targetCount: number): 
 
 export function regenerateExercise(
   currentExercise: Exercise,
-  settings: WorkoutSettings
+  settings: WorkoutSettings,
+  existingExercises?: Exercise[]
 ): Exercise | null {
-  const { selectedEquipment, difficulty } = settings;
+  const { selectedEquipment, difficulty, targetMuscleGroups, excludedMuscleGroups } = settings;
 
-  // Filter exercises by available equipment and exclude blacklisted exercises
-  const blacklistedExercises = BlacklistStorage.getBlacklistedExercises();
-  const availableExercises = exercises.filter(exercise =>
-    exercise.equipment.some(equipmentType =>
-      selectedEquipment.includes(equipmentType)
-    ) && !blacklistedExercises.includes(exercise.id.toString()) &&
-    exercise.id !== currentExercise.id // Exclude current exercise
-  );
+  // Get all existing exercise IDs to avoid duplicates, always include current exercise
+  const existingExerciseIds = existingExercises
+    ? [...existingExercises.map(ex => ex.id), currentExercise.id]
+    : [currentExercise.id];
 
-  // Filter by difficulty level
-  const difficultyMap = { easy: [1, 2, 3], medium: [2, 3, 4], hard: [3, 4, 5] };
-  const allowedDifficulties = difficultyMap[difficulty];
+  // Helper function to check if an exercise is cardio
+  const isCardioExercise = (exercise: Exercise) => {
+    const cardioMuscleGroups = ['legs', 'shoulders', 'core'];
+    const cardioKeywords = ['jumping', 'burpee', 'mountain', 'jack', 'high knees', 'butt kickers', 'jump'];
 
-  const suitableExercises = availableExercises.filter(exercise =>
-    allowedDifficulties.includes(exercise.difficulty)
-  );
+    return (
+      exercise.muscleGroups.some(mg => cardioMuscleGroups.includes(mg)) &&
+      cardioKeywords.some(keyword => exercise.name.toLowerCase().includes(keyword))
+    ) || exercise.name.toLowerCase().includes('cardio');
+  };
 
-  // Prefer exercises targeting the same primary muscle group
-  const sameMuscleExercises = suitableExercises.filter(exercise =>
-    exercise.primaryMuscle === currentExercise.primaryMuscle
-  );
+  // Function to apply filters with fallback levels
+  const getFilteredExercises = (fallbackLevel: number): Exercise[] => {
+    const blacklistedExercises = BlacklistStorage.getBlacklistedExercises();
 
-  // Choose from same muscle group if available, otherwise from all suitable exercises
-  const candidateExercises = sameMuscleExercises.length > 0 ? sameMuscleExercises : suitableExercises;
+    // Level 1: Base filters (always applied)
+    let filtered = exercises.filter(exercise =>
+      exercise.equipment.some(equipmentType =>
+        selectedEquipment.includes(equipmentType)
+      ) && !blacklistedExercises.includes(exercise.id.toString()) &&
+      !existingExerciseIds.includes(exercise.id) // Exclude all existing exercises
+    );
 
-  if (candidateExercises.length === 0) {
-    return null; // No suitable replacement found
+    // For refresh, we want more variety - be more lenient with difficulty
+    // Level 2: Apply difficulty filter (expand range at higher fallback levels)
+    if (fallbackLevel === 0) {
+      // Strict difficulty matching
+      const difficultyMap = { easy: [1, 2, 3], medium: [2, 3, 4], hard: [3, 4, 5] };
+      const allowedDifficulties = difficultyMap[difficulty];
+      filtered = filtered.filter(exercise =>
+        allowedDifficulties.includes(exercise.difficulty)
+      );
+    } else if (fallbackLevel === 1) {
+      // Expanded difficulty range for more variety
+      const expandedDifficultyMap = { easy: [1, 2, 3, 4], medium: [1, 2, 3, 4, 5], hard: [2, 3, 4, 5] };
+      const allowedDifficulties = expandedDifficultyMap[difficulty];
+      filtered = filtered.filter(exercise =>
+        allowedDifficulties.includes(exercise.difficulty)
+      );
+    }
+    // fallbackLevel >= 2: Skip difficulty filter entirely
+
+    // Level 3: Apply excluded muscle groups filter (skip if fallbackLevel >= 3)
+    if (fallbackLevel < 3 && excludedMuscleGroups && excludedMuscleGroups.length > 0) {
+      filtered = filtered.filter(exercise => {
+        // Exclude if primary muscle is in excluded list
+        if (excludedMuscleGroups.includes(exercise.primaryMuscle)) {
+          return false;
+        }
+        // Exclude if any muscle group is in excluded list
+        if (exercise.muscleGroups.some(mg => excludedMuscleGroups.includes(mg))) {
+          return false;
+        }
+        return true;
+      });
+    }
+
+    // Level 4: Apply target muscle groups filter (skip if fallbackLevel >= 4)
+    if (fallbackLevel < 4 && targetMuscleGroups && targetMuscleGroups.length > 0) {
+      filtered = filtered.filter(exercise => {
+        return targetMuscleGroups.some(targetMuscle => {
+          if (targetMuscle === 'cardio') {
+            return isCardioExercise(exercise);
+          } else if (targetMuscle === 'core') {
+            return exercise.primaryMuscle === 'core' || exercise.muscleGroups.includes('core');
+          } else {
+            return exercise.primaryMuscle === targetMuscle || exercise.muscleGroups.includes(targetMuscle);
+          }
+        });
+      });
+    }
+
+    return filtered;
+  };
+
+  // Try different levels of filtering until we find exercises
+  let candidateExercises: Exercise[] = [];
+  let usedFallbackLevel = -1;
+
+  // Prioritize avoid selections over variety - only ignore them as absolute last resort
+  for (let level = 0; level <= 4; level++) {
+    const filtered = getFilteredExercises(level);
+
+    // Simple priority: use first level that has any exercises, avoid selections are respected until level 3+
+    if (filtered.length > 0) {
+      usedFallbackLevel = level;
+      // Prefer exercises targeting the same primary muscle group (if not excluded at this level)
+      if (level < 3 && (!excludedMuscleGroups || !excludedMuscleGroups.includes(currentExercise.primaryMuscle))) {
+        const sameMuscleExercises = filtered.filter(exercise =>
+          exercise.primaryMuscle === currentExercise.primaryMuscle
+        );
+        candidateExercises = sameMuscleExercises.length > 0 ? sameMuscleExercises : filtered;
+      } else {
+        candidateExercises = filtered;
+      }
+      break;
+    }
   }
 
-  // Return a random replacement
+  if (candidateExercises.length === 0) {
+    return null; // No suitable replacement found even with all fallbacks
+  }
+
+  // Return a random replacement with fallback reason if needed
   const randomIndex = Math.floor(Math.random() * candidateExercises.length);
-  return candidateExercises[randomIndex];
+  const selectedExercise = { ...candidateExercises[randomIndex] };
+
+  // Set fallback reason based on the level that was needed
+  if (usedFallbackLevel > 0) {
+    if (usedFallbackLevel >= 4) {
+      selectedExercise.fallbackReason = 'target_muscle_unavailable';
+    } else if (usedFallbackLevel >= 3) {
+      selectedExercise.fallbackReason = 'no_suitable_alternatives';
+    } else if (usedFallbackLevel >= 2) {
+      selectedExercise.fallbackReason = 'difficulty_mismatch';
+    } else {
+      selectedExercise.fallbackReason = 'equipment_unavailable';
+    }
+  }
+
+  return selectedExercise;
 }

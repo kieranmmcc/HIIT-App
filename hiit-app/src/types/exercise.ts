@@ -6,6 +6,7 @@ export interface Exercise {
   primaryMuscle: string;
   difficulty: number; // 1-5 scale
   equipment: string[];
+  fallbackReason?: 'target_muscle_unavailable' | 'difficulty_mismatch' | 'equipment_unavailable' | 'no_suitable_alternatives';
 }
 
 export interface WorkoutExercise {
@@ -19,6 +20,21 @@ export interface GeneratedWorkout {
   totalDuration: number; // in seconds
   difficulty: 'easy' | 'medium' | 'hard';
   equipmentUsed: string[];
+
+  // Warmup exercises
+  warmup?: {
+    exercises: WarmupExercise[];
+    totalDuration: number;
+  };
+}
+
+export interface WarmupExercise {
+  id: string;
+  name: string;
+  instructions: string;
+  targetBodyParts: string[];
+  duration: number;
+  equipment: string[];
 }
 
 export interface ActiveWorkout {
