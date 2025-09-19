@@ -183,4 +183,404 @@ describe('ActiveWorkout Component', () => {
     const progressBar = container.querySelector('[style*="width: 50%"]');
     expect(progressBar).toBeInTheDocument(); // 1 of 2 warmup exercises = 50%
   });
+
+  describe('warmup phase transitions', () => {
+    it('transitions from warmup to prepare to work phases correctly', async () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'Quick Stretch',
+              instructions: 'Stretch quickly',
+              targetBodyParts: ['shoulders'],
+              duration: 1, // 1 second for fast test
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 1
+        }
+      });
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      // Start in warmup phase
+      expect(screen.getByText('warmup')).toBeInTheDocument();
+      expect(screen.getByText('Warmup: Quick Stretch')).toBeInTheDocument();
+
+      // Start the workout
+      fireEvent.click(screen.getByText('Start'));
+
+      // Wait for warmup to complete and transition to prepare
+      await waitFor(() => {
+        expect(screen.getByText('prepare')).toBeInTheDocument();
+      }, { timeout: 2000 });
+
+      // Wait for prepare to complete and transition to work
+      await waitFor(() => {
+        expect(screen.getByText('work')).toBeInTheDocument();
+      }, { timeout: 6000 }); // Prepare phase is 5 seconds
+    });
+
+    it('handles multiple warmup exercises in sequence', async () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'First Warmup',
+              instructions: 'First exercise',
+              targetBodyParts: ['shoulders'],
+              duration: 1,
+              equipment: ['bodyweight']
+            },
+            {
+              id: 'warmup_002',
+              name: 'Second Warmup',
+              instructions: 'Second exercise',
+              targetBodyParts: ['legs'],
+              duration: 1,
+              equipment: ['bodyweight']
+            },
+            {
+              id: 'warmup_003',
+              name: 'Third Warmup',
+              instructions: 'Third exercise',
+              targetBodyParts: ['core'],
+              duration: 1,
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 3
+        }
+      });
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      fireEvent.click(screen.getByText('Start'));
+
+      // Should start with first warmup
+      expect(screen.getByText('Warmup: First Warmup')).toBeInTheDocument();
+
+      // Progress through each warmup exercise
+      await waitFor(() => {
+        expect(screen.getByText('Warmup: Second Warmup')).toBeInTheDocument();
+      }, { timeout: 2000 });
+
+      await waitFor(() => {
+        expect(screen.getByText('Warmup: Third Warmup')).toBeInTheDocument();
+      }, { timeout: 2000 });
+
+      // Finally transition to prepare
+      await waitFor(() => {
+        expect(screen.getByText('prepare')).toBeInTheDocument();
+      }, { timeout: 2000 });
+    });
+
+    it('skips warmup when workout has no warmup', async () => {
+      const workout = createMockWorkout(); // No warmup
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      // Should start directly in prepare phase
+      expect(screen.getByText('prepare')).toBeInTheDocument();
+      expect(screen.queryByText('warmup')).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByText('Start'));
+
+      // Should transition directly to work after 5 seconds
+      await waitFor(() => {
+        expect(screen.getByText('work')).toBeInTheDocument();
+      }, { timeout: 6000 });
+    });
+
+    it('allows skipping warmup exercises', async () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'Long Warmup',
+              instructions: 'This takes a while',
+              targetBodyParts: ['full_body'],
+              duration: 30, // Long duration
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 30
+        }
+      });
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      fireEvent.click(screen.getByText('Start'));
+
+      // Should be in warmup
+      expect(screen.getByText('Warmup: Long Warmup')).toBeInTheDocument();
+
+      // Find and click skip button
+      const skipButton = screen.getByRole('button', { name: /skip|next/i }) ||
+                        screen.querySelector('button[title*="skip"]') ||
+                        screen.querySelector('svg[viewBox="0 0 24 24"]')?.closest('button');
+
+      if (skipButton) {
+        fireEvent.click(skipButton);
+
+        // Should advance to next phase
+        await waitFor(() => {
+          expect(screen.getByText('prepare')).toBeInTheDocument();
+        }, { timeout: 1000 });
+      }
+    });
+
+    it('maintains correct progress during warmup phase', () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'First',
+              instructions: 'First exercise',
+              targetBodyParts: ['shoulders'],
+              duration: 30,
+              equipment: ['bodyweight']
+            },
+            {
+              id: 'warmup_002',
+              name: 'Second',
+              instructions: 'Second exercise',
+              targetBodyParts: ['legs'],
+              duration: 30,
+              equipment: ['bodyweight']
+            },
+            {
+              id: 'warmup_003',
+              name: 'Third',
+              instructions: 'Third exercise',
+              targetBodyParts: ['core'],
+              duration: 30,
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 90
+        }
+      });
+
+      const { container } = render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      // First exercise = 33.3%
+      let progressBar = container.querySelector('[style*="width: 33"]');
+      expect(progressBar).toBeInTheDocument();
+    });
+
+    it('handles pause and resume during warmup', async () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'Pausable Warmup',
+              instructions: 'Can be paused',
+              targetBodyParts: ['full_body'],
+              duration: 10,
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 10
+        }
+      });
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      // Start workout
+      fireEvent.click(screen.getByText('Start'));
+
+      // Should be running warmup
+      expect(screen.getByText('Pause')).toBeInTheDocument();
+
+      // Pause the workout
+      fireEvent.click(screen.getByText('Pause'));
+
+      // Should show resume button
+      await waitFor(() => {
+        expect(screen.getByText('Resume')).toBeInTheDocument();
+      });
+
+      // Resume the workout
+      fireEvent.click(screen.getByText('Resume'));
+
+      // Should show pause button again
+      await waitFor(() => {
+        expect(screen.getByText('Pause')).toBeInTheDocument();
+      });
+    });
+
+    it('stops warmup correctly', async () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'Stoppable Warmup',
+              instructions: 'Can be stopped',
+              targetBodyParts: ['full_body'],
+              duration: 10,
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 10
+        }
+      });
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      // Start workout
+      fireEvent.click(screen.getByText('Start'));
+
+      // Should be running
+      expect(screen.getByText('Pause')).toBeInTheDocument();
+
+      // Find stop button (usually represented by a square icon)
+      const stopButton = screen.querySelector('svg[viewBox="0 0 24 24"] rect')?.closest('button');
+
+      if (stopButton) {
+        fireEvent.click(stopButton);
+
+        // Should stop and show start button again
+        await waitFor(() => {
+          expect(screen.getByText('Start')).toBeInTheDocument();
+        });
+      }
+    });
+  });
+
+  describe('warmup display and UI', () => {
+    it('shows warmup exercise instructions properly', () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'Detailed Warmup',
+              instructions: 'This is a very detailed instruction for the warmup exercise that should be displayed properly in the UI component.',
+              targetBodyParts: ['full_body'],
+              duration: 45,
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 45
+        }
+      });
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      expect(screen.getByText('This is a very detailed instruction for the warmup exercise that should be displayed properly in the UI component.')).toBeInTheDocument();
+    });
+
+    it('shows correct timer countdown during warmup', () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'Timed Warmup',
+              instructions: 'Watch the timer',
+              targetBodyParts: ['full_body'],
+              duration: 45,
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 45
+        }
+      });
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      // Should show initial time
+      expect(screen.getByText('00:45')).toBeInTheDocument();
+    });
+
+    it('uses pink color scheme for warmup phase', () => {
+      const workout = createMockWorkout({
+        warmup: {
+          exercises: [
+            {
+              id: 'warmup_001',
+              name: 'Colored Warmup',
+              instructions: 'Should be pink',
+              targetBodyParts: ['full_body'],
+              duration: 30,
+              equipment: ['bodyweight']
+            }
+          ],
+          totalDuration: 30
+        }
+      });
+
+      render(
+        <ActiveWorkout
+          workout={workout}
+          onComplete={mockHandlers.onWorkoutGenerated}
+          onExit={mockHandlers.onBack}
+        />
+      );
+
+      const phaseIndicator = screen.getByText('warmup');
+      expect(phaseIndicator).toHaveStyle({ color: '#fd79a8' });
+    });
+  });
 });
