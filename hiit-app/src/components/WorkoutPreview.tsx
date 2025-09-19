@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import type { WorkoutSettings } from '../types/workout';
 import type { GeneratedWorkout } from '../types/circuit';
 import type { Equipment } from '../types/equipment';
+import type { Exercise } from '../types/exercise';
 import { generateWorkout, regenerateExercise } from '../utils/workoutGenerator';
 import { equipmentData } from '../data/equipment';
 import { BlacklistStorage } from '../utils/blacklistStorage';
@@ -202,11 +203,23 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
       if (stationIndex === -1) return prevWorkout;
 
       const currentExercise = newCircuit.stations[stationIndex].exercises[exerciseIndex];
-      const newExercise = regenerateExercise(currentExercise, workoutSettings);
+
+      // Get all existing exercises in the workout to avoid duplicates
+      const allExistingExercises: Exercise[] = [];
+      newCircuit.stations.forEach((station: any) => {
+        station.exercises.forEach((exercise: any) => {
+          if (exercise.id !== currentExercise.id) { // Exclude the one we're replacing
+            allExistingExercises.push(exercise);
+          }
+        });
+      });
+
+      const newExercise = regenerateExercise(currentExercise, workoutSettings, allExistingExercises);
 
       if (newExercise) {
-
         const newStations = [...newCircuit.stations];
+
+        // Only replace the specific exercise instance, not all instances
         const newStationExercises = [...newStations[stationIndex].exercises];
         newStationExercises[exerciseIndex] = newExercise;
         newStations[stationIndex] = {
@@ -219,16 +232,27 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
           stations: newStations
         };
 
-        // Also update the legacy exercises array - replace ALL instances
+        // Update legacy exercises array - replace only matching instances in same position
         const newLegacyExercises = [...prevWorkout.exercises];
-        for (let i = 0; i < newLegacyExercises.length; i++) {
-          if (newLegacyExercises[i].exercise.id === currentExercise.id) {
-            newLegacyExercises[i] = {
-              ...newLegacyExercises[i],
-              exercise: newExercise
-            };
-            // Don't break - continue to replace ALL instances of this exercise
+        let currentCircuitPosition = 0;
+
+        // Find the exact position in the legacy array that corresponds to this circuit position
+        for (let sIndex = 0; sIndex < updatedCircuit.stations.length; sIndex++) {
+          const station = updatedCircuit.stations[sIndex];
+          for (let eIndex = 0; eIndex < station.exercises.length; eIndex++) {
+            if (sIndex === stationIndex && eIndex === exerciseIndex) {
+              // This is the position we want to update
+              if (currentCircuitPosition < newLegacyExercises.length) {
+                newLegacyExercises[currentCircuitPosition] = {
+                  ...newLegacyExercises[currentCircuitPosition],
+                  exercise: newExercise
+                };
+              }
+              break;
+            }
+            currentCircuitPosition++;
           }
+          if (sIndex === stationIndex && exerciseIndex < station.exercises.length) break;
         }
 
         // Update expanded exercises state for regenerated exercise
@@ -262,30 +286,64 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
       const currentExercise = prevWorkout.circuit.stations[stationIndex].exercises[exerciseIndex];
       BlacklistStorage.addToBlacklist(currentExercise.id.toString());
 
+      // Get all existing exercises except the ones we're replacing
+      const allExistingExercises: Exercise[] = [];
+      prevWorkout.circuit.stations.forEach((station: any) => {
+        station.exercises.forEach((exercise: any) => {
+          if (exercise.id !== currentExercise.id) { // Exclude the blacklisted exercise
+            allExistingExercises.push(exercise);
+          }
+        });
+      });
 
-      // Find and replace all instances of this exercise in the circuit
-      const replacementExercise = regenerateExercise(currentExercise, workoutSettings);
-      if (!replacementExercise) return prevWorkout;
-
+      // For blacklisting, we want to replace ALL instances of this exercise
+      // But each instance should get a different replacement to avoid duplicates
       const newCircuit = { ...prevWorkout.circuit };
       const newStations = [...newCircuit.stations];
-      let totalReplacements = 0;
+      const replacementMap = new Map<string, Exercise>(); // Map station-exercise positions to replacements
+
+      // First pass: identify all instances that need replacement
+      const instancesToReplace: Array<{stationIndex: number, exerciseIndex: number, stationId: string}> = [];
 
       for (let sIndex = 0; sIndex < newStations.length; sIndex++) {
         const station = newStations[sIndex];
-        const newExercises = [...station.exercises];
-
-        for (let eIndex = 0; eIndex < newExercises.length; eIndex++) {
-          if (newExercises[eIndex].id === currentExercise.id) {
-            newExercises[eIndex] = replacementExercise;
-            totalReplacements++;
+        for (let eIndex = 0; eIndex < station.exercises.length; eIndex++) {
+          if (station.exercises[eIndex].id === currentExercise.id) {
+            instancesToReplace.push({
+              stationIndex: sIndex,
+              exerciseIndex: eIndex,
+              stationId: station.id
+            });
           }
         }
+      }
 
-        newStations[sIndex] = {
-          ...station,
-          exercises: newExercises
-        };
+      // Second pass: generate unique replacements for each instance
+      for (const instance of instancesToReplace) {
+        const currentlyUsedExercises = [...allExistingExercises];
+        // Add already assigned replacements to avoid duplicates
+        replacementMap.forEach(replacement => currentlyUsedExercises.push(replacement));
+
+        const replacementExercise = regenerateExercise(currentExercise, workoutSettings, currentlyUsedExercises);
+        if (replacementExercise) {
+          const key = `${instance.stationIndex}-${instance.exerciseIndex}`;
+          replacementMap.set(key, replacementExercise);
+          allExistingExercises.push(replacementExercise);
+        }
+      }
+
+      // Third pass: apply all replacements
+      for (const instance of instancesToReplace) {
+        const key = `${instance.stationIndex}-${instance.exerciseIndex}`;
+        const replacement = replacementMap.get(key);
+        if (replacement) {
+          const newExercises = [...newStations[instance.stationIndex].exercises];
+          newExercises[instance.exerciseIndex] = replacement;
+          newStations[instance.stationIndex] = {
+            ...newStations[instance.stationIndex],
+            exercises: newExercises
+          };
+        }
       }
 
       const updatedCircuit = {
@@ -293,21 +351,26 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
         stations: newStations
       };
 
-      // Also update legacy exercises array - use the same replacement exercise for all instances
+      // Update legacy exercises array
       const newLegacyExercises = [...prevWorkout.exercises];
-      for (let i = 0; i < newLegacyExercises.length; i++) {
-        if (newLegacyExercises[i].exercise.id === currentExercise.id) {
-          newLegacyExercises[i] = {
-            ...newLegacyExercises[i],
-            exercise: replacementExercise
-          };
+      let currentCircuitPosition = 0;
+
+      for (let sIndex = 0; sIndex < updatedCircuit.stations.length; sIndex++) {
+        const station = updatedCircuit.stations[sIndex];
+        for (let eIndex = 0; eIndex < station.exercises.length; eIndex++) {
+          if (currentCircuitPosition < newLegacyExercises.length) {
+            newLegacyExercises[currentCircuitPosition] = {
+              ...newLegacyExercises[currentCircuitPosition],
+              exercise: station.exercises[eIndex]
+            };
+          }
+          currentCircuitPosition++;
         }
       }
 
-
       // Update expanded exercises state for all replaced exercises
       const instructionsVisible = InstructionPreferences.getInstructionsVisible();
-      if (instructionsVisible && totalReplacements > 0) {
+      if (instructionsVisible && replacementMap.size > 0) {
         setExpandedExercises(prev => {
           const newSet = new Set(prev);
           // Add all new exercise keys from updated circuit
