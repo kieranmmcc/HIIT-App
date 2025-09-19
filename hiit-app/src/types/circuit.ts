@@ -61,6 +61,21 @@ export interface GeneratedWorkout {
 
   // New circuit-based structure
   circuit?: CircuitWorkout;
+
+  // Warmup exercises
+  warmup?: {
+    exercises: WarmupExercise[];
+    totalDuration: number;
+  };
+}
+
+export interface WarmupExercise {
+  id: string;
+  name: string;
+  instructions: string;
+  targetBodyParts: string[];
+  duration: number;
+  equipment: string[];
 }
 
 import type { Exercise } from './exercise';

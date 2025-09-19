@@ -3,6 +3,7 @@ import EquipmentSelection from './components/EquipmentSelection'
 import WorkoutSetup from './components/WorkoutSetup'
 import WorkoutPreview from './components/WorkoutPreview'
 import ActiveWorkout from './components/ActiveWorkout'
+import AvoidedExercises from './components/AvoidedExercises'
 import type { Equipment } from './types/equipment'
 import type { WorkoutSettings } from './types/workout'
 import type { GeneratedWorkout } from './types/exercise'
@@ -10,10 +11,11 @@ import { equipmentData } from './data/equipment'
 import { EquipmentStorage } from './utils/equipmentStorage'
 import './styles/EquipmentSelection.css'
 
-type AppScreen = 'equipment' | 'workout-setup' | 'workout-preview' | 'workout-active'
+type AppScreen = 'equipment' | 'workout-setup' | 'workout-preview' | 'workout-active' | 'avoided-exercises'
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('equipment')
+  const [previousScreen, setPreviousScreen] = useState<AppScreen>('equipment')
   const [equipment, setEquipment] = useState<Equipment[]>(equipmentData)
   const [currentWorkoutSettings, setCurrentWorkoutSettings] = useState<WorkoutSettings | null>(null)
   const [generatedWorkout, setGeneratedWorkout] = useState<GeneratedWorkout | null>(null)
@@ -31,6 +33,7 @@ function App() {
       }));
 
       setEquipment(updatedEquipment);
+      setPreviousScreen('equipment');
       setCurrentScreen('workout-setup');
     }
     // If hasCompletedSetup is false/undefined, stay on equipment selection screen
@@ -43,7 +46,7 @@ function App() {
   const handleEquipmentContinue = (selectedEquipment: Equipment[]) => {
     setEquipment(selectedEquipment)
     setCurrentScreen('workout-setup')
-    setTimeout(scrollToTop, 50) // Small delay to ensure screen change renders first
+    setTimeout(scrollToTop, 50)
   }
 
   const handleBackToEquipment = () => {
@@ -57,6 +60,10 @@ function App() {
     setCurrentWorkoutSettings(settings)
     setCurrentScreen('workout-preview')
     setTimeout(scrollToTop, 50)
+  }
+
+  const handleWorkoutGenerated = (workout: GeneratedWorkout) => {
+    setGeneratedWorkout(workout)
   }
 
   const handlePreviewToActive = (workout: GeneratedWorkout) => {
@@ -86,6 +93,17 @@ function App() {
     setEquipment(updatedEquipment)
   }
 
+  const handleShowAvoidedExercises = () => {
+    setPreviousScreen(currentScreen)
+    setCurrentScreen('avoided-exercises')
+    setTimeout(scrollToTop, 50)
+  }
+
+  const handleBackFromAvoided = () => {
+    setCurrentScreen(previousScreen)
+    setTimeout(scrollToTop, 50)
+  }
+
   return (
     <div className="app" style={{ minHeight: '100vh', background: '#0a0a0b' }}>
       {currentScreen === 'equipment' && (
@@ -101,6 +119,7 @@ function App() {
           selectedEquipment={equipment}
           onBack={handleBackToEquipment}
           onStartWorkout={handleStartWorkout}
+          onShowAvoidedExercises={handleShowAvoidedExercises}
         />
       )}
 
@@ -110,6 +129,8 @@ function App() {
           existingWorkout={generatedWorkout}
           onStartWorkout={handlePreviewToActive}
           onBack={handleBackToSetup}
+          onShowAvoidedExercises={handleShowAvoidedExercises}
+          onWorkoutGenerated={handleWorkoutGenerated}
         />
       )}
 
@@ -118,6 +139,12 @@ function App() {
           workout={generatedWorkout}
           onComplete={handleWorkoutComplete}
           onExit={handleWorkoutExit}
+        />
+      )}
+
+      {currentScreen === 'avoided-exercises' && (
+        <AvoidedExercises
+          onBack={handleBackFromAvoided}
         />
       )}
     </div>

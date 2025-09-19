@@ -15,12 +15,14 @@ interface WorkoutSetupProps {
   selectedEquipment: Equipment[];
   onBack: () => void;
   onStartWorkout: (settings: WorkoutSettings) => void;
+  onShowAvoidedExercises: () => void;
 }
 
 const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
   // selectedEquipment,
   onBack,
-  onStartWorkout
+  onStartWorkout,
+  onShowAvoidedExercises
 }) => {
   const [duration, setDuration] = useState<number>(20);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
@@ -52,11 +54,11 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
     return Math.round((secondsPerRound * rounds) / 60); // Convert back to minutes
   };
 
-  // Update duration when exercise count or difficulty changes
+  // Only update duration when exercise count changes (not difficulty)
   useEffect(() => {
     const newDuration = calculateDuration(exerciseCount, difficulty);
     setDuration(newDuration);
-  }, [exerciseCount, difficulty]);
+  }, [exerciseCount]);
 
   useEffect(() => {
     // Initialize workout equipment from storage
@@ -98,7 +100,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
     }, 0);
   }, []);
 
-  // Update duration when circuit type, difficulty, or exercise count changes
+  // Update duration when circuit type or exercise count changes
   useEffect(() => {
     const durations = getAvailableDurations(circuitType, difficulty, exerciseCount);
     if (durations.length > 0) {
@@ -109,7 +111,7 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
         setDuration(durations[middleIndex].value);
       }
     }
-  }, [circuitType, difficulty, exerciseCount]);
+  }, [circuitType, exerciseCount]);
 
   // Handle circuit type changes - adjust exercise count appropriately
   useEffect(() => {
@@ -269,7 +271,31 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
           </button>
 
           {/* Mobile: Button at top center */}
-          <div className="mobile-only" style={{ justifyContent: 'center', marginBottom: '1rem' }}>
+          <div className="mobile-only" style={{ justifyContent: 'center', gap: '12px', marginBottom: '1rem' }}>
+            <button
+              onClick={onShowAvoidedExercises}
+              style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                color: '#ef4444',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="15 9l-6 6"/>
+                <path d="9 9l6 6"/>
+              </svg>
+              Avoided Exercises
+            </button>
             <PWAInstallButton size="small" />
           </div>
 
@@ -280,7 +306,39 @@ const WorkoutSetup: React.FC<WorkoutSetupProps> = ({
                 Choose your workout duration and intensity level
               </p>
             </div>
-            <div className="desktop-only">
+            <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
+              <button
+                onClick={onShowAvoidedExercises}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  color: '#ef4444',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="15 9l-6 6"/>
+                  <path d="9 9l6 6"/>
+                </svg>
+                Manage Avoided Exercises
+              </button>
               <PWAInstallButton size="small" />
             </div>
           </div>

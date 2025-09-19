@@ -110,5 +110,109 @@
     "targetBodyParts": ["back", "spine", "shoulders", "chest"],
     "duration": 60,
     "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_015",
+    "name": "Glute Bridge",
+    "instructions": "Lie on your back with your knees bent and feet flat on the floor, hip-width apart. Place your arms by your sides. Lift your hips off the floor until your body forms a straight line from your shoulders to your knees. Squeeze your glutes at the top. Hold for a moment, then lower back down.",
+    "targetBodyParts": ["glutes", "hamstrings", "core", "lower_back"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_016",
+    "name": "Downward-Facing Dog",
+    "instructions": "Start on your hands and knees. Lift your hips up and back, forming an inverted V-shape with your body. Keep your head between your upper arms and press your heels towards the floor. You can pedal your feet to deepen the calf stretch.",
+    "targetBodyParts": ["full_body", "hamstrings", "calves", "shoulders", "back"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_017",
+    "name": "Cobra Pose (Dynamic)",
+    "instructions": "Lie on your stomach with your hands under your shoulders. Gently press up, lifting your chest off the floor while keeping your hips on the ground. Look forward and feel the stretch in your lower back and abdominals. Lower down and repeat in a flowing motion.",
+    "targetBodyParts": ["spine", "abdominals", "back", "chest"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_018",
+    "name": "Shoulder Rolls",
+    "instructions": "Stand tall with your arms at your sides. Slowly roll your shoulders up, back, and down in large circles. Complete several rolls backward, then reverse direction and roll forward. Focus on smooth, controlled movements.",
+    "targetBodyParts": ["shoulders", "upper_back", "neck"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_019",
+    "name": "Arm Swings (Cross-Body)",
+    "instructions": "Stand with your feet shoulder-width apart. Swing your right arm across your body to the left, then back out to the right. Continue swinging back and forth across your body. Switch arms after 15 seconds.",
+    "targetBodyParts": ["shoulders", "chest", "upper_back"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_020",
+    "name": "Knee-to-Chest Walk",
+    "instructions": "Stand tall and slowly walk forward. With each step, bring your knee up towards your chest and give it a gentle hug with your hands before placing your foot down. Alternate legs with each step.",
+    "targetBodyParts": ["hip_flexors", "glutes", "legs", "balance"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_021",
+    "name": "Lateral Leg Swings",
+    "instructions": "Stand next to a wall for support. Swing one leg out to the side and then across the front of your body. Keep the movement controlled and your upper body stable. Switch legs after 15 seconds.",
+    "targetBodyParts": ["hips", "abductors", "adductors", "legs"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_022",
+    "name": "Bear Crawl Hold",
+    "instructions": "Start on your hands and knees. Lift your knees just a few inches off the ground, keeping your back flat and core tight. Hold this position while breathing normally. This activates your entire core and shoulders.",
+    "targetBodyParts": ["core", "shoulders", "back", "stability"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_023",
+    "name": "Ankle Circles",
+    "instructions": "Stand on one leg, holding onto something for balance if needed. Lift your other foot and make slow, controlled circles with your ankle. Go clockwise for 15 seconds, then counter-clockwise. Switch feet.",
+    "targetBodyParts": ["ankles", "calves", "balance"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_024",
+    "name": "World's Greatest Stretch",
+    "instructions": "Start in a lunge position with your right foot forward. Place your left hand on the ground inside your right foot. Rotate your right arm up towards the ceiling, opening your chest. Hold briefly, then return to center. Switch sides.",
+    "targetBodyParts": ["hip_flexors", "thoracic_spine", "shoulders", "chest"],
+    "duration": 60,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_025",
+    "name": "Leg Cradle Walk",
+    "instructions": "Walk forward while bringing one knee up and across your body. Grab your shin and ankle, pulling your leg towards your chest in a 'cradle' position. Take a step and repeat with the other leg. This opens the hips dynamically.",
+    "targetBodyParts": ["hips", "glutes", "hip_flexors", "balance"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_026",
+    "name": "Scapular Wall Slides",
+    "instructions": "Stand with your back against a wall, arms in a 'goal post' position with elbows and wrists touching the wall. Slowly slide your arms up the wall while maintaining contact, then back down. Focus on squeezing your shoulder blades together.",
+    "targetBodyParts": ["shoulders", "upper_back", "scapula"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_027",
+    "name": "Hip Circles (Standing)",
+    "instructions": "Stand with your hands on your hips, feet shoulder-width apart. Make large, slow circles with your hips, going clockwise for 30 seconds, then counter-clockwise for 30 seconds. Keep your upper body stable.",
+    "targetBodyParts": ["hips", "lower_back", "core"],
+    "duration": 60,
+    "equipment": ["bodyweight"]
   }
 ]

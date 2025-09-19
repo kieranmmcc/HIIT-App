@@ -8,6 +8,7 @@ import type {
   GeneratedWorkout
 } from '../types/circuit';
 import exercisesData from '../data/exercises.json';
+import { generateWarmup } from './warmupGenerator';
 import { BlacklistStorage } from './blacklistStorage';
 
 const exercises = exercisesData as Exercise[];
@@ -37,13 +38,20 @@ export function generateCircuitWorkout(settings: WorkoutSettings): GeneratedWork
   // Convert circuit to legacy exercise format for compatibility
   const legacyExercises = convertCircuitToLegacyFormat(circuit);
 
-  return {
+  // Create the workout object
+  const workout: GeneratedWorkout = {
     exercises: legacyExercises,
     totalDuration: circuit.totalDuration,
     difficulty,
     equipmentUsed: selectedEquipment,
     circuit
   };
+
+  // Generate warmup based on the workout
+  const warmup = generateWarmup(workout);
+  workout.warmup = warmup;
+
+  return workout;
 }
 
 function getFilteredExercises(settings: WorkoutSettings): Exercise[] {
