@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import type { RenderOptions } from '@testing-library/react';
 import type { Equipment } from '../../types/equipment';
 import type { WorkoutSettings } from '../../types/workout';
 import type { GeneratedWorkout, Exercise } from '../../types/exercise';
