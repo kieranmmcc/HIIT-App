@@ -1,0 +1,98 @@
+[
+  {
+    "id": "stretch_001",
+    "name": "Standing Hamstring Stretch",
+    "instructions": "Stand with your feet hip-width apart. Extend one leg straight out in front of you, heel on the floor, toes pointing up. Hinge at your hips and lean forward over the straight leg until you feel a stretch in your hamstring. Keep your back straight. Hold, then switch sides.",
+    "targetBodyParts": ["hamstrings", "legs"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_002",
+    "name": "Standing Quad Stretch",
+    "instructions": "Stand on one leg, holding onto a wall or chair for balance if needed. Grab your other foot and pull it towards your glute, feeling a stretch in the front of your thigh. Keep your knees together and your hips pushed slightly forward. Hold, then switch sides.",
+    "targetBodyParts": ["quadriceps", "legs", "hip_flexors"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_003",
+    "name": "Pigeon Pose",
+    "instructions": "Start in a plank position. Bring one knee forward and place it behind the corresponding wrist, with your shin angled across the front of your mat. Extend your other leg straight back. Lower your hips to the floor. You should feel a deep stretch in the glute of the front leg. Hold, then switch sides.",
+    "targetBodyParts": ["glutes", "hips", "piriformis"],
+    "duration": 60,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_004",
+    "name": "Calf Stretch",
+    "instructions": "Stand facing a wall with your hands on it for support. Step one foot back, keeping the leg straight and the heel flat on the floor. Gently lean forward until you feel a stretch in the calf of your back leg. Hold, then switch sides.",
+    "targetBodyParts": ["calves", "legs"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_005",
+    "name": "Cross-Body Shoulder Stretch",
+    "instructions": "Stand or sit tall. Bring one arm straight across your body. Use your other hand to gently pull the straight arm closer to your chest, feeling a stretch in your shoulder. Keep the shoulder of the stretching arm relaxed and down. Hold, then switch sides.",
+    "targetBodyParts": ["shoulders", "back"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_006",
+    "name": "Triceps Stretch",
+    "instructions": "Raise one arm straight up, then bend your elbow to let your hand fall behind your head. Use your other hand to gently pull the bent elbow towards your head, feeling a stretch in your tricep. Hold, then switch sides.",
+    "targetBodyParts": ["triceps", "shoulders", "arms"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_007",
+    "name": "Doorway Chest Stretch",
+    "instructions": "Stand in a doorway and place your forearms on the frame, with your elbows bent at 90 degrees. Step one foot forward and gently lean into the doorway until you feel a stretch across your chest. Hold the position.",
+    "targetBodyParts": ["chest", "shoulders"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_008",
+    "name": "Child's Pose",
+    "instructions": "Kneel on the floor, sit back on your heels, then fold forward, resting your forehead on the floor. Your arms can be extended forward or resting alongside your body. Breathe deeply and relax into the stretch.",
+    "targetBodyParts": ["back", "hips", "glutes", "spine"],
+    "duration": 60,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_009",
+    "name": "Cobra Pose",
+    "instructions": "Lie on your stomach with your hands under your shoulders. Gently press up, lifting your chest off the floor while keeping your hips on the ground. Look forward and feel the stretch in your lower back and abdominals. Only go as high as is comfortable.",
+    "targetBodyParts": ["spine", "abdominals", "back"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_010",
+    "name": "Downward-Facing Dog",
+    "instructions": "Start on your hands and knees. Lift your hips up and back, forming an inverted V-shape with your body. Keep your head between your upper arms and press your heels towards the floor. You can pedal your feet to deepen the calf stretch.",
+    "targetBodyParts": ["full_body", "hamstrings", "calves", "shoulders", "back"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_011",
+    "name": "Glute Bridge",
+    "instructions": "Lie on your back with your knees bent and feet flat on the floor, hip-width apart. Place your arms by your sides. Lift your hips off the floor until your body forms a straight line from your shoulders to your knees. Squeeze your glutes at the top. Hold for a moment, then lower back down.",
+    "targetBodyParts": ["glutes", "hamstrings", "core", "lower_back"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "stretch_012",
+    "name": "Butterfly Stretch",
+    "instructions": "Sit on the floor with the soles of your feet together and your knees bent out to the sides. Hold onto your ankles or feet. Gently press your knees towards the floor to feel a stretch in your inner thighs. Keep your back straight.",
+    "targetBodyParts": ["hips", "adductors", "inner_thighs"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  }
+]

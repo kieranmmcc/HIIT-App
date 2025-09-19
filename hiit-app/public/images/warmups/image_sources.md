@@ -1,0 +1,16 @@
+# Warm-up Image Sources
+
+- **Jumping Jacks:** [Freepik](https://www.freepik.com/free-photos-vectors/jumping-jacks)
+- **High Knees:** [Spotebi](https://spotebi.com/exercise-guide/high-knees/)
+- **Butt Kicks:** [IconScout](https://iconscout.com/illustration/butt-kicks-7428530)
+- **Arm Circles:** [Spotebi](https://spotebi.com/exercise-guide/arm-circles/)
+- **Torso Twists:** [Lipstick Lifters](https://lipsticklifters.com/standing-torso-twist-exercise/)
+- **Leg Swings (Forward):** [WorkoutLabs](https://workoutlabs.com/exercise-guide/forward-leg-swings/)
+- **Leg Swings (Side-to-Side):** [WorkoutLabs](https://workoutlabs.com/exercise-guide/side-leg-swings/)
+- **Bodyweight Squats:** [Vecteezy](https://www.vecteezy.com/free-vector/bodyweight-squat)
+- **Cat-Cow Stretch:** [Verywell Fit](https://www.verywellfit.com/cat-cow-stretch-marjaryasana-and-bitilasana-3567212)
+- **Inchworms:** [Vecteezy](https://www.vecteezy.com/free-vector/inchworm-exercise)
+- **Hip Circles:** [Google Images](https://www.google.com/search?q=Hip+Circles+exercise+diagram&tbm=isch)
+- **Walking Lunges:** [Freepik](https://www.freepik.com/free-photos-vectors/walking-lunges)
+- **Bird-Dog:** [Vecteezy](https://www.vecteezy.com/free-vector/bird-dog-exercise)
+- **Thoracic Spine Windmills:** [Rehab Hero](https://rehabhero.ca/thoracic-spine-windmills/)

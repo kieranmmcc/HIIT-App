@@ -1,0 +1,114 @@
+[
+  {
+    "id": "warmup_001",
+    "name": "Jumping Jacks",
+    "instructions": "Start with your feet together and your arms at your sides. In one motion, jump your feet out to the side and raise your arms above your head. Immediately reverse the motion to return to the starting position. Repeat in a rhythmic fashion.",
+    "targetBodyParts": ["full_body", "cardio", "legs", "shoulders"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_002",
+    "name": "High Knees",
+    "instructions": "Stand in place and run, driving your knees up towards your chest as high as you can. Keep your core engaged and pump your arms in sync with your legs.",
+    "targetBodyParts": ["cardio", "legs", "core", "hip_flexors"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_003",
+    "name": "Butt Kicks",
+    "instructions": "Stand in place and jog, focusing on kicking your heels back to touch your glutes. Keep your movements light and quick.",
+    "targetBodyParts": ["cardio", "hamstrings", "quadriceps"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_004",
+    "name": "Arm Circles",
+    "instructions": "Stand with your feet shoulder-width apart and extend your arms straight out to your sides. Make small circles with your arms, gradually increasing the size. After 15 seconds, reverse the direction of the circles.",
+    "targetBodyParts": ["shoulders", "chest", "back"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_005",
+    "name": "Torso Twists",
+    "instructions": "Stand with your feet shoulder-width apart, knees slightly bent, and hands on your hips or crossed over your chest. Gently twist your upper body from side to side. Keep your hips stable and focus the movement in your spine.",
+    "targetBodyParts": ["core", "back", "obliques"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_006",
+    "name": "Leg Swings (Forward)",
+    "instructions": "Stand holding onto a wall or stable object for balance. Swing one leg forward and backward in a controlled motion. Keep your core tight and your upper body still. Switch legs after 15 seconds.",
+    "targetBodyParts": ["legs", "hamstrings", "hip_flexors", "glutes"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_007",
+    "name": "Leg Swings (Side-to-Side)",
+    "instructions": "Stand facing a wall, holding on for balance. Swing one leg out to the side and then across the front of your body. Keep the movement controlled. Switch legs after 15 seconds.",
+    "targetBodyParts": ["legs", "hips", "adductors", "abductors"],
+    "duration": 30,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_008",
+    "name": "Bodyweight Squats",
+    "instructions": "Stand with your feet shoulder-width apart. Lower your hips back and down as if sitting in a chair, keeping your chest up and your back straight. Go as low as you comfortably can, then push through your heels to return to the start.",
+    "targetBodyParts": ["legs", "quadriceps", "hamstrings", "glutes", "core"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_009",
+    "name": "Cat-Cow Stretch",
+    "instructions": "Start on your hands and knees. Inhale as you drop your belly towards the floor and look up (Cow). Exhale as you round your spine up towards the ceiling and tuck your chin to your chest (Cat). Flow between the two positions.",
+    "targetBodyParts": ["back", "spine", "core", "shoulders"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_010",
+    "name": "Inchworms",
+    "instructions": "From a standing position, hinge at your hips and walk your hands out into a high plank position. Keep your legs as straight as possible. Once in the plank, walk your feet in towards your hands. Stand up and repeat.",
+    "targetBodyParts": ["full_body", "hamstrings", "shoulders", "core", "back"],
+    "duration": 60,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_011",
+    "name": "Hip Circles",
+    "instructions": "Stand on one leg, holding onto something for balance if needed. Lift the other knee to a 90-degree angle and make large, controlled circles with your hip. Go clockwise for 15 seconds, then counter-clockwise for 15 seconds. Switch legs.",
+    "targetBodyParts": ["hips", "hip_flexors", "glutes"],
+    "duration": 60,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_012",
+    "name": "Walking Lunges",
+    "instructions": "Step forward with one leg and lower your hips until both knees are bent at a 90-degree angle. Ensure your front knee is directly above your ankle. Push off your back foot and step forward into a lunge with the opposite leg. Continue alternating.",
+    "targetBodyParts": ["legs", "quadriceps", "glutes", "hamstrings"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_013",
+    "name": "Bird-Dog",
+    "instructions": "Start on all fours. Simultaneously extend your right arm forward and your left leg backward, keeping your back flat and your hips level. Hold for a moment, then return to the start. Alternate sides.",
+    "targetBodyParts": ["core", "back", "glutes", "shoulders", "balance"],
+    "duration": 45,
+    "equipment": ["bodyweight"]
+  },
+  {
+    "id": "warmup_014",
+    "name": "Thoracic Spine Windmills",
+    "instructions": "Start on all fours. Place one hand behind your head. Rotate your elbow down towards your opposite wrist, then rotate it up towards the ceiling, following your elbow with your eyes. Complete all reps on one side before switching.",
+    "targetBodyParts": ["back", "spine", "shoulders", "chest"],
+    "duration": 60,
+    "equipment": ["bodyweight"]
+  }
+]
