@@ -10,23 +10,35 @@ import { muscleGroupLabels } from '../types/muscleGroups';
 import { circuitTypeOptions } from '../types/circuit';
 import { InstructionPreferences } from '../utils/instructionPreferences';
 import { difficultyOptions } from '../data/workoutOptions';
+import { warmupBodyPartLabels } from '../utils/warmupGenerator';
 
 interface WorkoutPreviewProps {
   workoutSettings: WorkoutSettings;
   existingWorkout?: GeneratedWorkout | null;
   onStartWorkout: (workout: GeneratedWorkout) => void;
   onBack: () => void;
+  onShowAvoidedExercises: () => void;
+  onWorkoutGenerated?: (workout: GeneratedWorkout) => void;
 }
 
 const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
   workoutSettings,
   existingWorkout,
   onStartWorkout,
-  onBack
+  onBack,
+  onShowAvoidedExercises,
+  onWorkoutGenerated
 }) => {
   const [workout, setWorkout] = useState<GeneratedWorkout>(() =>
     existingWorkout || generateWorkout(workoutSettings)
   );
+
+  // Notify parent when workout is generated or changes
+  useEffect(() => {
+    if (onWorkoutGenerated) {
+      onWorkoutGenerated(workout);
+    }
+  }, [workout, onWorkoutGenerated]);
 
   // Update workout if existingWorkout changes (e.g., coming back from active workout)
   useEffect(() => {
@@ -232,27 +244,19 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
           stations: newStations
         };
 
-        // Update legacy exercises array - replace only matching instances in same position
+        // Update legacy exercises array - replace ALL instances of the old exercise with the new one
+        // This is critical for supersets where the same exercise appears multiple times (e.g., A,B,A,B)
         const newLegacyExercises = [...prevWorkout.exercises];
-        let currentCircuitPosition = 0;
+        const oldExerciseId = currentExercise.id;
 
-        // Find the exact position in the legacy array that corresponds to this circuit position
-        for (let sIndex = 0; sIndex < updatedCircuit.stations.length; sIndex++) {
-          const station = updatedCircuit.stations[sIndex];
-          for (let eIndex = 0; eIndex < station.exercises.length; eIndex++) {
-            if (sIndex === stationIndex && eIndex === exerciseIndex) {
-              // This is the position we want to update
-              if (currentCircuitPosition < newLegacyExercises.length) {
-                newLegacyExercises[currentCircuitPosition] = {
-                  ...newLegacyExercises[currentCircuitPosition],
-                  exercise: newExercise
-                };
-              }
-              break;
-            }
-            currentCircuitPosition++;
+        // Update all instances in the legacy array that match the old exercise
+        for (let i = 0; i < newLegacyExercises.length; i++) {
+          if (newLegacyExercises[i].exercise.id === oldExerciseId) {
+            newLegacyExercises[i] = {
+              ...newLegacyExercises[i],
+              exercise: newExercise
+            };
           }
-          if (sIndex === stationIndex && exerciseIndex < station.exercises.length) break;
         }
 
         // Update expanded exercises state for regenerated exercise
@@ -426,6 +430,41 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
               <polyline points="15,18 9,12 15,6" />
             </svg>
             Back to Setup
+          </button>
+
+          <button
+            onClick={onShowAvoidedExercises}
+            style={{
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              color: '#ef4444',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              marginBottom: '1rem',
+              width: 'fit-content'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="15 9l-6 6"/>
+              <path d="9 9l6 6"/>
+            </svg>
+            Manage Avoided Exercises
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
@@ -603,6 +642,143 @@ const WorkoutPreview: React.FC<WorkoutPreviewProps> = ({
             })}
           </div>
         </div>
+
+        {/* Warmup Section */}
+        {workout.warmup && workout.warmup.exercises.length > 0 && (
+          <div style={{
+            background: '#131315',
+            border: '2px solid #f39c12',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '2rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+              <h2 style={{
+                color: '#f39c12',
+                fontSize: '1.25rem',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                margin: 0
+              }}>
+                🔥 Warm-Up ({Math.round(workout.warmup.totalDuration / 60)} min)
+              </h2>
+            </div>
+
+            <p style={{
+              color: '#b8bcc8',
+              fontSize: '0.875rem',
+              marginBottom: '1.5rem',
+              lineHeight: 1.5
+            }}>
+              Personalized warm-up targeting the muscle groups in your workout
+            </p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1.5rem'
+            }}>
+              {workout.warmup.exercises.map((warmupEx, index) => (
+                <div
+                  key={warmupEx.id}
+                  style={{
+                    background: '#1c1c20',
+                    border: '1px solid #3a3a40',
+                    borderRadius: '12px',
+                    padding: '1.25rem'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
+                    {/* Exercise Number */}
+                    <div style={{
+                      width: '28px',
+                      height: '28px',
+                      background: 'rgba(243, 156, 18, 0.2)',
+                      border: '2px solid #f39c12',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#f39c12',
+                      fontSize: '0.875rem',
+                      fontWeight: 'bold',
+                      flexShrink: 0
+                    }}>
+                      {index + 1}
+                    </div>
+
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+                        <div style={{ flex: 1 }}>
+                          <h4 style={{
+                            color: 'white',
+                            fontSize: '1rem',
+                            fontWeight: '600',
+                            marginBottom: '0.5rem',
+                            lineHeight: 1.3
+                          }}>
+                            {warmupEx.name}
+                          </h4>
+
+                          <div style={{
+                            background: 'rgba(243, 156, 18, 0.15)',
+                            border: '1px solid #f39c12',
+                            borderRadius: '6px',
+                            padding: '0.25rem 0.5rem',
+                            fontSize: '0.75rem',
+                            color: '#f39c12',
+                            fontWeight: '600',
+                            display: 'inline-block',
+                            marginBottom: '0.75rem'
+                          }}>
+                            {warmupEx.duration}s
+                          </div>
+
+                          {/* Target Body Parts */}
+                          <div style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '0.375rem',
+                            marginBottom: '0.75rem'
+                          }}>
+                            {warmupEx.targetBodyParts.slice(0, 3).map((bodyPart) => (
+                              <div
+                                key={bodyPart}
+                                style={{
+                                  background: 'rgba(243, 156, 18, 0.1)',
+                                  border: '1px solid rgba(243, 156, 18, 0.3)',
+                                  borderRadius: '4px',
+                                  padding: '0.125rem 0.375rem',
+                                  fontSize: '0.625rem',
+                                  color: '#f39c12',
+                                  textTransform: 'capitalize'
+                                }}
+                              >
+                                {warmupBodyPartLabels[bodyPart] || bodyPart}
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Instructions */}
+                          <p style={{
+                            color: '#b8bcc8',
+                            fontSize: '0.75rem',
+                            lineHeight: 1.4,
+                            margin: 0,
+                            opacity: 0.9
+                          }}>
+                            {warmupEx.instructions}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Circuit Layout */}
         {circuitInfo ? (
