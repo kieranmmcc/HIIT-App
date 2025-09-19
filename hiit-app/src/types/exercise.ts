@@ -40,8 +40,9 @@ export interface WarmupExercise {
 export interface ActiveWorkout {
   workout: GeneratedWorkout;
   currentExerciseIndex: number;
-  phase: 'prepare' | 'work' | 'rest' | 'complete';
+  phase: 'warmup' | 'prepare' | 'work' | 'rest' | 'complete';
   timeRemaining: number; // seconds remaining in current phase
   isActive: boolean;
   isPaused: boolean;
+  currentWarmupIndex?: number; // For tracking warmup exercises
 }

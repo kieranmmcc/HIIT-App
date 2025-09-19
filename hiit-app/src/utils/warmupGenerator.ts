@@ -86,6 +86,28 @@ export function generateWarmup(workout: GeneratedWorkout): GeneratedWarmup {
   // Sort by score (highest first)
   scoredWarmups.sort((a, b) => b.score - a.score);
 
+  // Categorize warmups by intensity
+  const stretchWarmups = scoredWarmups.filter(({ warmup }) =>
+    warmup.name.toLowerCase().includes('stretch') ||
+    warmup.name.toLowerCase().includes('circle') ||
+    warmup.name.toLowerCase().includes('roll') ||
+    warmup.name.toLowerCase().includes('swing') ||
+    warmup.name.toLowerCase().includes('cat-cow') ||
+    warmup.name.toLowerCase().includes('cobra') ||
+    warmup.name.toLowerCase().includes('downward') ||
+    warmup.name.toLowerCase().includes('bridge')
+  );
+
+  const activeWarmups = scoredWarmups.filter(({ warmup }) =>
+    warmup.name.toLowerCase().includes('jack') ||
+    warmup.name.toLowerCase().includes('knee') ||
+    warmup.name.toLowerCase().includes('kick') ||
+    warmup.name.toLowerCase().includes('squat') ||
+    warmup.name.toLowerCase().includes('lunge') ||
+    warmup.name.toLowerCase().includes('crawl') ||
+    warmup.name.toLowerCase().includes('walk')
+  );
+
   // Select warmups ensuring good coverage and minimum duration
   const selectedWarmups: WarmupExercise[] = [];
   const coveredParts = new Set<string>();
@@ -93,11 +115,24 @@ export function generateWarmup(workout: GeneratedWorkout): GeneratedWarmup {
   const minDuration = 60; // At least 1 minute
   const maxDuration = 180; // At most 3 minutes
 
-  // First pass: Select highest scoring warmups that cover new body parts
-  for (const { warmup, targetedParts } of scoredWarmups) {
+  // First pass: Select stretch/mobility warmups
+  for (const { warmup, targetedParts } of stretchWarmups) {
+    if (totalDuration >= maxDuration * 0.4) break; // Use up to 40% of time for stretches
+
+    const coversNewParts = targetedParts.some(part => !coveredParts.has(part));
+    const needsMoreTime = totalDuration < minDuration * 0.3; // At least 30% stretch time
+
+    if (coversNewParts || needsMoreTime) {
+      selectedWarmups.push(warmup);
+      targetedParts.forEach(part => coveredParts.add(part));
+      totalDuration += warmup.duration;
+    }
+  }
+
+  // Second pass: Add active warmups
+  for (const { warmup, targetedParts } of activeWarmups) {
     if (totalDuration >= maxDuration) break;
 
-    // Check if this warmup covers new body parts or if we need more duration
     const coversNewParts = targetedParts.some(part => !coveredParts.has(part));
     const needsMoreTime = totalDuration < minDuration;
 
@@ -108,7 +143,7 @@ export function generateWarmup(workout: GeneratedWorkout): GeneratedWarmup {
     }
   }
 
-  // Second pass: If we still don't have minimum duration, add more warmups
+  // Third pass: If we still don't have minimum duration, add remaining warmups
   if (totalDuration < minDuration) {
     for (const { warmup } of scoredWarmups) {
       if (totalDuration >= minDuration) break;
